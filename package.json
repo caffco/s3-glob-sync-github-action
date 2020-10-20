@@ -1,6 +1,6 @@
 {
   "name": "@caff/s3-glob-sync-github-action",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "A Github action to get the packages in a Yarn workspace",
   "main": "lib/index.js",
   "repository": "https://github.com/caffco/s3-glob-sync-github-action",

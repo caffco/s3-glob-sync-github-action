@@ -1,0 +1,57 @@
+{
+  "name": "@caff/s3-glob-sync-github-action",
+  "version": "0.0.1-alpha.3",
+  "description": "A Github action to get the packages in a Yarn workspace",
+  "main": "lib/index.js",
+  "repository": "https://github.com/caffco/s3-glob-sync-github-action",
+  "bugs": {
+    "url": "https://github.com/caffco/s3-glob-sync-github-action/issues"
+  },
+  "homepage": "https://github.com/caffco/s3-glob-sync-github-action#readme",
+  "author": "Lluís Ulzurrun de Asanza i Sàez <me@llu.is>",
+  "license": "MIT",
+  "keywords": [
+    "actions",
+    "node",
+    "yarn",
+    "workspace"
+  ],
+  "scripts": {
+    "build": "run-s tsc package",
+    "tsc": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest",
+    "all": "run-s format lint test build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.10.3",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.2",
+    "@typescript-eslint/parser": "^4.4.1",
+    "@vercel/ncc": "^0.24.1",
+    "eslint": "^7.11.0",
+    "eslint-plugin-github": "^4.1.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "jest-circus": "^26.4.2",
+    "lint-staged": "^10.4.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.1.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/glob": "^0.1.0",
+    "@aws-sdk/client-s3-node": "^0.1.0-preview.2"
+  }
+}

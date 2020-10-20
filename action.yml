@@ -1,0 +1,52 @@
+name: 'S3 Glob Sync'
+description: 'Allows syncing globs with AWS S3'
+author: 'Caff'
+branding:
+  icon: refresh-cw
+  color: orange
+inputs:
+  prefix:
+    required: true
+    description: 'In upload mode, prefix to be added to keys for uploaded files. In download mode all files with this prefix will be downloaded to destination folder.'
+  bucket_name:
+    required: true
+    description: 'Name of the bucket to work with.'
+  endpoint:
+    required: true
+    description: 'Endpoint for AWS S3 API.'
+  region:
+    required: true
+    description: 'Region of the bucket to work with.'
+  access_key_id:
+    required: true
+    description: 'Access key ID used to authenticate with AWS S3 API.'
+  secret_access_key:
+    required: true
+    description: 'Secret access key used to authenticate with AWS S3 API.'
+  mode:
+    required: true
+    description: 'Working mode. Can be «upload» or «download».'
+  acl:
+    required: false
+    description: 'Upload mode only. The ACL to be applied to uploaded files. Defaults to «private».'
+  patterns:
+    required: false
+    description: 'Upload mode only. Newline-separated glob patterns to be uploaded.'
+  max_parallel_uploads:
+    required: false
+    description: 'Upload mode only. Maximum amount of uploads that will be performed concurrently. Defaults to 10.'
+    default: '10'
+  destination_folder:
+    required: false
+    description: 'Download mode only. Folder where files will be downloaded.'
+  max_parallel_downloads:
+    required: false
+    description: 'Download mode only. Maximum amount of downloads that will be performed concurrently. Defaults to 10. Limited to 1000 by AWS S3 API.'
+outputs:
+  uploaded_files:
+    description: 'List of absolute paths to uploaded files.'
+  downloaded_files:
+    description: 'List of absolute paths to downloaded files.'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

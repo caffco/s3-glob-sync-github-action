@@ -1,5 +1,5 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/d9d35eccf8ed20d25347/maintainability)](https://codeclimate.com/github/caffco/yarn-workspace-packages-github-action/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/d9d35eccf8ed20d25347/test_coverage)](https://codeclimate.com/github/caffco/yarn-workspace-packages-github-action/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c3e53e2a559017ec4abf/maintainability)](https://codeclimate.com/github/caffco/s3-glob-sync-github-action/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c3e53e2a559017ec4abf/test_coverage)](https://codeclimate.com/github/caffco/s3-glob-sync-github-action/test_coverage)
 
 # S3 Glob Sync
 

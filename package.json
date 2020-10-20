@@ -34,6 +34,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.11.1",
     "@types/jest": "^26.0.14",
+    "@types/mkdirp": "^1.0.1",
     "@types/node": "^14.11.10",
     "@typescript-eslint/parser": "^4.5.0",
     "@vercel/ncc": "^0.24.1",
@@ -52,6 +53,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/glob": "^0.1.0",
-    "@aws-sdk/client-s3-node": "^0.1.0-preview.2"
+    "@aws-sdk/client-s3-node": "^0.1.0-preview.2",
+    "mkdirp": "^1.0.4"
   }
 }

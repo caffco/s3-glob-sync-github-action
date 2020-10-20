@@ -1,7 +1,9 @@
 import {S3} from '@aws-sdk/client-s3-node'
-import * as fs from 'fs'
+import fs from 'fs'
+import mkdirp from 'mkdirp'
 import {downloadPrefix} from './download'
 
+jest.mock('mkdirp')
 jest.mock('fs', () => ({
   createWriteStream: jest.fn().mockReturnValue({
     on: jest.fn().mockImplementation((eventName, callback) => {
@@ -46,7 +48,7 @@ describe('download', () => {
         listObjectsV2: jest.fn().mockResolvedValueOnce({
           Contents: [
             {
-              Key: 'the-prefix-the-key'
+              Key: 'the-prefix-parent-folder/the-key'
             }
           ],
           NextContinuationToken: undefined,
@@ -64,11 +66,15 @@ describe('download', () => {
 
       expect(s3Spy.getObject).toHaveBeenCalledWith({
         Bucket: 'the-bucket',
-        Key: 'the-prefix-the-key'
+        Key: 'the-prefix-parent-folder/the-key'
       })
 
+      expect(mkdirp.sync).toHaveBeenCalledWith(
+        '/fake-destination/parent-folder'
+      )
+
       expect(fs.createWriteStream).toHaveBeenCalledWith(
-        '/fake-destination/the-key'
+        '/fake-destination/parent-folder/the-key'
       )
     })
 

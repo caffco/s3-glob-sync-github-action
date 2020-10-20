@@ -1,5 +1,6 @@
-import {resolve as resolvePath} from 'path'
+import {resolve as resolvePath, dirname} from 'path'
 import fs from 'fs'
+import mkdirp from 'mkdirp'
 import {S3, _UnmarshalledObject} from '@aws-sdk/client-s3-node'
 
 const downloadSingleFile = async ({
@@ -19,6 +20,8 @@ const downloadSingleFile = async ({
     destinationFolder,
     key.substring(prefix.length)
   )
+
+  mkdirp.sync(dirname(absolutePathToFile))
 
   const remoteObject = await s3.getObject({
     Bucket: bucketName,

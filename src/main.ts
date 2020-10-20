@@ -1,29 +1,28 @@
 import {S3} from '@aws-sdk/client-s3-node'
 import {
+  Mode,
   getOptionsFromGithubActionInput,
   setGithubActionOutputFromResults
 } from './github'
 import {uploadGlobToPrefix} from './upload'
 import {downloadPrefix} from './download'
 
-const upload = async (
-  options: Parameters<typeof uploadGlobToPrefix>[0]
-): Promise<void> => {
-  const absolutePathToFiles = await uploadGlobToPrefix(options)
+const run = async <
+  ActionInput,
+  Action extends (options: ActionInput) => Promise<string[]>
+>({
+  mode,
+  options,
+  action
+}: {
+  mode: Mode
+  options: ActionInput
+  action: Action
+}): Promise<void> => {
+  const absolutePathToFiles = await action(options)
 
   setGithubActionOutputFromResults({
-    mode: 'upload',
-    absolutePathToFiles
-  })
-}
-
-const download = async (
-  options: Parameters<typeof downloadPrefix>[0]
-): Promise<void> => {
-  const absolutePathToFiles = await downloadPrefix(options)
-
-  setGithubActionOutputFromResults({
-    mode: 'download',
+    mode,
     absolutePathToFiles
   })
 }
@@ -42,11 +41,19 @@ export default async function main(): Promise<void> {
 
   switch (options.mode) {
     case 'upload':
-      await upload({...options, s3})
+      await run({
+        mode: options.mode,
+        options: {...options, s3},
+        action: uploadGlobToPrefix
+      })
       break
 
     case 'download':
-      await download({...options, s3})
+      await run({
+        mode: options.mode,
+        options: {...options, s3},
+        action: downloadPrefix
+      })
       break
   }
 }

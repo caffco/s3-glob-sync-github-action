@@ -1,6 +1,6 @@
 import {resolve as resolvePath} from 'path'
 import fs from 'fs'
-import {S3} from '@aws-sdk/client-s3-node'
+import {S3, _UnmarshalledObject} from '@aws-sdk/client-s3-node'
 
 const downloadSingleFile = async ({
   destinationFolder,
@@ -42,6 +42,37 @@ const downloadSingleFile = async ({
     readStream.pipe(writeStream)
   })
 }
+
+const downloadObjects = async ({
+  objectsInBucket,
+  destinationFolder,
+  bucketName,
+  prefix,
+  s3
+}: {
+  objectsInBucket: _UnmarshalledObject[]
+  destinationFolder: string
+  bucketName: string
+  prefix: string
+  s3: S3
+}): Promise<string[]> =>
+  Promise.all(
+    objectsInBucket.map(async singleObjectInBucket => {
+      if (!singleObjectInBucket.Key) {
+        throw new Error(
+          `No key for remote object: ${JSON.stringify(singleObjectInBucket)}`
+        )
+      }
+
+      return downloadSingleFile({
+        destinationFolder,
+        key: singleObjectInBucket.Key,
+        bucketName,
+        prefix,
+        s3
+      })
+    })
+  )
 
 const downloadObjectsWithPrefixInPage = async ({
   continuationToken,
@@ -86,23 +117,13 @@ const downloadObjectsWithPrefixInPage = async ({
     )
   }
 
-  const absolutePathsToDownloadedFiles = await Promise.all(
-    objectsInBucket.map(async singleObjectInBucket => {
-      if (!singleObjectInBucket.Key) {
-        throw new Error(
-          `No key for remote object: ${JSON.stringify(singleObjectInBucket)}`
-        )
-      }
-
-      return downloadSingleFile({
-        destinationFolder,
-        key: singleObjectInBucket.Key,
-        bucketName,
-        prefix,
-        s3
-      })
-    })
-  )
+  const absolutePathsToDownloadedFiles = await downloadObjects({
+    objectsInBucket,
+    destinationFolder,
+    bucketName,
+    prefix,
+    s3
+  })
 
   if (hasNextPage) {
     if (!nextContinuationToken) {

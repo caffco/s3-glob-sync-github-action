@@ -1,6 +1,6 @@
 import {getInput, setOutput} from '@actions/core'
 
-type Mode = 'upload' | 'download'
+export type Mode = 'upload' | 'download'
 
 interface S3BucketConfig {
   prefix: string
@@ -23,6 +23,17 @@ export type ACL =
   | 'bucket-owner-full-control'
   | 'log-delivery-write'
 
+const getS3BucketConfig = (): S3BucketConfig => ({
+  prefix: getInput('prefix'),
+  bucketName: getInput('bucket_name'),
+  endpoint: getInput('endpoint'),
+  region: getInput('region'),
+  credentials: {
+    accessKeyId: getInput('access_key_id'),
+    secretAccessKey: getInput('secret_access_key')
+  }
+})
+
 export function getOptionsFromGithubActionInput(): S3BucketConfig &
   (
     | {
@@ -39,16 +50,7 @@ export function getOptionsFromGithubActionInput(): S3BucketConfig &
   ) {
   const mode = getInput('mode') as Mode
 
-  const s3BucketConfig: S3BucketConfig = {
-    prefix: getInput('prefix'),
-    bucketName: getInput('bucket_name'),
-    endpoint: getInput('endpoint'),
-    region: getInput('region'),
-    credentials: {
-      accessKeyId: getInput('access_key_id'),
-      secretAccessKey: getInput('secret_access_key')
-    }
-  }
+  const s3BucketConfig = getS3BucketConfig()
 
   switch (mode) {
     case 'upload':

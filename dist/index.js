@@ -67,17 +67,8 @@ const downloadSingleFile = ({ destinationFolder, key, bucketName, prefix, s3 }) 
         readStream.pipe(writeStream);
     });
 });
-const downloadObjectsWithPrefixInPage = ({ continuationToken, destinationFolder, bucketName, prefix, s3, maxParallelDownloads }) => __awaiter(void 0, void 0, void 0, function* () {
-    const { Contents: objectsInBucket, NextContinuationToken: nextContinuationToken, IsTruncated: hasNextPage } = yield s3.listObjectsV2({
-        ContinuationToken: continuationToken,
-        Bucket: bucketName,
-        Prefix: prefix,
-        MaxKeys: maxParallelDownloads
-    });
-    if (!objectsInBucket) {
-        throw new Error(`No objects with prefix «${prefix}» found in bucket «${bucketName}»`);
-    }
-    const absolutePathsToDownloadedFiles = yield Promise.all(objectsInBucket.map((singleObjectInBucket) => __awaiter(void 0, void 0, void 0, function* () {
+const downloadObjects = ({ objectsInBucket, destinationFolder, bucketName, prefix, s3 }) => __awaiter(void 0, void 0, void 0, function* () {
+    return Promise.all(objectsInBucket.map((singleObjectInBucket) => __awaiter(void 0, void 0, void 0, function* () {
         if (!singleObjectInBucket.Key) {
             throw new Error(`No key for remote object: ${JSON.stringify(singleObjectInBucket)}`);
         }
@@ -89,6 +80,24 @@ const downloadObjectsWithPrefixInPage = ({ continuationToken, destinationFolder,
             s3
         });
     })));
+});
+const downloadObjectsWithPrefixInPage = ({ continuationToken, destinationFolder, bucketName, prefix, s3, maxParallelDownloads }) => __awaiter(void 0, void 0, void 0, function* () {
+    const { Contents: objectsInBucket, NextContinuationToken: nextContinuationToken, IsTruncated: hasNextPage } = yield s3.listObjectsV2({
+        ContinuationToken: continuationToken,
+        Bucket: bucketName,
+        Prefix: prefix,
+        MaxKeys: maxParallelDownloads
+    });
+    if (!objectsInBucket) {
+        throw new Error(`No objects with prefix «${prefix}» found in bucket «${bucketName}»`);
+    }
+    const absolutePathsToDownloadedFiles = yield downloadObjects({
+        objectsInBucket,
+        destinationFolder,
+        bucketName,
+        prefix,
+        s3
+    });
     if (hasNextPage) {
         if (!nextContinuationToken) {
             throw new Error('Response has next page but no continuation token was provided');
@@ -134,18 +143,19 @@ exports.downloadPrefix = ({ destinationFolder, bucketName, prefix, s3, maxParall
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setGithubActionOutputFromResults = exports.getOptionsFromGithubActionInput = void 0;
 const core_1 = __webpack_require__(42186);
+const getS3BucketConfig = () => ({
+    prefix: core_1.getInput('prefix'),
+    bucketName: core_1.getInput('bucket_name'),
+    endpoint: core_1.getInput('endpoint'),
+    region: core_1.getInput('region'),
+    credentials: {
+        accessKeyId: core_1.getInput('access_key_id'),
+        secretAccessKey: core_1.getInput('secret_access_key')
+    }
+});
 function getOptionsFromGithubActionInput() {
     const mode = core_1.getInput('mode');
-    const s3BucketConfig = {
-        prefix: core_1.getInput('prefix'),
-        bucketName: core_1.getInput('bucket_name'),
-        endpoint: core_1.getInput('endpoint'),
-        region: core_1.getInput('region'),
-        credentials: {
-            accessKeyId: core_1.getInput('access_key_id'),
-            secretAccessKey: core_1.getInput('secret_access_key')
-        }
-    };
+    const s3BucketConfig = getS3BucketConfig();
     switch (mode) {
         case 'upload':
             return Object.assign(Object.assign({}, s3BucketConfig), { mode, acl: core_1.getInput('acl') || 'private', patterns: core_1.getInput('patterns').split('\n'), maxParallelUploads: parseInt(core_1.getInput('max_parallel_uploads')) || 10 });
@@ -242,17 +252,10 @@ const client_s3_node_1 = __webpack_require__(39960);
 const github_1 = __webpack_require__(85928);
 const upload_1 = __webpack_require__(64831);
 const download_1 = __webpack_require__(95933);
-const upload = (options) => __awaiter(void 0, void 0, void 0, function* () {
-    const absolutePathToFiles = yield upload_1.uploadGlobToPrefix(options);
+const run = ({ mode, options, action }) => __awaiter(void 0, void 0, void 0, function* () {
+    const absolutePathToFiles = yield action(options);
     github_1.setGithubActionOutputFromResults({
-        mode: 'upload',
-        absolutePathToFiles
-    });
-});
-const download = (options) => __awaiter(void 0, void 0, void 0, function* () {
-    const absolutePathToFiles = yield download_1.downloadPrefix(options);
-    github_1.setGithubActionOutputFromResults({
-        mode: 'download',
+        mode,
         absolutePathToFiles
     });
 });
@@ -269,10 +272,18 @@ function main() {
         });
         switch (options.mode) {
             case 'upload':
-                yield upload(Object.assign(Object.assign({}, options), { s3 }));
+                yield run({
+                    mode: options.mode,
+                    options: Object.assign(Object.assign({}, options), { s3 }),
+                    action: upload_1.uploadGlobToPrefix
+                });
                 break;
             case 'download':
-                yield download(Object.assign(Object.assign({}, options), { s3 }));
+                yield run({
+                    mode: options.mode,
+                    options: Object.assign(Object.assign({}, options), { s3 }),
+                    action: download_1.downloadPrefix
+                });
                 break;
         }
     });

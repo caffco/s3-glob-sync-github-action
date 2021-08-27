@@ -6,7 +6,13 @@ async function run(): Promise<void> {
   try {
     await main()
   } catch (error) {
-    core.setFailed(error.message)
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    } else if (typeof error === 'string') {
+      core.setFailed(error)
+    } else {
+      core.setFailed('Unknown error')
+    }
   }
 }
 

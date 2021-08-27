@@ -1,5 +1,4 @@
-require('./sourcemap-register.js');module.exports =
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 29278:
@@ -9,7 +8,7 @@ require('./sourcemap-register.js');module.exports =
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getChunked = void 0;
-exports.getChunked = (originalItems, maximumChunkSize) => {
+const getChunked = (originalItems, maximumChunkSize) => {
     if (maximumChunkSize <= 0 || isNaN(maximumChunkSize)) {
         throw new Error('Chunk size must be a positive number');
     }
@@ -24,12 +23,13 @@ exports.getChunked = (originalItems, maximumChunkSize) => {
             : [...chunks.slice(0, -1), [...lastChunk, item]];
     }, [[]]);
 };
+exports.getChunked = getChunked;
 
 
 /***/ }),
 
 /***/ 95933:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -47,12 +47,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.downloadPrefix = void 0;
-const path_1 = __webpack_require__(85622);
-const fs_1 = __importDefault(__webpack_require__(35747));
-const mkdirp_1 = __importDefault(__webpack_require__(66186));
+const path_1 = __nccwpck_require__(85622);
+const fs_1 = __importDefault(__nccwpck_require__(35747));
+const mkdirp_1 = __importDefault(__nccwpck_require__(66186));
 const downloadSingleFile = ({ destinationFolder, key, bucketName, prefix, s3 }) => __awaiter(void 0, void 0, void 0, function* () {
-    const absolutePathToFile = path_1.resolve(destinationFolder, key.substring(prefix.length));
-    mkdirp_1.default.sync(path_1.dirname(absolutePathToFile));
+    const absolutePathToFile = (0, path_1.resolve)(destinationFolder, key.substring(prefix.length));
+    mkdirp_1.default.sync((0, path_1.dirname)(absolutePathToFile));
     const remoteObject = yield s3.getObject({
         Bucket: bucketName,
         Key: key
@@ -116,7 +116,7 @@ const downloadObjectsWithPrefixInPage = ({ continuationToken, destinationFolder,
         absolutePathsToDownloadedFiles
     };
 });
-exports.downloadPrefix = ({ destinationFolder, bucketName, prefix, s3, maxParallelDownloads }) => __awaiter(void 0, void 0, void 0, function* () {
+const downloadPrefix = ({ destinationFolder, bucketName, prefix, s3, maxParallelDownloads }) => __awaiter(void 0, void 0, void 0, function* () {
     const absolutePathsToDownloadedFiles = [];
     let continuationToken = undefined;
     do {
@@ -133,46 +133,47 @@ exports.downloadPrefix = ({ destinationFolder, bucketName, prefix, s3, maxParall
     } while (continuationToken);
     return absolutePathsToDownloadedFiles;
 });
+exports.downloadPrefix = downloadPrefix;
 
 
 /***/ }),
 
 /***/ 85928:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setGithubActionOutputFromResults = exports.getOptionsFromGithubActionInput = void 0;
-const core_1 = __webpack_require__(42186);
+const core_1 = __nccwpck_require__(42186);
 const getS3BucketConfig = () => ({
-    prefix: core_1.getInput('prefix'),
-    bucketName: core_1.getInput('bucket_name'),
-    endpoint: core_1.getInput('endpoint'),
-    region: core_1.getInput('region'),
+    prefix: (0, core_1.getInput)('prefix'),
+    bucketName: (0, core_1.getInput)('bucket_name'),
+    endpoint: (0, core_1.getInput)('endpoint'),
+    region: (0, core_1.getInput)('region'),
     credentials: {
-        accessKeyId: core_1.getInput('access_key_id'),
-        secretAccessKey: core_1.getInput('secret_access_key')
+        accessKeyId: (0, core_1.getInput)('access_key_id'),
+        secretAccessKey: (0, core_1.getInput)('secret_access_key')
     }
 });
 function getOptionsFromGithubActionInput() {
-    const mode = core_1.getInput('mode');
+    const mode = (0, core_1.getInput)('mode');
     const s3BucketConfig = getS3BucketConfig();
     switch (mode) {
         case 'upload':
-            return Object.assign(Object.assign({}, s3BucketConfig), { mode, acl: core_1.getInput('acl') || 'private', patterns: core_1.getInput('patterns').split('\n'), maxParallelUploads: parseInt(core_1.getInput('max_parallel_uploads')) || 10 });
+            return Object.assign(Object.assign({}, s3BucketConfig), { mode, acl: (0, core_1.getInput)('acl') || 'private', patterns: (0, core_1.getInput)('patterns').split('\n'), maxParallelUploads: parseInt((0, core_1.getInput)('max_parallel_uploads')) || 10 });
         case 'download':
-            return Object.assign(Object.assign({}, s3BucketConfig), { mode, destinationFolder: core_1.getInput('destination_folder'), maxParallelDownloads: parseInt(core_1.getInput('max_parallel_downloads')) || 10 });
+            return Object.assign(Object.assign({}, s3BucketConfig), { mode, destinationFolder: (0, core_1.getInput)('destination_folder'), maxParallelDownloads: parseInt((0, core_1.getInput)('max_parallel_downloads')) || 10 });
     }
 }
 exports.getOptionsFromGithubActionInput = getOptionsFromGithubActionInput;
 function setGithubActionOutputFromResults({ mode, absolutePathToFiles }) {
     switch (mode) {
         case 'upload':
-            core_1.setOutput('uploaded_files', absolutePathToFiles);
+            (0, core_1.setOutput)('uploaded_files', absolutePathToFiles);
             break;
         case 'download':
-            core_1.setOutput('downloaded_files', absolutePathToFiles);
+            (0, core_1.setOutput)('downloaded_files', absolutePathToFiles);
             break;
     }
 }
@@ -182,7 +183,7 @@ exports.setGithubActionOutputFromResults = setGithubActionOutputFromResults;
 /***/ }),
 
 /***/ 94822:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -218,15 +219,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__webpack_require__(42186));
-const main_1 = __importDefault(__webpack_require__(3109));
+const core = __importStar(__nccwpck_require__(42186));
+const main_1 = __importDefault(__nccwpck_require__(3109));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield main_1.default();
+            yield (0, main_1.default)();
         }
         catch (error) {
-            core.setFailed(error.message);
+            if (error instanceof Error) {
+                core.setFailed(error.message);
+            }
+            else if (typeof error === 'string') {
+                core.setFailed(error);
+            }
+            else {
+                core.setFailed('Unknown error');
+            }
         }
     });
 }
@@ -236,7 +245,7 @@ run();
 /***/ }),
 
 /***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -250,20 +259,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const client_s3_node_1 = __webpack_require__(39960);
-const github_1 = __webpack_require__(85928);
-const upload_1 = __webpack_require__(64831);
-const download_1 = __webpack_require__(95933);
+const client_s3_node_1 = __nccwpck_require__(39960);
+const github_1 = __nccwpck_require__(85928);
+const upload_1 = __nccwpck_require__(64831);
+const download_1 = __nccwpck_require__(95933);
 const run = ({ mode, options, action }) => __awaiter(void 0, void 0, void 0, function* () {
     const absolutePathToFiles = yield action(options);
-    github_1.setGithubActionOutputFromResults({
+    (0, github_1.setGithubActionOutputFromResults)({
         mode,
         absolutePathToFiles
     });
 });
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const options = github_1.getOptionsFromGithubActionInput();
+        const options = (0, github_1.getOptionsFromGithubActionInput)();
         const s3 = new client_s3_node_1.S3({
             endpoint: options.endpoint,
             region: options.region,
@@ -296,7 +305,7 @@ exports.default = main;
 /***/ }),
 
 /***/ 64831:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -333,9 +342,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadGlobToPrefix = void 0;
-const fs_1 = __importDefault(__webpack_require__(35747));
-const glob = __importStar(__webpack_require__(28090));
-const chunk_1 = __webpack_require__(29278);
+const fs_1 = __importDefault(__nccwpck_require__(35747));
+const glob = __importStar(__nccwpck_require__(28090));
+const chunk_1 = __nccwpck_require__(29278);
 const uploadSingleFile = ({ acl, absolutePathToFile, bucketName, prefix, s3 }) => __awaiter(void 0, void 0, void 0, function* () {
     const buffer = yield new Promise((resolve, reject) => fs_1.default.readFile(absolutePathToFile, (error, data) => error ? reject(error) : resolve(data)));
     yield s3.putObject({
@@ -345,10 +354,10 @@ const uploadSingleFile = ({ acl, absolutePathToFile, bucketName, prefix, s3 }) =
         ACL: acl
     });
 });
-exports.uploadGlobToPrefix = ({ acl, patterns, bucketName, prefix, s3, maxParallelUploads }) => __awaiter(void 0, void 0, void 0, function* () {
+const uploadGlobToPrefix = ({ acl, patterns, bucketName, prefix, s3, maxParallelUploads }) => __awaiter(void 0, void 0, void 0, function* () {
     const globber = yield glob.create(patterns.join('\n'));
     const absolutePathsToUpload = yield globber.glob();
-    const chunks = chunk_1.getChunked(absolutePathsToUpload, maxParallelUploads);
+    const chunks = (0, chunk_1.getChunked)(absolutePathsToUpload, maxParallelUploads);
     for (const singleChunk of chunks) {
         yield Promise.all(singleChunk.map((absolutePathToFile) => __awaiter(void 0, void 0, void 0, function* () {
             return yield uploadSingleFile({
@@ -362,25 +371,39 @@ exports.uploadGlobToPrefix = ({ acl, patterns, bucketName, prefix, s3, maxParall
     }
     return absolutePathsToUpload;
 });
+exports.uploadGlobToPrefix = uploadGlobToPrefix;
 
 
 /***/ }),
 
 /***/ 87351:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__webpack_require__(12087));
-const utils_1 = __webpack_require__(5278);
+exports.issue = exports.issueCommand = void 0;
+const os = __importStar(__nccwpck_require__(12087));
+const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
  *
@@ -453,10 +476,29 @@ function escapeProperty(s) {
 /***/ }),
 
 /***/ 42186:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -466,19 +508,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __webpack_require__(87351);
-const file_command_1 = __webpack_require__(717);
-const utils_1 = __webpack_require__(5278);
-const os = __importStar(__webpack_require__(12087));
-const path = __importStar(__webpack_require__(85622));
+exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+const command_1 = __nccwpck_require__(87351);
+const file_command_1 = __nccwpck_require__(717);
+const utils_1 = __nccwpck_require__(5278);
+const os = __importStar(__nccwpck_require__(12087));
+const path = __importStar(__nccwpck_require__(85622));
 /**
  * The code to exit an action
  */
@@ -540,7 +576,9 @@ function addPath(inputPath) {
 }
 exports.addPath = addPath;
 /**
- * Gets the value of an input.  The value is also trimmed.
+ * Gets the value of an input.
+ * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.
+ * Returns an empty string if the value is not defined.
  *
  * @param     name     name of the input to get
  * @param     options  optional. See InputOptions.
@@ -551,9 +589,49 @@ function getInput(name, options) {
     if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
     }
+    if (options && options.trimWhitespace === false) {
+        return val;
+    }
     return val.trim();
 }
 exports.getInput = getInput;
+/**
+ * Gets the values of an multiline input.  Each value is also trimmed.
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string[]
+ *
+ */
+function getMultilineInput(name, options) {
+    const inputs = getInput(name, options)
+        .split('\n')
+        .filter(x => x !== '');
+    return inputs;
+}
+exports.getMultilineInput = getMultilineInput;
+/**
+ * Gets the input value of the boolean type in the YAML 1.2 "core schema" specification.
+ * Support boolean input list: `true | True | TRUE | false | False | FALSE` .
+ * The return value is also in boolean type.
+ * ref: https://yaml.org/spec/1.2/spec.html#id2804923
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   boolean
+ */
+function getBooleanInput(name, options) {
+    const trueValue = ['true', 'True', 'TRUE'];
+    const falseValue = ['false', 'False', 'FALSE'];
+    const val = getInput(name, options);
+    if (trueValue.includes(val))
+        return true;
+    if (falseValue.includes(val))
+        return false;
+    throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${name}\n` +
+        `Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
+}
+exports.getBooleanInput = getBooleanInput;
 /**
  * Sets the value of an output.
  *
@@ -562,6 +640,7 @@ exports.getInput = getInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    process.stdout.write(os.EOL);
     command_1.issueCommand('set-output', { name }, value);
 }
 exports.setOutput = setOutput;
@@ -608,19 +687,30 @@ exports.debug = debug;
 /**
  * Adds an error issue
  * @param message error issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
+function error(message, properties = {}) {
+    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.error = error;
 /**
- * Adds an warning issue
+ * Adds a warning issue
  * @param message warning issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+function warning(message, properties = {}) {
+    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.warning = warning;
+/**
+ * Adds a notice issue
+ * @param message notice issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
+ */
+function notice(message, properties = {}) {
+    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+exports.notice = notice;
 /**
  * Writes info to log with console.log.
  * @param message info message
@@ -698,24 +788,37 @@ exports.getState = getState;
 /***/ }),
 
 /***/ 717:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
 // For internal use, subject to change.
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__webpack_require__(35747));
-const os = __importStar(__webpack_require__(12087));
-const utils_1 = __webpack_require__(5278);
+const fs = __importStar(__nccwpck_require__(35747));
+const os = __importStar(__nccwpck_require__(12087));
+const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -741,6 +844,7 @@ exports.issueCommand = issueCommand;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toCommandProperties = exports.toCommandValue = void 0;
 /**
  * Sanitizes an input into a string so it can be passed into issueCommand safely
  * @param input input to sanitize into a string
@@ -755,12 +859,31 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+exports.toCommandProperties = toCommandProperties;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
 
 /***/ 28090:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -774,7 +897,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const internal_globber_1 = __webpack_require__(28298);
+exports.hashFiles = exports.create = void 0;
+const internal_globber_1 = __nccwpck_require__(28298);
+const internal_hash_files_1 = __nccwpck_require__(2448);
 /**
  * Constructs a globber
  *
@@ -787,17 +912,54 @@ function create(patterns, options) {
     });
 }
 exports.create = create;
+/**
+ * Computes the sha256 hash of a glob
+ *
+ * @param patterns  Patterns separated by newlines
+ * @param options   Glob options
+ */
+function hashFiles(patterns, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let followSymbolicLinks = true;
+        if (options && typeof options.followSymbolicLinks === 'boolean') {
+            followSymbolicLinks = options.followSymbolicLinks;
+        }
+        const globber = yield create(patterns, { followSymbolicLinks });
+        return internal_hash_files_1.hashFiles(globber);
+    });
+}
+exports.hashFiles = hashFiles;
 //# sourceMappingURL=glob.js.map
 
 /***/ }),
 
 /***/ 51026:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __webpack_require__(42186);
+exports.getOptions = void 0;
+const core = __importStar(__nccwpck_require__(42186));
 /**
  * Returns a copy with defaults filled in.
  */
@@ -805,6 +967,7 @@ function getOptions(copy) {
     const result = {
         followSymbolicLinks: true,
         implicitDescendants: true,
+        matchDirectories: true,
         omitBrokenSymbolicLinks: true
     };
     if (copy) {
@@ -815,6 +978,10 @@ function getOptions(copy) {
         if (typeof copy.implicitDescendants === 'boolean') {
             result.implicitDescendants = copy.implicitDescendants;
             core.debug(`implicitDescendants '${result.implicitDescendants}'`);
+        }
+        if (typeof copy.matchDirectories === 'boolean') {
+            result.matchDirectories = copy.matchDirectories;
+            core.debug(`matchDirectories '${result.matchDirectories}'`);
         }
         if (typeof copy.omitBrokenSymbolicLinks === 'boolean') {
             result.omitBrokenSymbolicLinks = copy.omitBrokenSymbolicLinks;
@@ -829,10 +996,29 @@ exports.getOptions = getOptions;
 /***/ }),
 
 /***/ 28298:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -862,14 +1048,15 @@ var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _ar
     function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __webpack_require__(42186);
-const fs = __webpack_require__(35747);
-const globOptionsHelper = __webpack_require__(51026);
-const path = __webpack_require__(85622);
-const patternHelper = __webpack_require__(29005);
-const internal_match_kind_1 = __webpack_require__(81063);
-const internal_pattern_1 = __webpack_require__(64536);
-const internal_search_state_1 = __webpack_require__(89117);
+exports.DefaultGlobber = void 0;
+const core = __importStar(__nccwpck_require__(42186));
+const fs = __importStar(__nccwpck_require__(35747));
+const globOptionsHelper = __importStar(__nccwpck_require__(51026));
+const path = __importStar(__nccwpck_require__(85622));
+const patternHelper = __importStar(__nccwpck_require__(29005));
+const internal_match_kind_1 = __nccwpck_require__(81063);
+const internal_pattern_1 = __nccwpck_require__(64536);
+const internal_search_state_1 = __nccwpck_require__(89117);
 const IS_WINDOWS = process.platform === 'win32';
 class DefaultGlobber {
     constructor(options) {
@@ -912,7 +1099,7 @@ class DefaultGlobber {
                 if (options.implicitDescendants &&
                     (pattern.trailingSeparator ||
                         pattern.segments[pattern.segments.length - 1] !== '**')) {
-                    patterns.push(new internal_pattern_1.Pattern(pattern.negate, pattern.segments.concat('**')));
+                    patterns.push(new internal_pattern_1.Pattern(pattern.negate, true, pattern.segments.concat('**')));
                 }
             }
             // Push the search paths
@@ -955,7 +1142,7 @@ class DefaultGlobber {
                 // Directory
                 if (stats.isDirectory()) {
                     // Matched
-                    if (match & internal_match_kind_1.MatchKind.Directory) {
+                    if (match & internal_match_kind_1.MatchKind.Directory && options.matchDirectories) {
                         yield yield __await(item.path);
                     }
                     // Descend?
@@ -1050,12 +1237,114 @@ exports.DefaultGlobber = DefaultGlobber;
 
 /***/ }),
 
+/***/ 2448:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hashFiles = void 0;
+const crypto = __importStar(__nccwpck_require__(76417));
+const core = __importStar(__nccwpck_require__(42186));
+const fs = __importStar(__nccwpck_require__(35747));
+const stream = __importStar(__nccwpck_require__(92413));
+const util = __importStar(__nccwpck_require__(31669));
+const path = __importStar(__nccwpck_require__(85622));
+function hashFiles(globber) {
+    var e_1, _a;
+    var _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        let hasMatch = false;
+        const githubWorkspace = (_b = process.env['GITHUB_WORKSPACE']) !== null && _b !== void 0 ? _b : process.cwd();
+        const result = crypto.createHash('sha256');
+        let count = 0;
+        try {
+            for (var _c = __asyncValues(globber.globGenerator()), _d; _d = yield _c.next(), !_d.done;) {
+                const file = _d.value;
+                core.debug(file);
+                if (!file.startsWith(`${githubWorkspace}${path.sep}`)) {
+                    core.debug(`Ignore '${file}' since it is not under GITHUB_WORKSPACE.`);
+                    continue;
+                }
+                if (fs.statSync(file).isDirectory()) {
+                    core.debug(`Skip directory '${file}'.`);
+                    continue;
+                }
+                const hash = crypto.createHash('sha256');
+                const pipeline = util.promisify(stream.pipeline);
+                yield pipeline(fs.createReadStream(file), hash);
+                result.write(hash.digest());
+                count++;
+                if (!hasMatch) {
+                    hasMatch = true;
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) yield _a.call(_c);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        result.end();
+        if (hasMatch) {
+            core.debug(`Found ${count} files to hash.`);
+            return result.digest('hex');
+        }
+        else {
+            core.debug(`No matches found for glob`);
+            return '';
+        }
+    });
+}
+exports.hashFiles = hashFiles;
+//# sourceMappingURL=internal-hash-files.js.map
+
+/***/ }),
+
 /***/ 81063:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MatchKind = void 0;
 /**
  * Indicates whether a pattern matches a path
  */
@@ -1075,13 +1364,36 @@ var MatchKind;
 /***/ }),
 
 /***/ 1849:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const assert = __webpack_require__(42357);
-const path = __webpack_require__(85622);
+exports.safeTrimTrailingSeparator = exports.normalizeSeparators = exports.hasRoot = exports.hasAbsoluteRoot = exports.ensureAbsoluteRoot = exports.dirname = void 0;
+const path = __importStar(__nccwpck_require__(85622));
+const assert_1 = __importDefault(__nccwpck_require__(42357));
 const IS_WINDOWS = process.platform === 'win32';
 /**
  * Similar to path.dirname except normalizes the path separators and slightly better handling for Windows UNC paths.
@@ -1121,8 +1433,8 @@ exports.dirname = dirname;
  * or `C:` are expanded based on the current working directory.
  */
 function ensureAbsoluteRoot(root, itemPath) {
-    assert(root, `ensureAbsoluteRoot parameter 'root' must not be empty`);
-    assert(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
+    assert_1.default(root, `ensureAbsoluteRoot parameter 'root' must not be empty`);
+    assert_1.default(itemPath, `ensureAbsoluteRoot parameter 'itemPath' must not be empty`);
     // Already rooted
     if (hasAbsoluteRoot(itemPath)) {
         return itemPath;
@@ -1132,7 +1444,7 @@ function ensureAbsoluteRoot(root, itemPath) {
         // Check for itemPath like C: or C:foo
         if (itemPath.match(/^[A-Z]:[^\\/]|^[A-Z]:$/i)) {
             let cwd = process.cwd();
-            assert(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+            assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
             // Drive letter matches cwd? Expand to cwd
             if (itemPath[0].toUpperCase() === cwd[0].toUpperCase()) {
                 // Drive only, e.g. C:
@@ -1157,11 +1469,11 @@ function ensureAbsoluteRoot(root, itemPath) {
         // Check for itemPath like \ or \foo
         else if (normalizeSeparators(itemPath).match(/^\\$|^\\[^\\]/)) {
             const cwd = process.cwd();
-            assert(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
+            assert_1.default(cwd.match(/^[A-Z]:\\/i), `Expected current directory to start with an absolute drive root. Actual '${cwd}'`);
             return `${cwd[0]}:\\${itemPath.substr(1)}`;
         }
     }
-    assert(hasAbsoluteRoot(root), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
+    assert_1.default(hasAbsoluteRoot(root), `ensureAbsoluteRoot parameter 'root' must have an absolute root`);
     // Otherwise ensure root ends with a separator
     if (root.endsWith('/') || (IS_WINDOWS && root.endsWith('\\'))) {
         // Intentionally empty
@@ -1178,7 +1490,7 @@ exports.ensureAbsoluteRoot = ensureAbsoluteRoot;
  * `\\hello\share` and `C:\hello` (and using alternate separator).
  */
 function hasAbsoluteRoot(itemPath) {
-    assert(itemPath, `hasAbsoluteRoot parameter 'itemPath' must not be empty`);
+    assert_1.default(itemPath, `hasAbsoluteRoot parameter 'itemPath' must not be empty`);
     // Normalize separators
     itemPath = normalizeSeparators(itemPath);
     // Windows
@@ -1195,7 +1507,7 @@ exports.hasAbsoluteRoot = hasAbsoluteRoot;
  * `\`, `\hello`, `\\hello\share`, `C:`, and `C:\hello` (and using alternate separator).
  */
 function hasRoot(itemPath) {
-    assert(itemPath, `isRooted parameter 'itemPath' must not be empty`);
+    assert_1.default(itemPath, `isRooted parameter 'itemPath' must not be empty`);
     // Normalize separators
     itemPath = normalizeSeparators(itemPath);
     // Windows
@@ -1257,14 +1569,37 @@ exports.safeTrimTrailingSeparator = safeTrimTrailingSeparator;
 /***/ }),
 
 /***/ 96836:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const assert = __webpack_require__(42357);
-const path = __webpack_require__(85622);
-const pathHelper = __webpack_require__(1849);
+exports.Path = void 0;
+const path = __importStar(__nccwpck_require__(85622));
+const pathHelper = __importStar(__nccwpck_require__(1849));
+const assert_1 = __importDefault(__nccwpck_require__(42357));
 const IS_WINDOWS = process.platform === 'win32';
 /**
  * Helper class for parsing paths into segments
@@ -1278,7 +1613,7 @@ class Path {
         this.segments = [];
         // String
         if (typeof itemPath === 'string') {
-            assert(itemPath, `Parameter 'itemPath' must not be empty`);
+            assert_1.default(itemPath, `Parameter 'itemPath' must not be empty`);
             // Normalize slashes and trim unnecessary trailing slash
             itemPath = pathHelper.safeTrimTrailingSeparator(itemPath);
             // Not rooted
@@ -1305,24 +1640,24 @@ class Path {
         // Array
         else {
             // Must not be empty
-            assert(itemPath.length > 0, `Parameter 'itemPath' must not be an empty array`);
+            assert_1.default(itemPath.length > 0, `Parameter 'itemPath' must not be an empty array`);
             // Each segment
             for (let i = 0; i < itemPath.length; i++) {
                 let segment = itemPath[i];
                 // Must not be empty
-                assert(segment, `Parameter 'itemPath' must not contain any empty segments`);
+                assert_1.default(segment, `Parameter 'itemPath' must not contain any empty segments`);
                 // Normalize slashes
                 segment = pathHelper.normalizeSeparators(itemPath[i]);
                 // Root segment
                 if (i === 0 && pathHelper.hasRoot(segment)) {
                     segment = pathHelper.safeTrimTrailingSeparator(segment);
-                    assert(segment === pathHelper.dirname(segment), `Parameter 'itemPath' root segment contains information for multiple segments`);
+                    assert_1.default(segment === pathHelper.dirname(segment), `Parameter 'itemPath' root segment contains information for multiple segments`);
                     this.segments.push(segment);
                 }
                 // All other segments
                 else {
                     // Must not contain slash
-                    assert(!segment.includes(path.sep), `Parameter 'itemPath' contains unexpected path separators`);
+                    assert_1.default(!segment.includes(path.sep), `Parameter 'itemPath' contains unexpected path separators`);
                     this.segments.push(segment);
                 }
             }
@@ -1354,13 +1689,33 @@ exports.Path = Path;
 /***/ }),
 
 /***/ 29005:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pathHelper = __webpack_require__(1849);
-const internal_match_kind_1 = __webpack_require__(81063);
+exports.partialMatch = exports.match = exports.getSearchPaths = void 0;
+const pathHelper = __importStar(__nccwpck_require__(1849));
+const internal_match_kind_1 = __nccwpck_require__(81063);
 const IS_WINDOWS = process.platform === 'win32';
 /**
  * Given an array of patterns, returns an array of paths to search.
@@ -1435,21 +1790,44 @@ exports.partialMatch = partialMatch;
 /***/ }),
 
 /***/ 64536:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const assert = __webpack_require__(42357);
-const os = __webpack_require__(12087);
-const path = __webpack_require__(85622);
-const pathHelper = __webpack_require__(1849);
-const minimatch_1 = __webpack_require__(83973);
-const internal_match_kind_1 = __webpack_require__(81063);
-const internal_path_1 = __webpack_require__(96836);
+exports.Pattern = void 0;
+const os = __importStar(__nccwpck_require__(12087));
+const path = __importStar(__nccwpck_require__(85622));
+const pathHelper = __importStar(__nccwpck_require__(1849));
+const assert_1 = __importDefault(__nccwpck_require__(42357));
+const minimatch_1 = __nccwpck_require__(83973);
+const internal_match_kind_1 = __nccwpck_require__(81063);
+const internal_path_1 = __nccwpck_require__(96836);
 const IS_WINDOWS = process.platform === 'win32';
 class Pattern {
-    constructor(patternOrNegate, segments) {
+    constructor(patternOrNegate, isImplicitPattern = false, segments, homedir) {
         /**
          * Indicates whether matches should be excluded from the result set
          */
@@ -1463,9 +1841,9 @@ class Pattern {
         else {
             // Convert to pattern
             segments = segments || [];
-            assert(segments.length, `Parameter 'segments' must not empty`);
+            assert_1.default(segments.length, `Parameter 'segments' must not empty`);
             const root = Pattern.getLiteral(segments[0]);
-            assert(root && pathHelper.hasAbsoluteRoot(root), `Parameter 'segments' first element must be a root path`);
+            assert_1.default(root && pathHelper.hasAbsoluteRoot(root), `Parameter 'segments' first element must be a root path`);
             pattern = new internal_path_1.Path(segments).toString().trim();
             if (patternOrNegate) {
                 pattern = `!${pattern}`;
@@ -1477,7 +1855,7 @@ class Pattern {
             pattern = pattern.substr(1).trim();
         }
         // Normalize slashes and ensures absolute root
-        pattern = Pattern.fixupPattern(pattern);
+        pattern = Pattern.fixupPattern(pattern, homedir);
         // Segments
         this.segments = new internal_path_1.Path(pattern).segments;
         // Trailing slash indicates the pattern should only match directories, not regular files
@@ -1493,6 +1871,7 @@ class Pattern {
         this.searchPath = new internal_path_1.Path(searchSegments).toString();
         // Root RegExp (required when determining partial match)
         this.rootRegExp = new RegExp(Pattern.regExpEscape(searchSegments[0]), IS_WINDOWS ? 'i' : '');
+        this.isImplicitPattern = isImplicitPattern;
         // Create minimatch
         const minimatchOptions = {
             dot: true,
@@ -1514,11 +1893,11 @@ class Pattern {
             // Normalize slashes
             itemPath = pathHelper.normalizeSeparators(itemPath);
             // Append a trailing slash. Otherwise Minimatch will not match the directory immediately
-            // preceeding the globstar. For example, given the pattern `/foo/**`, Minimatch returns
+            // preceding the globstar. For example, given the pattern `/foo/**`, Minimatch returns
             // false for `/foo` but returns true for `/foo/`. Append a trailing slash to handle that quirk.
-            if (!itemPath.endsWith(path.sep)) {
+            if (!itemPath.endsWith(path.sep) && this.isImplicitPattern === false) {
                 // Note, this is safe because the constructor ensures the pattern has an absolute root.
-                // For example, formats like C: and C:foo on Windows are resolved to an aboslute root.
+                // For example, formats like C: and C:foo on Windows are resolved to an absolute root.
                 itemPath = `${itemPath}${path.sep}`;
             }
         }
@@ -1556,15 +1935,15 @@ class Pattern {
     /**
      * Normalizes slashes and ensures absolute root
      */
-    static fixupPattern(pattern) {
+    static fixupPattern(pattern, homedir) {
         // Empty
-        assert(pattern, 'pattern cannot be empty');
+        assert_1.default(pattern, 'pattern cannot be empty');
         // Must not contain `.` segment, unless first segment
         // Must not contain `..` segment
         const literalSegments = new internal_path_1.Path(pattern).segments.map(x => Pattern.getLiteral(x));
-        assert(literalSegments.every((x, i) => (x !== '.' || i === 0) && x !== '..'), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
+        assert_1.default(literalSegments.every((x, i) => (x !== '.' || i === 0) && x !== '..'), `Invalid pattern '${pattern}'. Relative pathing '.' and '..' is not allowed.`);
         // Must not contain globs in root, e.g. Windows UNC path \\foo\b*r
-        assert(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
+        assert_1.default(!pathHelper.hasRoot(pattern) || literalSegments[0], `Invalid pattern '${pattern}'. Root segment must not contain globs.`);
         // Normalize slashes
         pattern = pathHelper.normalizeSeparators(pattern);
         // Replace leading `.` segment
@@ -1573,9 +1952,9 @@ class Pattern {
         }
         // Replace leading `~` segment
         else if (pattern === '~' || pattern.startsWith(`~${path.sep}`)) {
-            const homedir = os.homedir();
-            assert(homedir, 'Unable to determine HOME directory');
-            assert(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
+            homedir = homedir || os.homedir();
+            assert_1.default(homedir, 'Unable to determine HOME directory');
+            assert_1.default(pathHelper.hasAbsoluteRoot(homedir), `Expected HOME directory to be a rooted path. Actual '${homedir}'`);
             pattern = Pattern.globEscape(homedir) + pattern.substr(1);
         }
         // Replace relative drive root, e.g. pattern is C: or C:foo
@@ -1678,6 +2057,7 @@ exports.Pattern = Pattern;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SearchState = void 0;
 class SearchState {
     constructor(path, level) {
         this.path = path;
@@ -1690,13 +2070,13 @@ exports.SearchState = SearchState;
 /***/ }),
 
 /***/ 68892:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var is_array_buffer_1 = __webpack_require__(47749);
+var tslib_1 = __nccwpck_require__(4351);
+var is_array_buffer_1 = __nccwpck_require__(47749);
 function applyBodyChecksumMiddleware(headerName, hashCtor, encoder, streamHasher) {
     var _this = this;
     if (streamHasher === void 0) { streamHasher = throwOnStream; }
@@ -1766,13 +2146,13 @@ function throwOnStream(stream) {
 /***/ }),
 
 /***/ 49285:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var bucketHostname_1 = __webpack_require__(74228);
+var tslib_1 = __nccwpck_require__(4351);
+var bucketHostname_1 = __nccwpck_require__(74228);
 function bucketEndpointMiddleware(_a) {
     var _this = this;
     var _b = _a === void 0 ? {} : _a, _c = _b.forcePathStyle, forcePathStyle = _c === void 0 ? false : _c, _d = _b.preformedBucketEndpoint, preformedBucketEndpoint = _d === void 0 ? false : _d, _e = _b.useAccelerateEndpoint, useAccelerateEndpoint = _e === void 0 ? false : _e, _f = _b.useDualstackEndpoint, useDualstackEndpoint = _f === void 0 ? false : _f;
@@ -1813,12 +2193,12 @@ exports.bucketEndpointMiddleware = bucketEndpointMiddleware;
 /***/ }),
 
 /***/ 74228:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 var DOMAIN_PATTERN = /^[a-z0-9][a-z0-9\.\-]{1,61}[a-z0-9]$/;
 var IP_ADDRESS_PATTERN = /(\d+\.){3}\d+/;
 var DOTS_PATTERN = /\.\./;
@@ -1880,104 +2260,104 @@ function partitionSuffix(hostname) {
 /***/ }),
 
 /***/ 32829:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(49285), exports);
-tslib_1.__exportStar(__webpack_require__(74228), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(49285), exports);
+tslib_1.__exportStar(__nccwpck_require__(74228), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
 /***/ 85117:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var S3Client_1 = __webpack_require__(8833);
-var AbortMultipartUploadCommand_1 = __webpack_require__(30455);
-var CompleteMultipartUploadCommand_1 = __webpack_require__(39952);
-var CopyObjectCommand_1 = __webpack_require__(8842);
-var CreateBucketCommand_1 = __webpack_require__(41886);
-var CreateMultipartUploadCommand_1 = __webpack_require__(97899);
-var DeleteBucketAnalyticsConfigurationCommand_1 = __webpack_require__(1295);
-var DeleteBucketCommand_1 = __webpack_require__(81629);
-var DeleteBucketCorsCommand_1 = __webpack_require__(7682);
-var DeleteBucketEncryptionCommand_1 = __webpack_require__(79727);
-var DeleteBucketInventoryConfigurationCommand_1 = __webpack_require__(46927);
-var DeleteBucketLifecycleCommand_1 = __webpack_require__(95010);
-var DeleteBucketMetricsConfigurationCommand_1 = __webpack_require__(86030);
-var DeleteBucketPolicyCommand_1 = __webpack_require__(58774);
-var DeleteBucketReplicationCommand_1 = __webpack_require__(33723);
-var DeleteBucketTaggingCommand_1 = __webpack_require__(53827);
-var DeleteBucketWebsiteCommand_1 = __webpack_require__(89521);
-var DeleteObjectCommand_1 = __webpack_require__(27864);
-var DeleteObjectTaggingCommand_1 = __webpack_require__(89978);
-var DeleteObjectsCommand_1 = __webpack_require__(74256);
-var GetBucketAccelerateConfigurationCommand_1 = __webpack_require__(8672);
-var GetBucketAclCommand_1 = __webpack_require__(11347);
-var GetBucketAnalyticsConfigurationCommand_1 = __webpack_require__(93389);
-var GetBucketCorsCommand_1 = __webpack_require__(89450);
-var GetBucketEncryptionCommand_1 = __webpack_require__(7264);
-var GetBucketInventoryConfigurationCommand_1 = __webpack_require__(10726);
-var GetBucketLifecycleCommand_1 = __webpack_require__(97622);
-var GetBucketLifecycleConfigurationCommand_1 = __webpack_require__(30931);
-var GetBucketLocationCommand_1 = __webpack_require__(32459);
-var GetBucketLoggingCommand_1 = __webpack_require__(82039);
-var GetBucketMetricsConfigurationCommand_1 = __webpack_require__(14391);
-var GetBucketNotificationCommand_1 = __webpack_require__(7645);
-var GetBucketNotificationConfigurationCommand_1 = __webpack_require__(11885);
-var GetBucketPolicyCommand_1 = __webpack_require__(55051);
-var GetBucketReplicationCommand_1 = __webpack_require__(10547);
-var GetBucketRequestPaymentCommand_1 = __webpack_require__(76044);
-var GetBucketTaggingCommand_1 = __webpack_require__(14721);
-var GetBucketVersioningCommand_1 = __webpack_require__(99133);
-var GetBucketWebsiteCommand_1 = __webpack_require__(47543);
-var GetObjectAclCommand_1 = __webpack_require__(71744);
-var GetObjectCommand_1 = __webpack_require__(78242);
-var GetObjectTaggingCommand_1 = __webpack_require__(32104);
-var GetObjectTorrentCommand_1 = __webpack_require__(85541);
-var HeadBucketCommand_1 = __webpack_require__(26930);
-var HeadObjectCommand_1 = __webpack_require__(4493);
-var ListBucketAnalyticsConfigurationsCommand_1 = __webpack_require__(47879);
-var ListBucketInventoryConfigurationsCommand_1 = __webpack_require__(42335);
-var ListBucketMetricsConfigurationsCommand_1 = __webpack_require__(83107);
-var ListBucketsCommand_1 = __webpack_require__(14705);
-var ListMultipartUploadsCommand_1 = __webpack_require__(54283);
-var ListObjectVersionsCommand_1 = __webpack_require__(76786);
-var ListObjectsCommand_1 = __webpack_require__(11021);
-var ListObjectsV2Command_1 = __webpack_require__(46098);
-var ListPartsCommand_1 = __webpack_require__(69851);
-var PutBucketAccelerateConfigurationCommand_1 = __webpack_require__(16488);
-var PutBucketAclCommand_1 = __webpack_require__(52835);
-var PutBucketAnalyticsConfigurationCommand_1 = __webpack_require__(79573);
-var PutBucketCorsCommand_1 = __webpack_require__(47671);
-var PutBucketEncryptionCommand_1 = __webpack_require__(88138);
-var PutBucketInventoryConfigurationCommand_1 = __webpack_require__(11979);
-var PutBucketLifecycleCommand_1 = __webpack_require__(42831);
-var PutBucketLifecycleConfigurationCommand_1 = __webpack_require__(6642);
-var PutBucketLoggingCommand_1 = __webpack_require__(64732);
-var PutBucketMetricsConfigurationCommand_1 = __webpack_require__(66294);
-var PutBucketNotificationCommand_1 = __webpack_require__(16837);
-var PutBucketNotificationConfigurationCommand_1 = __webpack_require__(61430);
-var PutBucketPolicyCommand_1 = __webpack_require__(39048);
-var PutBucketReplicationCommand_1 = __webpack_require__(44288);
-var PutBucketRequestPaymentCommand_1 = __webpack_require__(43133);
-var PutBucketTaggingCommand_1 = __webpack_require__(68940);
-var PutBucketVersioningCommand_1 = __webpack_require__(56047);
-var PutBucketWebsiteCommand_1 = __webpack_require__(22491);
-var PutObjectAclCommand_1 = __webpack_require__(52769);
-var PutObjectCommand_1 = __webpack_require__(75007);
-var PutObjectTaggingCommand_1 = __webpack_require__(73377);
-var RestoreObjectCommand_1 = __webpack_require__(50613);
-var SelectObjectContentCommand_1 = __webpack_require__(71476);
-var UploadPartCommand_1 = __webpack_require__(1946);
-var UploadPartCopyCommand_1 = __webpack_require__(67354);
+var tslib_1 = __nccwpck_require__(4351);
+var S3Client_1 = __nccwpck_require__(8833);
+var AbortMultipartUploadCommand_1 = __nccwpck_require__(30455);
+var CompleteMultipartUploadCommand_1 = __nccwpck_require__(39952);
+var CopyObjectCommand_1 = __nccwpck_require__(8842);
+var CreateBucketCommand_1 = __nccwpck_require__(41886);
+var CreateMultipartUploadCommand_1 = __nccwpck_require__(97899);
+var DeleteBucketAnalyticsConfigurationCommand_1 = __nccwpck_require__(1295);
+var DeleteBucketCommand_1 = __nccwpck_require__(81629);
+var DeleteBucketCorsCommand_1 = __nccwpck_require__(7682);
+var DeleteBucketEncryptionCommand_1 = __nccwpck_require__(79727);
+var DeleteBucketInventoryConfigurationCommand_1 = __nccwpck_require__(46927);
+var DeleteBucketLifecycleCommand_1 = __nccwpck_require__(95010);
+var DeleteBucketMetricsConfigurationCommand_1 = __nccwpck_require__(86030);
+var DeleteBucketPolicyCommand_1 = __nccwpck_require__(58774);
+var DeleteBucketReplicationCommand_1 = __nccwpck_require__(33723);
+var DeleteBucketTaggingCommand_1 = __nccwpck_require__(53827);
+var DeleteBucketWebsiteCommand_1 = __nccwpck_require__(89521);
+var DeleteObjectCommand_1 = __nccwpck_require__(27864);
+var DeleteObjectTaggingCommand_1 = __nccwpck_require__(89978);
+var DeleteObjectsCommand_1 = __nccwpck_require__(74256);
+var GetBucketAccelerateConfigurationCommand_1 = __nccwpck_require__(8672);
+var GetBucketAclCommand_1 = __nccwpck_require__(11347);
+var GetBucketAnalyticsConfigurationCommand_1 = __nccwpck_require__(93389);
+var GetBucketCorsCommand_1 = __nccwpck_require__(89450);
+var GetBucketEncryptionCommand_1 = __nccwpck_require__(7264);
+var GetBucketInventoryConfigurationCommand_1 = __nccwpck_require__(10726);
+var GetBucketLifecycleCommand_1 = __nccwpck_require__(97622);
+var GetBucketLifecycleConfigurationCommand_1 = __nccwpck_require__(30931);
+var GetBucketLocationCommand_1 = __nccwpck_require__(32459);
+var GetBucketLoggingCommand_1 = __nccwpck_require__(82039);
+var GetBucketMetricsConfigurationCommand_1 = __nccwpck_require__(14391);
+var GetBucketNotificationCommand_1 = __nccwpck_require__(7645);
+var GetBucketNotificationConfigurationCommand_1 = __nccwpck_require__(11885);
+var GetBucketPolicyCommand_1 = __nccwpck_require__(55051);
+var GetBucketReplicationCommand_1 = __nccwpck_require__(10547);
+var GetBucketRequestPaymentCommand_1 = __nccwpck_require__(76044);
+var GetBucketTaggingCommand_1 = __nccwpck_require__(14721);
+var GetBucketVersioningCommand_1 = __nccwpck_require__(99133);
+var GetBucketWebsiteCommand_1 = __nccwpck_require__(47543);
+var GetObjectAclCommand_1 = __nccwpck_require__(71744);
+var GetObjectCommand_1 = __nccwpck_require__(78242);
+var GetObjectTaggingCommand_1 = __nccwpck_require__(32104);
+var GetObjectTorrentCommand_1 = __nccwpck_require__(85541);
+var HeadBucketCommand_1 = __nccwpck_require__(26930);
+var HeadObjectCommand_1 = __nccwpck_require__(4493);
+var ListBucketAnalyticsConfigurationsCommand_1 = __nccwpck_require__(47879);
+var ListBucketInventoryConfigurationsCommand_1 = __nccwpck_require__(42335);
+var ListBucketMetricsConfigurationsCommand_1 = __nccwpck_require__(83107);
+var ListBucketsCommand_1 = __nccwpck_require__(14705);
+var ListMultipartUploadsCommand_1 = __nccwpck_require__(54283);
+var ListObjectVersionsCommand_1 = __nccwpck_require__(76786);
+var ListObjectsCommand_1 = __nccwpck_require__(11021);
+var ListObjectsV2Command_1 = __nccwpck_require__(46098);
+var ListPartsCommand_1 = __nccwpck_require__(69851);
+var PutBucketAccelerateConfigurationCommand_1 = __nccwpck_require__(16488);
+var PutBucketAclCommand_1 = __nccwpck_require__(52835);
+var PutBucketAnalyticsConfigurationCommand_1 = __nccwpck_require__(79573);
+var PutBucketCorsCommand_1 = __nccwpck_require__(47671);
+var PutBucketEncryptionCommand_1 = __nccwpck_require__(88138);
+var PutBucketInventoryConfigurationCommand_1 = __nccwpck_require__(11979);
+var PutBucketLifecycleCommand_1 = __nccwpck_require__(42831);
+var PutBucketLifecycleConfigurationCommand_1 = __nccwpck_require__(6642);
+var PutBucketLoggingCommand_1 = __nccwpck_require__(64732);
+var PutBucketMetricsConfigurationCommand_1 = __nccwpck_require__(66294);
+var PutBucketNotificationCommand_1 = __nccwpck_require__(16837);
+var PutBucketNotificationConfigurationCommand_1 = __nccwpck_require__(61430);
+var PutBucketPolicyCommand_1 = __nccwpck_require__(39048);
+var PutBucketReplicationCommand_1 = __nccwpck_require__(44288);
+var PutBucketRequestPaymentCommand_1 = __nccwpck_require__(43133);
+var PutBucketTaggingCommand_1 = __nccwpck_require__(68940);
+var PutBucketVersioningCommand_1 = __nccwpck_require__(56047);
+var PutBucketWebsiteCommand_1 = __nccwpck_require__(22491);
+var PutObjectAclCommand_1 = __nccwpck_require__(52769);
+var PutObjectCommand_1 = __nccwpck_require__(75007);
+var PutObjectTaggingCommand_1 = __nccwpck_require__(73377);
+var RestoreObjectCommand_1 = __nccwpck_require__(50613);
+var SelectObjectContentCommand_1 = __nccwpck_require__(71476);
+var UploadPartCommand_1 = __nccwpck_require__(1946);
+var UploadPartCopyCommand_1 = __nccwpck_require__(67354);
 var S3 = /** @class */ (function (_super) {
     tslib_1.__extends(S3, _super);
     function S3() {
@@ -2771,22 +3151,22 @@ exports.S3 = S3;
 /***/ }),
 
 /***/ 8833:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_config_resolver = __webpack_require__(17808);
-var __aws_sdk_middleware_content_length = __webpack_require__(40802);
-var __aws_sdk_middleware_expect_continue = __webpack_require__(62645);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_serializer = __webpack_require__(15910);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_retry_middleware = __webpack_require__(57901);
-var __aws_sdk_signing_middleware = __webpack_require__(55824);
-var __aws_sdk_util_user_agent_node = __webpack_require__(40185);
-var S3Configuration_1 = __webpack_require__(1525);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var __aws_sdk_config_resolver = __nccwpck_require__(17808);
+var __aws_sdk_middleware_content_length = __nccwpck_require__(40802);
+var __aws_sdk_middleware_expect_continue = __nccwpck_require__(62645);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_serializer = __nccwpck_require__(15910);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_retry_middleware = __nccwpck_require__(57901);
+var __aws_sdk_signing_middleware = __nccwpck_require__(55824);
+var __aws_sdk_util_user_agent_node = __nccwpck_require__(40185);
+var S3Configuration_1 = __nccwpck_require__(1525);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 var S3Client = /** @class */ (function () {
     function S3Client(configuration) {
         this.middlewareStack = new __aws_sdk_middleware_stack.MiddlewareStack();
@@ -2853,27 +3233,27 @@ exports.S3Client = S3Client;
 /***/ }),
 
 /***/ 1525:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_core_handler = __webpack_require__(64818);
-var __aws_sdk_credential_provider_node = __webpack_require__(44091);
-var __aws_sdk_hash_node = __webpack_require__(53612);
-var __aws_sdk_hash_stream_node = __webpack_require__(95594);
-var __aws_sdk_node_http_handler = __webpack_require__(17937);
-var __aws_sdk_protocol_rest = __webpack_require__(88504);
-var __aws_sdk_region_provider = __webpack_require__(19948);
-var __aws_sdk_s3_error_unmarshaller = __webpack_require__(11839);
-var __aws_sdk_signature_v4 = __webpack_require__(18550);
-var __aws_sdk_stream_collector_node = __webpack_require__(18188);
-var __aws_sdk_url_parser_node = __webpack_require__(4560);
-var __aws_sdk_util_base64_node = __webpack_require__(31906);
-var __aws_sdk_util_body_length_node = __webpack_require__(55479);
-var __aws_sdk_util_utf8_node = __webpack_require__(19930);
-var __aws_sdk_xml_body_builder = __webpack_require__(53419);
-var __aws_sdk_xml_body_parser = __webpack_require__(52624);
+var __aws_sdk_core_handler = __nccwpck_require__(64818);
+var __aws_sdk_credential_provider_node = __nccwpck_require__(44091);
+var __aws_sdk_hash_node = __nccwpck_require__(53612);
+var __aws_sdk_hash_stream_node = __nccwpck_require__(95594);
+var __aws_sdk_node_http_handler = __nccwpck_require__(17937);
+var __aws_sdk_protocol_rest = __nccwpck_require__(88504);
+var __aws_sdk_region_provider = __nccwpck_require__(19948);
+var __aws_sdk_s3_error_unmarshaller = __nccwpck_require__(11839);
+var __aws_sdk_signature_v4 = __nccwpck_require__(18550);
+var __aws_sdk_stream_collector_node = __nccwpck_require__(18188);
+var __aws_sdk_url_parser_node = __nccwpck_require__(4560);
+var __aws_sdk_util_base64_node = __nccwpck_require__(31906);
+var __aws_sdk_util_body_length_node = __nccwpck_require__(55479);
+var __aws_sdk_util_utf8_node = __nccwpck_require__(19930);
+var __aws_sdk_xml_body_builder = __nccwpck_require__(53419);
+var __aws_sdk_xml_body_parser = __nccwpck_require__(52624);
 exports.configurationProperties = {
     profile: {},
     maxRedirects: {
@@ -3034,14 +3414,14 @@ exports.configurationProperties = {
 /***/ }),
 
 /***/ 30455:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var AbortMultipartUpload_1 = __webpack_require__(59723);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var AbortMultipartUpload_1 = __nccwpck_require__(59723);
 var AbortMultipartUploadCommand = /** @class */ (function () {
     function AbortMultipartUploadCommand(input) {
         this.input = input;
@@ -3074,14 +3454,14 @@ exports.AbortMultipartUploadCommand = AbortMultipartUploadCommand;
 /***/ }),
 
 /***/ 39952:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var CompleteMultipartUpload_1 = __webpack_require__(79332);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var CompleteMultipartUpload_1 = __nccwpck_require__(79332);
 var CompleteMultipartUploadCommand = /** @class */ (function () {
     function CompleteMultipartUploadCommand(input) {
         this.input = input;
@@ -3114,15 +3494,15 @@ exports.CompleteMultipartUploadCommand = CompleteMultipartUploadCommand;
 /***/ }),
 
 /***/ 8842:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var CopyObject_1 = __webpack_require__(50134);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var CopyObject_1 = __nccwpck_require__(50134);
 var CopyObjectCommand = /** @class */ (function () {
     function CopyObjectCommand(input) {
         this.input = input;
@@ -3173,14 +3553,14 @@ exports.CopyObjectCommand = CopyObjectCommand;
 /***/ }),
 
 /***/ 41886:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_location_constraint_middleware = __webpack_require__(95686);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var CreateBucket_1 = __webpack_require__(93289);
+var __aws_sdk_location_constraint_middleware = __nccwpck_require__(95686);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var CreateBucket_1 = __nccwpck_require__(93289);
 var CreateBucketCommand = /** @class */ (function () {
     function CreateBucketCommand(input) {
         this.input = input;
@@ -3208,15 +3588,15 @@ exports.CreateBucketCommand = CreateBucketCommand;
 /***/ }),
 
 /***/ 97899:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var CreateMultipartUpload_1 = __webpack_require__(41632);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var CreateMultipartUpload_1 = __nccwpck_require__(41632);
 var CreateMultipartUploadCommand = /** @class */ (function () {
     function CreateMultipartUploadCommand(input) {
         this.input = input;
@@ -3263,14 +3643,14 @@ exports.CreateMultipartUploadCommand = CreateMultipartUploadCommand;
 /***/ }),
 
 /***/ 1295:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketAnalyticsConfiguration_1 = __webpack_require__(22951);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketAnalyticsConfiguration_1 = __nccwpck_require__(22951);
 var DeleteBucketAnalyticsConfigurationCommand = /** @class */ (function () {
     function DeleteBucketAnalyticsConfigurationCommand(input) {
         this.input = input;
@@ -3303,13 +3683,13 @@ exports.DeleteBucketAnalyticsConfigurationCommand = DeleteBucketAnalyticsConfigu
 /***/ }),
 
 /***/ 81629:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucket_1 = __webpack_require__(56150);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucket_1 = __nccwpck_require__(56150);
 var DeleteBucketCommand = /** @class */ (function () {
     function DeleteBucketCommand(input) {
         this.input = input;
@@ -3333,14 +3713,14 @@ exports.DeleteBucketCommand = DeleteBucketCommand;
 /***/ }),
 
 /***/ 7682:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketCors_1 = __webpack_require__(20486);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketCors_1 = __nccwpck_require__(20486);
 var DeleteBucketCorsCommand = /** @class */ (function () {
     function DeleteBucketCorsCommand(input) {
         this.input = input;
@@ -3373,14 +3753,14 @@ exports.DeleteBucketCorsCommand = DeleteBucketCorsCommand;
 /***/ }),
 
 /***/ 79727:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketEncryption_1 = __webpack_require__(79423);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketEncryption_1 = __nccwpck_require__(79423);
 var DeleteBucketEncryptionCommand = /** @class */ (function () {
     function DeleteBucketEncryptionCommand(input) {
         this.input = input;
@@ -3413,14 +3793,14 @@ exports.DeleteBucketEncryptionCommand = DeleteBucketEncryptionCommand;
 /***/ }),
 
 /***/ 46927:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketInventoryConfiguration_1 = __webpack_require__(72409);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketInventoryConfiguration_1 = __nccwpck_require__(72409);
 var DeleteBucketInventoryConfigurationCommand = /** @class */ (function () {
     function DeleteBucketInventoryConfigurationCommand(input) {
         this.input = input;
@@ -3453,14 +3833,14 @@ exports.DeleteBucketInventoryConfigurationCommand = DeleteBucketInventoryConfigu
 /***/ }),
 
 /***/ 95010:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketLifecycle_1 = __webpack_require__(16284);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketLifecycle_1 = __nccwpck_require__(16284);
 var DeleteBucketLifecycleCommand = /** @class */ (function () {
     function DeleteBucketLifecycleCommand(input) {
         this.input = input;
@@ -3493,14 +3873,14 @@ exports.DeleteBucketLifecycleCommand = DeleteBucketLifecycleCommand;
 /***/ }),
 
 /***/ 86030:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketMetricsConfiguration_1 = __webpack_require__(93291);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketMetricsConfiguration_1 = __nccwpck_require__(93291);
 var DeleteBucketMetricsConfigurationCommand = /** @class */ (function () {
     function DeleteBucketMetricsConfigurationCommand(input) {
         this.input = input;
@@ -3533,14 +3913,14 @@ exports.DeleteBucketMetricsConfigurationCommand = DeleteBucketMetricsConfigurati
 /***/ }),
 
 /***/ 58774:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketPolicy_1 = __webpack_require__(97383);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketPolicy_1 = __nccwpck_require__(97383);
 var DeleteBucketPolicyCommand = /** @class */ (function () {
     function DeleteBucketPolicyCommand(input) {
         this.input = input;
@@ -3573,14 +3953,14 @@ exports.DeleteBucketPolicyCommand = DeleteBucketPolicyCommand;
 /***/ }),
 
 /***/ 33723:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketReplication_1 = __webpack_require__(43537);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketReplication_1 = __nccwpck_require__(43537);
 var DeleteBucketReplicationCommand = /** @class */ (function () {
     function DeleteBucketReplicationCommand(input) {
         this.input = input;
@@ -3613,14 +3993,14 @@ exports.DeleteBucketReplicationCommand = DeleteBucketReplicationCommand;
 /***/ }),
 
 /***/ 53827:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketTagging_1 = __webpack_require__(42904);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketTagging_1 = __nccwpck_require__(42904);
 var DeleteBucketTaggingCommand = /** @class */ (function () {
     function DeleteBucketTaggingCommand(input) {
         this.input = input;
@@ -3653,14 +4033,14 @@ exports.DeleteBucketTaggingCommand = DeleteBucketTaggingCommand;
 /***/ }),
 
 /***/ 89521:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteBucketWebsite_1 = __webpack_require__(81545);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteBucketWebsite_1 = __nccwpck_require__(81545);
 var DeleteBucketWebsiteCommand = /** @class */ (function () {
     function DeleteBucketWebsiteCommand(input) {
         this.input = input;
@@ -3693,14 +4073,14 @@ exports.DeleteBucketWebsiteCommand = DeleteBucketWebsiteCommand;
 /***/ }),
 
 /***/ 27864:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteObject_1 = __webpack_require__(49863);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteObject_1 = __nccwpck_require__(49863);
 var DeleteObjectCommand = /** @class */ (function () {
     function DeleteObjectCommand(input) {
         this.input = input;
@@ -3733,14 +4113,14 @@ exports.DeleteObjectCommand = DeleteObjectCommand;
 /***/ }),
 
 /***/ 89978:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteObjectTagging_1 = __webpack_require__(99666);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteObjectTagging_1 = __nccwpck_require__(99666);
 var DeleteObjectTaggingCommand = /** @class */ (function () {
     function DeleteObjectTaggingCommand(input) {
         this.input = input;
@@ -3773,15 +4153,15 @@ exports.DeleteObjectTaggingCommand = DeleteObjectTaggingCommand;
 /***/ }),
 
 /***/ 74256:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var DeleteObjects_1 = __webpack_require__(97001);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var DeleteObjects_1 = __nccwpck_require__(97001);
 var DeleteObjectsCommand = /** @class */ (function () {
     function DeleteObjectsCommand(input) {
         this.input = input;
@@ -3819,15 +4199,15 @@ exports.DeleteObjectsCommand = DeleteObjectsCommand;
 /***/ }),
 
 /***/ 8672:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketAccelerateConfiguration_1 = __webpack_require__(69140);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketAccelerateConfiguration_1 = __nccwpck_require__(69140);
 var GetBucketAccelerateConfigurationCommand = /** @class */ (function () {
     function GetBucketAccelerateConfigurationCommand(input) {
         this.input = input;
@@ -3867,15 +4247,15 @@ exports.GetBucketAccelerateConfigurationCommand = GetBucketAccelerateConfigurati
 /***/ }),
 
 /***/ 11347:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketAcl_1 = __webpack_require__(6129);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketAcl_1 = __nccwpck_require__(6129);
 var GetBucketAclCommand = /** @class */ (function () {
     function GetBucketAclCommand(input) {
         this.input = input;
@@ -3915,15 +4295,15 @@ exports.GetBucketAclCommand = GetBucketAclCommand;
 /***/ }),
 
 /***/ 93389:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketAnalyticsConfiguration_1 = __webpack_require__(16446);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketAnalyticsConfiguration_1 = __nccwpck_require__(16446);
 var GetBucketAnalyticsConfigurationCommand = /** @class */ (function () {
     function GetBucketAnalyticsConfigurationCommand(input) {
         this.input = input;
@@ -3963,15 +4343,15 @@ exports.GetBucketAnalyticsConfigurationCommand = GetBucketAnalyticsConfiguration
 /***/ }),
 
 /***/ 89450:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketCors_1 = __webpack_require__(60766);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketCors_1 = __nccwpck_require__(60766);
 var GetBucketCorsCommand = /** @class */ (function () {
     function GetBucketCorsCommand(input) {
         this.input = input;
@@ -4011,15 +4391,15 @@ exports.GetBucketCorsCommand = GetBucketCorsCommand;
 /***/ }),
 
 /***/ 7264:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketEncryption_1 = __webpack_require__(71215);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketEncryption_1 = __nccwpck_require__(71215);
 var GetBucketEncryptionCommand = /** @class */ (function () {
     function GetBucketEncryptionCommand(input) {
         this.input = input;
@@ -4059,15 +4439,15 @@ exports.GetBucketEncryptionCommand = GetBucketEncryptionCommand;
 /***/ }),
 
 /***/ 10726:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketInventoryConfiguration_1 = __webpack_require__(83163);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketInventoryConfiguration_1 = __nccwpck_require__(83163);
 var GetBucketInventoryConfigurationCommand = /** @class */ (function () {
     function GetBucketInventoryConfigurationCommand(input) {
         this.input = input;
@@ -4107,15 +4487,15 @@ exports.GetBucketInventoryConfigurationCommand = GetBucketInventoryConfiguration
 /***/ }),
 
 /***/ 97622:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketLifecycle_1 = __webpack_require__(5706);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketLifecycle_1 = __nccwpck_require__(5706);
 var GetBucketLifecycleCommand = /** @class */ (function () {
     function GetBucketLifecycleCommand(input) {
         this.input = input;
@@ -4155,15 +4535,15 @@ exports.GetBucketLifecycleCommand = GetBucketLifecycleCommand;
 /***/ }),
 
 /***/ 30931:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketLifecycleConfiguration_1 = __webpack_require__(76803);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketLifecycleConfiguration_1 = __nccwpck_require__(76803);
 var GetBucketLifecycleConfigurationCommand = /** @class */ (function () {
     function GetBucketLifecycleConfigurationCommand(input) {
         this.input = input;
@@ -4203,15 +4583,15 @@ exports.GetBucketLifecycleConfigurationCommand = GetBucketLifecycleConfiguration
 /***/ }),
 
 /***/ 32459:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketLocation_1 = __webpack_require__(5719);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketLocation_1 = __nccwpck_require__(5719);
 var GetBucketLocationCommand = /** @class */ (function () {
     function GetBucketLocationCommand(input) {
         this.input = input;
@@ -4251,15 +4631,15 @@ exports.GetBucketLocationCommand = GetBucketLocationCommand;
 /***/ }),
 
 /***/ 82039:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketLogging_1 = __webpack_require__(98760);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketLogging_1 = __nccwpck_require__(98760);
 var GetBucketLoggingCommand = /** @class */ (function () {
     function GetBucketLoggingCommand(input) {
         this.input = input;
@@ -4299,15 +4679,15 @@ exports.GetBucketLoggingCommand = GetBucketLoggingCommand;
 /***/ }),
 
 /***/ 14391:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketMetricsConfiguration_1 = __webpack_require__(49515);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketMetricsConfiguration_1 = __nccwpck_require__(49515);
 var GetBucketMetricsConfigurationCommand = /** @class */ (function () {
     function GetBucketMetricsConfigurationCommand(input) {
         this.input = input;
@@ -4347,15 +4727,15 @@ exports.GetBucketMetricsConfigurationCommand = GetBucketMetricsConfigurationComm
 /***/ }),
 
 /***/ 7645:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketNotification_1 = __webpack_require__(36755);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketNotification_1 = __nccwpck_require__(36755);
 var GetBucketNotificationCommand = /** @class */ (function () {
     function GetBucketNotificationCommand(input) {
         this.input = input;
@@ -4395,15 +4775,15 @@ exports.GetBucketNotificationCommand = GetBucketNotificationCommand;
 /***/ }),
 
 /***/ 11885:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketNotificationConfiguration_1 = __webpack_require__(88391);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketNotificationConfiguration_1 = __nccwpck_require__(88391);
 var GetBucketNotificationConfigurationCommand = /** @class */ (function () {
     function GetBucketNotificationConfigurationCommand(input) {
         this.input = input;
@@ -4443,15 +4823,15 @@ exports.GetBucketNotificationConfigurationCommand = GetBucketNotificationConfigu
 /***/ }),
 
 /***/ 55051:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketPolicy_1 = __webpack_require__(7208);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketPolicy_1 = __nccwpck_require__(7208);
 var GetBucketPolicyCommand = /** @class */ (function () {
     function GetBucketPolicyCommand(input) {
         this.input = input;
@@ -4491,15 +4871,15 @@ exports.GetBucketPolicyCommand = GetBucketPolicyCommand;
 /***/ }),
 
 /***/ 10547:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketReplication_1 = __webpack_require__(92178);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketReplication_1 = __nccwpck_require__(92178);
 var GetBucketReplicationCommand = /** @class */ (function () {
     function GetBucketReplicationCommand(input) {
         this.input = input;
@@ -4539,15 +4919,15 @@ exports.GetBucketReplicationCommand = GetBucketReplicationCommand;
 /***/ }),
 
 /***/ 76044:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketRequestPayment_1 = __webpack_require__(65633);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketRequestPayment_1 = __nccwpck_require__(65633);
 var GetBucketRequestPaymentCommand = /** @class */ (function () {
     function GetBucketRequestPaymentCommand(input) {
         this.input = input;
@@ -4587,15 +4967,15 @@ exports.GetBucketRequestPaymentCommand = GetBucketRequestPaymentCommand;
 /***/ }),
 
 /***/ 14721:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketTagging_1 = __webpack_require__(9760);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketTagging_1 = __nccwpck_require__(9760);
 var GetBucketTaggingCommand = /** @class */ (function () {
     function GetBucketTaggingCommand(input) {
         this.input = input;
@@ -4635,15 +5015,15 @@ exports.GetBucketTaggingCommand = GetBucketTaggingCommand;
 /***/ }),
 
 /***/ 99133:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketVersioning_1 = __webpack_require__(40050);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketVersioning_1 = __nccwpck_require__(40050);
 var GetBucketVersioningCommand = /** @class */ (function () {
     function GetBucketVersioningCommand(input) {
         this.input = input;
@@ -4683,15 +5063,15 @@ exports.GetBucketVersioningCommand = GetBucketVersioningCommand;
 /***/ }),
 
 /***/ 47543:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetBucketWebsite_1 = __webpack_require__(4040);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetBucketWebsite_1 = __nccwpck_require__(4040);
 var GetBucketWebsiteCommand = /** @class */ (function () {
     function GetBucketWebsiteCommand(input) {
         this.input = input;
@@ -4731,15 +5111,15 @@ exports.GetBucketWebsiteCommand = GetBucketWebsiteCommand;
 /***/ }),
 
 /***/ 71744:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetObjectAcl_1 = __webpack_require__(90580);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetObjectAcl_1 = __nccwpck_require__(90580);
 var GetObjectAclCommand = /** @class */ (function () {
     function GetObjectAclCommand(input) {
         this.input = input;
@@ -4779,16 +5159,16 @@ exports.GetObjectAclCommand = GetObjectAclCommand;
 /***/ }),
 
 /***/ 78242:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var GetObject_1 = __webpack_require__(96494);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var GetObject_1 = __nccwpck_require__(96494);
 var GetObjectCommand = /** @class */ (function () {
     function GetObjectCommand(input) {
         this.input = input;
@@ -4842,15 +5222,15 @@ exports.GetObjectCommand = GetObjectCommand;
 /***/ }),
 
 /***/ 32104:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetObjectTagging_1 = __webpack_require__(93721);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetObjectTagging_1 = __nccwpck_require__(93721);
 var GetObjectTaggingCommand = /** @class */ (function () {
     function GetObjectTaggingCommand(input) {
         this.input = input;
@@ -4890,15 +5270,15 @@ exports.GetObjectTaggingCommand = GetObjectTaggingCommand;
 /***/ }),
 
 /***/ 85541:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var GetObjectTorrent_1 = __webpack_require__(56377);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var GetObjectTorrent_1 = __nccwpck_require__(56377);
 var GetObjectTorrentCommand = /** @class */ (function () {
     function GetObjectTorrentCommand(input) {
         this.input = input;
@@ -4938,15 +5318,15 @@ exports.GetObjectTorrentCommand = GetObjectTorrentCommand;
 /***/ }),
 
 /***/ 26930:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var HeadBucket_1 = __webpack_require__(50595);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var HeadBucket_1 = __nccwpck_require__(50595);
 var HeadBucketCommand = /** @class */ (function () {
     function HeadBucketCommand(input) {
         this.input = input;
@@ -4986,16 +5366,16 @@ exports.HeadBucketCommand = HeadBucketCommand;
 /***/ }),
 
 /***/ 4493:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var HeadObject_1 = __webpack_require__(31386);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var HeadObject_1 = __nccwpck_require__(31386);
 var HeadObjectCommand = /** @class */ (function () {
     function HeadObjectCommand(input) {
         this.input = input;
@@ -5049,15 +5429,15 @@ exports.HeadObjectCommand = HeadObjectCommand;
 /***/ }),
 
 /***/ 47879:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListBucketAnalyticsConfigurations_1 = __webpack_require__(24177);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListBucketAnalyticsConfigurations_1 = __nccwpck_require__(24177);
 var ListBucketAnalyticsConfigurationsCommand = /** @class */ (function () {
     function ListBucketAnalyticsConfigurationsCommand(input) {
         this.input = input;
@@ -5097,15 +5477,15 @@ exports.ListBucketAnalyticsConfigurationsCommand = ListBucketAnalyticsConfigurat
 /***/ }),
 
 /***/ 42335:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListBucketInventoryConfigurations_1 = __webpack_require__(73934);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListBucketInventoryConfigurations_1 = __nccwpck_require__(73934);
 var ListBucketInventoryConfigurationsCommand = /** @class */ (function () {
     function ListBucketInventoryConfigurationsCommand(input) {
         this.input = input;
@@ -5145,15 +5525,15 @@ exports.ListBucketInventoryConfigurationsCommand = ListBucketInventoryConfigurat
 /***/ }),
 
 /***/ 83107:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListBucketMetricsConfigurations_1 = __webpack_require__(4194);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListBucketMetricsConfigurations_1 = __nccwpck_require__(4194);
 var ListBucketMetricsConfigurationsCommand = /** @class */ (function () {
     function ListBucketMetricsConfigurationsCommand(input) {
         this.input = input;
@@ -5193,14 +5573,14 @@ exports.ListBucketMetricsConfigurationsCommand = ListBucketMetricsConfigurations
 /***/ }),
 
 /***/ 14705:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListBuckets_1 = __webpack_require__(27252);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListBuckets_1 = __nccwpck_require__(27252);
 var ListBucketsCommand = /** @class */ (function () {
     function ListBucketsCommand(input) {
         this.input = input;
@@ -5231,15 +5611,15 @@ exports.ListBucketsCommand = ListBucketsCommand;
 /***/ }),
 
 /***/ 54283:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListMultipartUploads_1 = __webpack_require__(39893);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListMultipartUploads_1 = __nccwpck_require__(39893);
 var ListMultipartUploadsCommand = /** @class */ (function () {
     function ListMultipartUploadsCommand(input) {
         this.input = input;
@@ -5279,15 +5659,15 @@ exports.ListMultipartUploadsCommand = ListMultipartUploadsCommand;
 /***/ }),
 
 /***/ 76786:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListObjectVersions_1 = __webpack_require__(79762);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListObjectVersions_1 = __nccwpck_require__(79762);
 var ListObjectVersionsCommand = /** @class */ (function () {
     function ListObjectVersionsCommand(input) {
         this.input = input;
@@ -5327,15 +5707,15 @@ exports.ListObjectVersionsCommand = ListObjectVersionsCommand;
 /***/ }),
 
 /***/ 11021:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListObjects_1 = __webpack_require__(59373);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListObjects_1 = __nccwpck_require__(59373);
 var ListObjectsCommand = /** @class */ (function () {
     function ListObjectsCommand(input) {
         this.input = input;
@@ -5375,15 +5755,15 @@ exports.ListObjectsCommand = ListObjectsCommand;
 /***/ }),
 
 /***/ 46098:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListObjectsV2_1 = __webpack_require__(25285);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListObjectsV2_1 = __nccwpck_require__(25285);
 var ListObjectsV2Command = /** @class */ (function () {
     function ListObjectsV2Command(input) {
         this.input = input;
@@ -5423,15 +5803,15 @@ exports.ListObjectsV2Command = ListObjectsV2Command;
 /***/ }),
 
 /***/ 69851:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var ListParts_1 = __webpack_require__(61574);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var ListParts_1 = __nccwpck_require__(61574);
 var ListPartsCommand = /** @class */ (function () {
     function ListPartsCommand(input) {
         this.input = input;
@@ -5471,14 +5851,14 @@ exports.ListPartsCommand = ListPartsCommand;
 /***/ }),
 
 /***/ 16488:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketAccelerateConfiguration_1 = __webpack_require__(50644);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketAccelerateConfiguration_1 = __nccwpck_require__(50644);
 var PutBucketAccelerateConfigurationCommand = /** @class */ (function () {
     function PutBucketAccelerateConfigurationCommand(input) {
         this.input = input;
@@ -5511,14 +5891,14 @@ exports.PutBucketAccelerateConfigurationCommand = PutBucketAccelerateConfigurati
 /***/ }),
 
 /***/ 52835:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketAcl_1 = __webpack_require__(79611);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketAcl_1 = __nccwpck_require__(79611);
 var PutBucketAclCommand = /** @class */ (function () {
     function PutBucketAclCommand(input) {
         this.input = input;
@@ -5551,14 +5931,14 @@ exports.PutBucketAclCommand = PutBucketAclCommand;
 /***/ }),
 
 /***/ 79573:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketAnalyticsConfiguration_1 = __webpack_require__(43421);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketAnalyticsConfiguration_1 = __nccwpck_require__(43421);
 var PutBucketAnalyticsConfigurationCommand = /** @class */ (function () {
     function PutBucketAnalyticsConfigurationCommand(input) {
         this.input = input;
@@ -5591,15 +5971,15 @@ exports.PutBucketAnalyticsConfigurationCommand = PutBucketAnalyticsConfiguration
 /***/ }),
 
 /***/ 47671:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketCors_1 = __webpack_require__(83341);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketCors_1 = __nccwpck_require__(83341);
 var PutBucketCorsCommand = /** @class */ (function () {
     function PutBucketCorsCommand(input) {
         this.input = input;
@@ -5637,14 +6017,14 @@ exports.PutBucketCorsCommand = PutBucketCorsCommand;
 /***/ }),
 
 /***/ 88138:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketEncryption_1 = __webpack_require__(96599);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketEncryption_1 = __nccwpck_require__(96599);
 var PutBucketEncryptionCommand = /** @class */ (function () {
     function PutBucketEncryptionCommand(input) {
         this.input = input;
@@ -5677,14 +6057,14 @@ exports.PutBucketEncryptionCommand = PutBucketEncryptionCommand;
 /***/ }),
 
 /***/ 11979:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketInventoryConfiguration_1 = __webpack_require__(13225);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketInventoryConfiguration_1 = __nccwpck_require__(13225);
 var PutBucketInventoryConfigurationCommand = /** @class */ (function () {
     function PutBucketInventoryConfigurationCommand(input) {
         this.input = input;
@@ -5717,15 +6097,15 @@ exports.PutBucketInventoryConfigurationCommand = PutBucketInventoryConfiguration
 /***/ }),
 
 /***/ 42831:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketLifecycle_1 = __webpack_require__(99870);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketLifecycle_1 = __nccwpck_require__(99870);
 var PutBucketLifecycleCommand = /** @class */ (function () {
     function PutBucketLifecycleCommand(input) {
         this.input = input;
@@ -5763,15 +6143,15 @@ exports.PutBucketLifecycleCommand = PutBucketLifecycleCommand;
 /***/ }),
 
 /***/ 6642:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketLifecycleConfiguration_1 = __webpack_require__(29695);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketLifecycleConfiguration_1 = __nccwpck_require__(29695);
 var PutBucketLifecycleConfigurationCommand = /** @class */ (function () {
     function PutBucketLifecycleConfigurationCommand(input) {
         this.input = input;
@@ -5809,14 +6189,14 @@ exports.PutBucketLifecycleConfigurationCommand = PutBucketLifecycleConfiguration
 /***/ }),
 
 /***/ 64732:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketLogging_1 = __webpack_require__(82458);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketLogging_1 = __nccwpck_require__(82458);
 var PutBucketLoggingCommand = /** @class */ (function () {
     function PutBucketLoggingCommand(input) {
         this.input = input;
@@ -5849,14 +6229,14 @@ exports.PutBucketLoggingCommand = PutBucketLoggingCommand;
 /***/ }),
 
 /***/ 66294:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketMetricsConfiguration_1 = __webpack_require__(61098);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketMetricsConfiguration_1 = __nccwpck_require__(61098);
 var PutBucketMetricsConfigurationCommand = /** @class */ (function () {
     function PutBucketMetricsConfigurationCommand(input) {
         this.input = input;
@@ -5889,14 +6269,14 @@ exports.PutBucketMetricsConfigurationCommand = PutBucketMetricsConfigurationComm
 /***/ }),
 
 /***/ 16837:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketNotification_1 = __webpack_require__(2757);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketNotification_1 = __nccwpck_require__(2757);
 var PutBucketNotificationCommand = /** @class */ (function () {
     function PutBucketNotificationCommand(input) {
         this.input = input;
@@ -5929,14 +6309,14 @@ exports.PutBucketNotificationCommand = PutBucketNotificationCommand;
 /***/ }),
 
 /***/ 61430:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketNotificationConfiguration_1 = __webpack_require__(33673);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketNotificationConfiguration_1 = __nccwpck_require__(33673);
 var PutBucketNotificationConfigurationCommand = /** @class */ (function () {
     function PutBucketNotificationConfigurationCommand(input) {
         this.input = input;
@@ -5969,15 +6349,15 @@ exports.PutBucketNotificationConfigurationCommand = PutBucketNotificationConfigu
 /***/ }),
 
 /***/ 39048:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketPolicy_1 = __webpack_require__(86115);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketPolicy_1 = __nccwpck_require__(86115);
 var PutBucketPolicyCommand = /** @class */ (function () {
     function PutBucketPolicyCommand(input) {
         this.input = input;
@@ -6015,15 +6395,15 @@ exports.PutBucketPolicyCommand = PutBucketPolicyCommand;
 /***/ }),
 
 /***/ 44288:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketReplication_1 = __webpack_require__(48734);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketReplication_1 = __nccwpck_require__(48734);
 var PutBucketReplicationCommand = /** @class */ (function () {
     function PutBucketReplicationCommand(input) {
         this.input = input;
@@ -6061,14 +6441,14 @@ exports.PutBucketReplicationCommand = PutBucketReplicationCommand;
 /***/ }),
 
 /***/ 43133:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketRequestPayment_1 = __webpack_require__(12870);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketRequestPayment_1 = __nccwpck_require__(12870);
 var PutBucketRequestPaymentCommand = /** @class */ (function () {
     function PutBucketRequestPaymentCommand(input) {
         this.input = input;
@@ -6101,15 +6481,15 @@ exports.PutBucketRequestPaymentCommand = PutBucketRequestPaymentCommand;
 /***/ }),
 
 /***/ 68940:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_apply_body_checksum_middleware = __webpack_require__(68892);
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketTagging_1 = __webpack_require__(7863);
+var __aws_sdk_apply_body_checksum_middleware = __nccwpck_require__(68892);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketTagging_1 = __nccwpck_require__(7863);
 var PutBucketTaggingCommand = /** @class */ (function () {
     function PutBucketTaggingCommand(input) {
         this.input = input;
@@ -6147,14 +6527,14 @@ exports.PutBucketTaggingCommand = PutBucketTaggingCommand;
 /***/ }),
 
 /***/ 56047:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketVersioning_1 = __webpack_require__(87436);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketVersioning_1 = __nccwpck_require__(87436);
 var PutBucketVersioningCommand = /** @class */ (function () {
     function PutBucketVersioningCommand(input) {
         this.input = input;
@@ -6187,14 +6567,14 @@ exports.PutBucketVersioningCommand = PutBucketVersioningCommand;
 /***/ }),
 
 /***/ 22491:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutBucketWebsite_1 = __webpack_require__(14757);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutBucketWebsite_1 = __nccwpck_require__(14757);
 var PutBucketWebsiteCommand = /** @class */ (function () {
     function PutBucketWebsiteCommand(input) {
         this.input = input;
@@ -6227,14 +6607,14 @@ exports.PutBucketWebsiteCommand = PutBucketWebsiteCommand;
 /***/ }),
 
 /***/ 52769:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutObjectAcl_1 = __webpack_require__(30691);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutObjectAcl_1 = __nccwpck_require__(30691);
 var PutObjectAclCommand = /** @class */ (function () {
     function PutObjectAclCommand(input) {
         this.input = input;
@@ -6267,16 +6647,16 @@ exports.PutObjectAclCommand = PutObjectAclCommand;
 /***/ }),
 
 /***/ 75007:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var PutObject_1 = __webpack_require__(96770);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var PutObject_1 = __nccwpck_require__(96770);
 var PutObjectCommand = /** @class */ (function () {
     function PutObjectCommand(input) {
         this.input = input;
@@ -6332,14 +6712,14 @@ exports.PutObjectCommand = PutObjectCommand;
 /***/ }),
 
 /***/ 73377:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var PutObjectTagging_1 = __webpack_require__(33987);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var PutObjectTagging_1 = __nccwpck_require__(33987);
 var PutObjectTaggingCommand = /** @class */ (function () {
     function PutObjectTaggingCommand(input) {
         this.input = input;
@@ -6372,14 +6752,14 @@ exports.PutObjectTaggingCommand = PutObjectTaggingCommand;
 /***/ }),
 
 /***/ 50613:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var RestoreObject_1 = __webpack_require__(31488);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var RestoreObject_1 = __nccwpck_require__(31488);
 var RestoreObjectCommand = /** @class */ (function () {
     function RestoreObjectCommand(input) {
         this.input = input;
@@ -6412,15 +6792,15 @@ exports.RestoreObjectCommand = RestoreObjectCommand;
 /***/ }),
 
 /***/ 71476:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var SelectObjectContent_1 = __webpack_require__(91223);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var SelectObjectContent_1 = __nccwpck_require__(91223);
 var SelectObjectContentCommand = /** @class */ (function () {
     function SelectObjectContentCommand(input) {
         this.input = input;
@@ -6467,16 +6847,16 @@ exports.SelectObjectContentCommand = SelectObjectContentCommand;
 /***/ }),
 
 /***/ 1946:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_header_default = __webpack_require__(26385);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var UploadPart_1 = __webpack_require__(27777);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_header_default = __nccwpck_require__(26385);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var UploadPart_1 = __nccwpck_require__(27777);
 var UploadPartCommand = /** @class */ (function () {
     function UploadPartCommand(input) {
         this.input = input;
@@ -6532,15 +6912,15 @@ exports.UploadPartCommand = UploadPartCommand;
 /***/ }),
 
 /***/ 67354:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var __aws_sdk_bucket_endpoint_middleware = __webpack_require__(32829);
-var __aws_sdk_middleware_stack = __webpack_require__(7936);
-var __aws_sdk_ssec_middleware = __webpack_require__(17845);
-var UploadPartCopy_1 = __webpack_require__(71869);
+var __aws_sdk_bucket_endpoint_middleware = __nccwpck_require__(32829);
+var __aws_sdk_middleware_stack = __nccwpck_require__(7936);
+var __aws_sdk_ssec_middleware = __nccwpck_require__(17845);
+var UploadPartCopy_1 = __nccwpck_require__(71869);
 var UploadPartCopyCommand = /** @class */ (function () {
     function UploadPartCopyCommand(input) {
         this.input = input;
@@ -6591,107 +6971,107 @@ exports.UploadPartCopyCommand = UploadPartCopyCommand;
 /***/ }),
 
 /***/ 39960:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(8833), exports);
-tslib_1.__exportStar(__webpack_require__(1525), exports);
-tslib_1.__exportStar(__webpack_require__(85117), exports);
-tslib_1.__exportStar(__webpack_require__(30455), exports);
-tslib_1.__exportStar(__webpack_require__(39952), exports);
-tslib_1.__exportStar(__webpack_require__(8842), exports);
-tslib_1.__exportStar(__webpack_require__(41886), exports);
-tslib_1.__exportStar(__webpack_require__(97899), exports);
-tslib_1.__exportStar(__webpack_require__(81629), exports);
-tslib_1.__exportStar(__webpack_require__(1295), exports);
-tslib_1.__exportStar(__webpack_require__(7682), exports);
-tslib_1.__exportStar(__webpack_require__(79727), exports);
-tslib_1.__exportStar(__webpack_require__(46927), exports);
-tslib_1.__exportStar(__webpack_require__(95010), exports);
-tslib_1.__exportStar(__webpack_require__(86030), exports);
-tslib_1.__exportStar(__webpack_require__(58774), exports);
-tslib_1.__exportStar(__webpack_require__(33723), exports);
-tslib_1.__exportStar(__webpack_require__(53827), exports);
-tslib_1.__exportStar(__webpack_require__(89521), exports);
-tslib_1.__exportStar(__webpack_require__(27864), exports);
-tslib_1.__exportStar(__webpack_require__(89978), exports);
-tslib_1.__exportStar(__webpack_require__(74256), exports);
-tslib_1.__exportStar(__webpack_require__(8672), exports);
-tslib_1.__exportStar(__webpack_require__(11347), exports);
-tslib_1.__exportStar(__webpack_require__(93389), exports);
-tslib_1.__exportStar(__webpack_require__(89450), exports);
-tslib_1.__exportStar(__webpack_require__(7264), exports);
-tslib_1.__exportStar(__webpack_require__(10726), exports);
-tslib_1.__exportStar(__webpack_require__(97622), exports);
-tslib_1.__exportStar(__webpack_require__(30931), exports);
-tslib_1.__exportStar(__webpack_require__(32459), exports);
-tslib_1.__exportStar(__webpack_require__(82039), exports);
-tslib_1.__exportStar(__webpack_require__(14391), exports);
-tslib_1.__exportStar(__webpack_require__(7645), exports);
-tslib_1.__exportStar(__webpack_require__(11885), exports);
-tslib_1.__exportStar(__webpack_require__(55051), exports);
-tslib_1.__exportStar(__webpack_require__(10547), exports);
-tslib_1.__exportStar(__webpack_require__(76044), exports);
-tslib_1.__exportStar(__webpack_require__(14721), exports);
-tslib_1.__exportStar(__webpack_require__(99133), exports);
-tslib_1.__exportStar(__webpack_require__(47543), exports);
-tslib_1.__exportStar(__webpack_require__(78242), exports);
-tslib_1.__exportStar(__webpack_require__(71744), exports);
-tslib_1.__exportStar(__webpack_require__(32104), exports);
-tslib_1.__exportStar(__webpack_require__(85541), exports);
-tslib_1.__exportStar(__webpack_require__(26930), exports);
-tslib_1.__exportStar(__webpack_require__(4493), exports);
-tslib_1.__exportStar(__webpack_require__(47879), exports);
-tslib_1.__exportStar(__webpack_require__(42335), exports);
-tslib_1.__exportStar(__webpack_require__(83107), exports);
-tslib_1.__exportStar(__webpack_require__(14705), exports);
-tslib_1.__exportStar(__webpack_require__(54283), exports);
-tslib_1.__exportStar(__webpack_require__(76786), exports);
-tslib_1.__exportStar(__webpack_require__(11021), exports);
-tslib_1.__exportStar(__webpack_require__(46098), exports);
-tslib_1.__exportStar(__webpack_require__(69851), exports);
-tslib_1.__exportStar(__webpack_require__(16488), exports);
-tslib_1.__exportStar(__webpack_require__(52835), exports);
-tslib_1.__exportStar(__webpack_require__(79573), exports);
-tslib_1.__exportStar(__webpack_require__(47671), exports);
-tslib_1.__exportStar(__webpack_require__(88138), exports);
-tslib_1.__exportStar(__webpack_require__(11979), exports);
-tslib_1.__exportStar(__webpack_require__(42831), exports);
-tslib_1.__exportStar(__webpack_require__(6642), exports);
-tslib_1.__exportStar(__webpack_require__(64732), exports);
-tslib_1.__exportStar(__webpack_require__(66294), exports);
-tslib_1.__exportStar(__webpack_require__(16837), exports);
-tslib_1.__exportStar(__webpack_require__(61430), exports);
-tslib_1.__exportStar(__webpack_require__(39048), exports);
-tslib_1.__exportStar(__webpack_require__(44288), exports);
-tslib_1.__exportStar(__webpack_require__(43133), exports);
-tslib_1.__exportStar(__webpack_require__(68940), exports);
-tslib_1.__exportStar(__webpack_require__(56047), exports);
-tslib_1.__exportStar(__webpack_require__(22491), exports);
-tslib_1.__exportStar(__webpack_require__(75007), exports);
-tslib_1.__exportStar(__webpack_require__(52769), exports);
-tslib_1.__exportStar(__webpack_require__(73377), exports);
-tslib_1.__exportStar(__webpack_require__(50613), exports);
-tslib_1.__exportStar(__webpack_require__(71476), exports);
-tslib_1.__exportStar(__webpack_require__(1946), exports);
-tslib_1.__exportStar(__webpack_require__(67354), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(8833), exports);
+tslib_1.__exportStar(__nccwpck_require__(1525), exports);
+tslib_1.__exportStar(__nccwpck_require__(85117), exports);
+tslib_1.__exportStar(__nccwpck_require__(30455), exports);
+tslib_1.__exportStar(__nccwpck_require__(39952), exports);
+tslib_1.__exportStar(__nccwpck_require__(8842), exports);
+tslib_1.__exportStar(__nccwpck_require__(41886), exports);
+tslib_1.__exportStar(__nccwpck_require__(97899), exports);
+tslib_1.__exportStar(__nccwpck_require__(81629), exports);
+tslib_1.__exportStar(__nccwpck_require__(1295), exports);
+tslib_1.__exportStar(__nccwpck_require__(7682), exports);
+tslib_1.__exportStar(__nccwpck_require__(79727), exports);
+tslib_1.__exportStar(__nccwpck_require__(46927), exports);
+tslib_1.__exportStar(__nccwpck_require__(95010), exports);
+tslib_1.__exportStar(__nccwpck_require__(86030), exports);
+tslib_1.__exportStar(__nccwpck_require__(58774), exports);
+tslib_1.__exportStar(__nccwpck_require__(33723), exports);
+tslib_1.__exportStar(__nccwpck_require__(53827), exports);
+tslib_1.__exportStar(__nccwpck_require__(89521), exports);
+tslib_1.__exportStar(__nccwpck_require__(27864), exports);
+tslib_1.__exportStar(__nccwpck_require__(89978), exports);
+tslib_1.__exportStar(__nccwpck_require__(74256), exports);
+tslib_1.__exportStar(__nccwpck_require__(8672), exports);
+tslib_1.__exportStar(__nccwpck_require__(11347), exports);
+tslib_1.__exportStar(__nccwpck_require__(93389), exports);
+tslib_1.__exportStar(__nccwpck_require__(89450), exports);
+tslib_1.__exportStar(__nccwpck_require__(7264), exports);
+tslib_1.__exportStar(__nccwpck_require__(10726), exports);
+tslib_1.__exportStar(__nccwpck_require__(97622), exports);
+tslib_1.__exportStar(__nccwpck_require__(30931), exports);
+tslib_1.__exportStar(__nccwpck_require__(32459), exports);
+tslib_1.__exportStar(__nccwpck_require__(82039), exports);
+tslib_1.__exportStar(__nccwpck_require__(14391), exports);
+tslib_1.__exportStar(__nccwpck_require__(7645), exports);
+tslib_1.__exportStar(__nccwpck_require__(11885), exports);
+tslib_1.__exportStar(__nccwpck_require__(55051), exports);
+tslib_1.__exportStar(__nccwpck_require__(10547), exports);
+tslib_1.__exportStar(__nccwpck_require__(76044), exports);
+tslib_1.__exportStar(__nccwpck_require__(14721), exports);
+tslib_1.__exportStar(__nccwpck_require__(99133), exports);
+tslib_1.__exportStar(__nccwpck_require__(47543), exports);
+tslib_1.__exportStar(__nccwpck_require__(78242), exports);
+tslib_1.__exportStar(__nccwpck_require__(71744), exports);
+tslib_1.__exportStar(__nccwpck_require__(32104), exports);
+tslib_1.__exportStar(__nccwpck_require__(85541), exports);
+tslib_1.__exportStar(__nccwpck_require__(26930), exports);
+tslib_1.__exportStar(__nccwpck_require__(4493), exports);
+tslib_1.__exportStar(__nccwpck_require__(47879), exports);
+tslib_1.__exportStar(__nccwpck_require__(42335), exports);
+tslib_1.__exportStar(__nccwpck_require__(83107), exports);
+tslib_1.__exportStar(__nccwpck_require__(14705), exports);
+tslib_1.__exportStar(__nccwpck_require__(54283), exports);
+tslib_1.__exportStar(__nccwpck_require__(76786), exports);
+tslib_1.__exportStar(__nccwpck_require__(11021), exports);
+tslib_1.__exportStar(__nccwpck_require__(46098), exports);
+tslib_1.__exportStar(__nccwpck_require__(69851), exports);
+tslib_1.__exportStar(__nccwpck_require__(16488), exports);
+tslib_1.__exportStar(__nccwpck_require__(52835), exports);
+tslib_1.__exportStar(__nccwpck_require__(79573), exports);
+tslib_1.__exportStar(__nccwpck_require__(47671), exports);
+tslib_1.__exportStar(__nccwpck_require__(88138), exports);
+tslib_1.__exportStar(__nccwpck_require__(11979), exports);
+tslib_1.__exportStar(__nccwpck_require__(42831), exports);
+tslib_1.__exportStar(__nccwpck_require__(6642), exports);
+tslib_1.__exportStar(__nccwpck_require__(64732), exports);
+tslib_1.__exportStar(__nccwpck_require__(66294), exports);
+tslib_1.__exportStar(__nccwpck_require__(16837), exports);
+tslib_1.__exportStar(__nccwpck_require__(61430), exports);
+tslib_1.__exportStar(__nccwpck_require__(39048), exports);
+tslib_1.__exportStar(__nccwpck_require__(44288), exports);
+tslib_1.__exportStar(__nccwpck_require__(43133), exports);
+tslib_1.__exportStar(__nccwpck_require__(68940), exports);
+tslib_1.__exportStar(__nccwpck_require__(56047), exports);
+tslib_1.__exportStar(__nccwpck_require__(22491), exports);
+tslib_1.__exportStar(__nccwpck_require__(75007), exports);
+tslib_1.__exportStar(__nccwpck_require__(52769), exports);
+tslib_1.__exportStar(__nccwpck_require__(73377), exports);
+tslib_1.__exportStar(__nccwpck_require__(50613), exports);
+tslib_1.__exportStar(__nccwpck_require__(71476), exports);
+tslib_1.__exportStar(__nccwpck_require__(1946), exports);
+tslib_1.__exportStar(__nccwpck_require__(67354), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
 /***/ 59723:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var AbortMultipartUploadInput_1 = __webpack_require__(30225);
-var AbortMultipartUploadOutput_1 = __webpack_require__(68378);
-var NoSuchUpload_1 = __webpack_require__(18528);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var AbortMultipartUploadInput_1 = __nccwpck_require__(30225);
+var AbortMultipartUploadOutput_1 = __nccwpck_require__(68378);
+var NoSuchUpload_1 = __nccwpck_require__(18528);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.AbortMultipartUpload = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "AbortMultipartUpload",
@@ -6816,14 +7196,14 @@ exports.BucketAlreadyOwnedByYou = {
 /***/ }),
 
 /***/ 79332:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var CompleteMultipartUploadInput_1 = __webpack_require__(61909);
-var CompleteMultipartUploadOutput_1 = __webpack_require__(34237);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var CompleteMultipartUploadInput_1 = __nccwpck_require__(61909);
+var CompleteMultipartUploadOutput_1 = __nccwpck_require__(34237);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.CompleteMultipartUpload = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "CompleteMultipartUpload",
@@ -6844,12 +7224,12 @@ exports.CompleteMultipartUpload = {
 /***/ }),
 
 /***/ 61909:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CompletedMultipartUpload_1 = __webpack_require__(71853);
+var _CompletedMultipartUpload_1 = __nccwpck_require__(71853);
 exports.CompleteMultipartUploadInput = {
     type: "structure",
     required: ["Bucket", "Key", "UploadId"],
@@ -6971,15 +7351,15 @@ exports.CompleteMultipartUploadOutput = {
 /***/ }),
 
 /***/ 50134:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var CopyObjectInput_1 = __webpack_require__(61342);
-var CopyObjectOutput_1 = __webpack_require__(52990);
-var ObjectNotInActiveTierError_1 = __webpack_require__(99075);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var CopyObjectInput_1 = __nccwpck_require__(61342);
+var CopyObjectOutput_1 = __nccwpck_require__(52990);
+var ObjectNotInActiveTierError_1 = __nccwpck_require__(99075);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.CopyObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "CopyObject",
@@ -7004,12 +7384,12 @@ exports.CopyObject = {
 /***/ }),
 
 /***/ 61342:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Metadata_1 = __webpack_require__(43941);
+var _Metadata_1 = __nccwpck_require__(43941);
 exports.CopyObjectInput = {
     type: "structure",
     required: ["Bucket", "CopySource", "Key"],
@@ -7254,12 +7634,12 @@ exports.CopyObjectInput = {
 /***/ }),
 
 /***/ 52990:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CopyObjectResult_1 = __webpack_require__(54802);
+var _CopyObjectResult_1 = __nccwpck_require__(54802);
 exports.CopyObjectOutput = {
     type: "structure",
     required: [],
@@ -7332,16 +7712,16 @@ exports.CopyObjectOutput = {
 /***/ }),
 
 /***/ 93289:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var CreateBucketInput_1 = __webpack_require__(99818);
-var CreateBucketOutput_1 = __webpack_require__(62272);
-var BucketAlreadyExists_1 = __webpack_require__(70440);
-var BucketAlreadyOwnedByYou_1 = __webpack_require__(70944);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var CreateBucketInput_1 = __nccwpck_require__(99818);
+var CreateBucketOutput_1 = __nccwpck_require__(62272);
+var BucketAlreadyExists_1 = __nccwpck_require__(70440);
+var BucketAlreadyOwnedByYou_1 = __nccwpck_require__(70944);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.CreateBucket = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "CreateBucket",
@@ -7369,12 +7749,12 @@ exports.CreateBucket = {
 /***/ }),
 
 /***/ 99818:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CreateBucketConfiguration_1 = __webpack_require__(17053);
+var _CreateBucketConfiguration_1 = __nccwpck_require__(17053);
 exports.CreateBucketInput = {
     type: "structure",
     required: ["Bucket"],
@@ -7466,14 +7846,14 @@ exports.CreateBucketOutput = {
 /***/ }),
 
 /***/ 41632:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var CreateMultipartUploadInput_1 = __webpack_require__(13966);
-var CreateMultipartUploadOutput_1 = __webpack_require__(22320);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var CreateMultipartUploadInput_1 = __nccwpck_require__(13966);
+var CreateMultipartUploadOutput_1 = __nccwpck_require__(22320);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.CreateMultipartUpload = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "CreateMultipartUpload",
@@ -7494,12 +7874,12 @@ exports.CreateMultipartUpload = {
 /***/ }),
 
 /***/ 13966:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Metadata_1 = __webpack_require__(43941);
+var _Metadata_1 = __nccwpck_require__(43941);
 exports.CreateMultipartUploadInput = {
     type: "structure",
     required: ["Bucket", "Key"],
@@ -7756,14 +8136,14 @@ exports.CreateMultipartUploadOutput = {
 /***/ }),
 
 /***/ 56150:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketInput_1 = __webpack_require__(34246);
-var DeleteBucketOutput_1 = __webpack_require__(66515);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketInput_1 = __nccwpck_require__(34246);
+var DeleteBucketOutput_1 = __nccwpck_require__(66515);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucket = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucket",
@@ -7784,14 +8164,14 @@ exports.DeleteBucket = {
 /***/ }),
 
 /***/ 22951:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketAnalyticsConfigurationInput_1 = __webpack_require__(48924);
-var DeleteBucketAnalyticsConfigurationOutput_1 = __webpack_require__(29112);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketAnalyticsConfigurationInput_1 = __nccwpck_require__(48924);
+var DeleteBucketAnalyticsConfigurationOutput_1 = __nccwpck_require__(29112);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketAnalyticsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketAnalyticsConfiguration",
@@ -7857,14 +8237,14 @@ exports.DeleteBucketAnalyticsConfigurationOutput = {
 /***/ }),
 
 /***/ 20486:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketCorsInput_1 = __webpack_require__(43585);
-var DeleteBucketCorsOutput_1 = __webpack_require__(65514);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketCorsInput_1 = __nccwpck_require__(43585);
+var DeleteBucketCorsOutput_1 = __nccwpck_require__(65514);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketCors = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketCors",
@@ -7923,14 +8303,14 @@ exports.DeleteBucketCorsOutput = {
 /***/ }),
 
 /***/ 79423:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketEncryptionInput_1 = __webpack_require__(68893);
-var DeleteBucketEncryptionOutput_1 = __webpack_require__(38111);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketEncryptionInput_1 = __nccwpck_require__(68893);
+var DeleteBucketEncryptionOutput_1 = __nccwpck_require__(38111);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketEncryption = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketEncryption",
@@ -8012,14 +8392,14 @@ exports.DeleteBucketInput = {
 /***/ }),
 
 /***/ 72409:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketInventoryConfigurationInput_1 = __webpack_require__(79548);
-var DeleteBucketInventoryConfigurationOutput_1 = __webpack_require__(62112);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketInventoryConfigurationInput_1 = __nccwpck_require__(79548);
+var DeleteBucketInventoryConfigurationOutput_1 = __nccwpck_require__(62112);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketInventoryConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketInventoryConfiguration",
@@ -8085,14 +8465,14 @@ exports.DeleteBucketInventoryConfigurationOutput = {
 /***/ }),
 
 /***/ 16284:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketLifecycleInput_1 = __webpack_require__(62599);
-var DeleteBucketLifecycleOutput_1 = __webpack_require__(52727);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketLifecycleInput_1 = __nccwpck_require__(62599);
+var DeleteBucketLifecycleOutput_1 = __nccwpck_require__(52727);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketLifecycle = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketLifecycle",
@@ -8151,14 +8531,14 @@ exports.DeleteBucketLifecycleOutput = {
 /***/ }),
 
 /***/ 93291:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketMetricsConfigurationInput_1 = __webpack_require__(39542);
-var DeleteBucketMetricsConfigurationOutput_1 = __webpack_require__(4204);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketMetricsConfigurationInput_1 = __nccwpck_require__(39542);
+var DeleteBucketMetricsConfigurationOutput_1 = __nccwpck_require__(4204);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketMetricsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketMetricsConfiguration",
@@ -8239,14 +8619,14 @@ exports.DeleteBucketOutput = {
 /***/ }),
 
 /***/ 97383:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketPolicyInput_1 = __webpack_require__(80553);
-var DeleteBucketPolicyOutput_1 = __webpack_require__(88272);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketPolicyInput_1 = __nccwpck_require__(80553);
+var DeleteBucketPolicyOutput_1 = __nccwpck_require__(88272);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketPolicy = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketPolicy",
@@ -8305,14 +8685,14 @@ exports.DeleteBucketPolicyOutput = {
 /***/ }),
 
 /***/ 43537:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketReplicationInput_1 = __webpack_require__(98141);
-var DeleteBucketReplicationOutput_1 = __webpack_require__(47785);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketReplicationInput_1 = __nccwpck_require__(98141);
+var DeleteBucketReplicationOutput_1 = __nccwpck_require__(47785);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketReplication = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketReplication",
@@ -8371,14 +8751,14 @@ exports.DeleteBucketReplicationOutput = {
 /***/ }),
 
 /***/ 42904:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketTaggingInput_1 = __webpack_require__(32220);
-var DeleteBucketTaggingOutput_1 = __webpack_require__(34492);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketTaggingInput_1 = __nccwpck_require__(32220);
+var DeleteBucketTaggingOutput_1 = __nccwpck_require__(34492);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketTagging",
@@ -8437,14 +8817,14 @@ exports.DeleteBucketTaggingOutput = {
 /***/ }),
 
 /***/ 81545:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteBucketWebsiteInput_1 = __webpack_require__(83297);
-var DeleteBucketWebsiteOutput_1 = __webpack_require__(37468);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteBucketWebsiteInput_1 = __nccwpck_require__(83297);
+var DeleteBucketWebsiteOutput_1 = __nccwpck_require__(37468);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteBucketWebsite = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteBucketWebsite",
@@ -8503,14 +8883,14 @@ exports.DeleteBucketWebsiteOutput = {
 /***/ }),
 
 /***/ 49863:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteObjectInput_1 = __webpack_require__(91589);
-var DeleteObjectOutput_1 = __webpack_require__(31641);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteObjectInput_1 = __nccwpck_require__(91589);
+var DeleteObjectOutput_1 = __nccwpck_require__(31641);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteObject",
@@ -8620,14 +9000,14 @@ exports.DeleteObjectOutput = {
 /***/ }),
 
 /***/ 99666:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteObjectTaggingInput_1 = __webpack_require__(10117);
-var DeleteObjectTaggingOutput_1 = __webpack_require__(83431);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteObjectTaggingInput_1 = __nccwpck_require__(10117);
+var DeleteObjectTaggingOutput_1 = __nccwpck_require__(83431);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteObjectTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteObjectTagging",
@@ -8709,14 +9089,14 @@ exports.DeleteObjectTaggingOutput = {
 /***/ }),
 
 /***/ 97001:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var DeleteObjectsInput_1 = __webpack_require__(79253);
-var DeleteObjectsOutput_1 = __webpack_require__(14971);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var DeleteObjectsInput_1 = __nccwpck_require__(79253);
+var DeleteObjectsOutput_1 = __nccwpck_require__(14971);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.DeleteObjects = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "DeleteObjects",
@@ -8737,12 +9117,12 @@ exports.DeleteObjects = {
 /***/ }),
 
 /***/ 79253:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Delete_1 = __webpack_require__(80578);
+var _Delete_1 = __nccwpck_require__(80578);
 exports.DeleteObjectsInput = {
     type: "structure",
     required: ["Bucket", "Delete"],
@@ -8783,13 +9163,13 @@ exports.DeleteObjectsInput = {
 /***/ }),
 
 /***/ 14971:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _DeletedObjects_1 = __webpack_require__(14945);
-var _Errors_1 = __webpack_require__(37226);
+var _DeletedObjects_1 = __nccwpck_require__(14945);
+var _Errors_1 = __nccwpck_require__(37226);
 exports.DeleteObjectsOutput = {
     type: "structure",
     required: [],
@@ -8815,14 +9195,14 @@ exports.DeleteObjectsOutput = {
 /***/ }),
 
 /***/ 69140:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketAccelerateConfigurationInput_1 = __webpack_require__(60024);
-var GetBucketAccelerateConfigurationOutput_1 = __webpack_require__(99410);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketAccelerateConfigurationInput_1 = __nccwpck_require__(60024);
+var GetBucketAccelerateConfigurationOutput_1 = __nccwpck_require__(99410);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketAccelerateConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketAccelerateConfiguration",
@@ -8887,14 +9267,14 @@ exports.GetBucketAccelerateConfigurationOutput = {
 /***/ }),
 
 /***/ 6129:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketAclInput_1 = __webpack_require__(1732);
-var GetBucketAclOutput_1 = __webpack_require__(14003);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketAclInput_1 = __nccwpck_require__(1732);
+var GetBucketAclOutput_1 = __nccwpck_require__(14003);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketAcl = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketAcl",
@@ -8938,13 +9318,13 @@ exports.GetBucketAclInput = {
 /***/ }),
 
 /***/ 14003:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
-var _Grants_1 = __webpack_require__(50781);
+var _Owner_1 = __nccwpck_require__(17885);
+var _Grants_1 = __nccwpck_require__(50781);
 exports.GetBucketAclOutput = {
     type: "structure",
     required: [],
@@ -8963,14 +9343,14 @@ exports.GetBucketAclOutput = {
 /***/ }),
 
 /***/ 16446:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketAnalyticsConfigurationInput_1 = __webpack_require__(99618);
-var GetBucketAnalyticsConfigurationOutput_1 = __webpack_require__(65410);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketAnalyticsConfigurationInput_1 = __nccwpck_require__(99618);
+var GetBucketAnalyticsConfigurationOutput_1 = __nccwpck_require__(65410);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketAnalyticsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketAnalyticsConfiguration",
@@ -9021,12 +9401,12 @@ exports.GetBucketAnalyticsConfigurationInput = {
 /***/ }),
 
 /***/ 65410:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsConfiguration_1 = __webpack_require__(18491);
+var _AnalyticsConfiguration_1 = __nccwpck_require__(18491);
 exports.GetBucketAnalyticsConfigurationOutput = {
     type: "structure",
     required: [],
@@ -9042,14 +9422,14 @@ exports.GetBucketAnalyticsConfigurationOutput = {
 /***/ }),
 
 /***/ 60766:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketCorsInput_1 = __webpack_require__(66668);
-var GetBucketCorsOutput_1 = __webpack_require__(39950);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketCorsInput_1 = __nccwpck_require__(66668);
+var GetBucketCorsOutput_1 = __nccwpck_require__(39950);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketCors = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketCors",
@@ -9093,12 +9473,12 @@ exports.GetBucketCorsInput = {
 /***/ }),
 
 /***/ 39950:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CORSRules_1 = __webpack_require__(44387);
+var _CORSRules_1 = __nccwpck_require__(44387);
 exports.GetBucketCorsOutput = {
     type: "structure",
     required: [],
@@ -9114,14 +9494,14 @@ exports.GetBucketCorsOutput = {
 /***/ }),
 
 /***/ 71215:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketEncryptionInput_1 = __webpack_require__(16160);
-var GetBucketEncryptionOutput_1 = __webpack_require__(41815);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketEncryptionInput_1 = __nccwpck_require__(16160);
+var GetBucketEncryptionOutput_1 = __nccwpck_require__(41815);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketEncryption = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketEncryption",
@@ -9165,12 +9545,12 @@ exports.GetBucketEncryptionInput = {
 /***/ }),
 
 /***/ 41815:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ServerSideEncryptionConfiguration_1 = __webpack_require__(25535);
+var _ServerSideEncryptionConfiguration_1 = __nccwpck_require__(25535);
 exports.GetBucketEncryptionOutput = {
     type: "structure",
     required: [],
@@ -9186,14 +9566,14 @@ exports.GetBucketEncryptionOutput = {
 /***/ }),
 
 /***/ 83163:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketInventoryConfigurationInput_1 = __webpack_require__(68507);
-var GetBucketInventoryConfigurationOutput_1 = __webpack_require__(12960);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketInventoryConfigurationInput_1 = __nccwpck_require__(68507);
+var GetBucketInventoryConfigurationOutput_1 = __nccwpck_require__(12960);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketInventoryConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketInventoryConfiguration",
@@ -9244,12 +9624,12 @@ exports.GetBucketInventoryConfigurationInput = {
 /***/ }),
 
 /***/ 12960:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryConfiguration_1 = __webpack_require__(27890);
+var _InventoryConfiguration_1 = __nccwpck_require__(27890);
 exports.GetBucketInventoryConfigurationOutput = {
     type: "structure",
     required: [],
@@ -9265,14 +9645,14 @@ exports.GetBucketInventoryConfigurationOutput = {
 /***/ }),
 
 /***/ 5706:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketLifecycleInput_1 = __webpack_require__(27445);
-var GetBucketLifecycleOutput_1 = __webpack_require__(34117);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketLifecycleInput_1 = __nccwpck_require__(27445);
+var GetBucketLifecycleOutput_1 = __nccwpck_require__(34117);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketLifecycle = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketLifecycle",
@@ -9293,14 +9673,14 @@ exports.GetBucketLifecycle = {
 /***/ }),
 
 /***/ 76803:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketLifecycleConfigurationInput_1 = __webpack_require__(64457);
-var GetBucketLifecycleConfigurationOutput_1 = __webpack_require__(10275);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketLifecycleConfigurationInput_1 = __nccwpck_require__(64457);
+var GetBucketLifecycleConfigurationOutput_1 = __nccwpck_require__(10275);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketLifecycleConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketLifecycleConfiguration",
@@ -9344,12 +9724,12 @@ exports.GetBucketLifecycleConfigurationInput = {
 /***/ }),
 
 /***/ 10275:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleRules_1 = __webpack_require__(70954);
+var _LifecycleRules_1 = __nccwpck_require__(70954);
 exports.GetBucketLifecycleConfigurationOutput = {
     type: "structure",
     required: [],
@@ -9388,12 +9768,12 @@ exports.GetBucketLifecycleInput = {
 /***/ }),
 
 /***/ 34117:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Rules_1 = __webpack_require__(30169);
+var _Rules_1 = __nccwpck_require__(30169);
 exports.GetBucketLifecycleOutput = {
     type: "structure",
     required: [],
@@ -9409,14 +9789,14 @@ exports.GetBucketLifecycleOutput = {
 /***/ }),
 
 /***/ 5719:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketLocationInput_1 = __webpack_require__(80672);
-var GetBucketLocationOutput_1 = __webpack_require__(55397);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketLocationInput_1 = __nccwpck_require__(80672);
+var GetBucketLocationOutput_1 = __nccwpck_require__(55397);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketLocation = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketLocation",
@@ -9481,14 +9861,14 @@ exports.GetBucketLocationOutput = {
 /***/ }),
 
 /***/ 98760:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketLoggingInput_1 = __webpack_require__(49517);
-var GetBucketLoggingOutput_1 = __webpack_require__(1493);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketLoggingInput_1 = __nccwpck_require__(49517);
+var GetBucketLoggingOutput_1 = __nccwpck_require__(1493);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketLogging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketLogging",
@@ -9532,12 +9912,12 @@ exports.GetBucketLoggingInput = {
 /***/ }),
 
 /***/ 1493:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LoggingEnabled_1 = __webpack_require__(69205);
+var _LoggingEnabled_1 = __nccwpck_require__(69205);
 exports.GetBucketLoggingOutput = {
     type: "structure",
     required: [],
@@ -9552,14 +9932,14 @@ exports.GetBucketLoggingOutput = {
 /***/ }),
 
 /***/ 49515:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketMetricsConfigurationInput_1 = __webpack_require__(46419);
-var GetBucketMetricsConfigurationOutput_1 = __webpack_require__(69025);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketMetricsConfigurationInput_1 = __nccwpck_require__(46419);
+var GetBucketMetricsConfigurationOutput_1 = __nccwpck_require__(69025);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketMetricsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketMetricsConfiguration",
@@ -9610,12 +9990,12 @@ exports.GetBucketMetricsConfigurationInput = {
 /***/ }),
 
 /***/ 69025:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetricsConfiguration_1 = __webpack_require__(84956);
+var _MetricsConfiguration_1 = __nccwpck_require__(84956);
 exports.GetBucketMetricsConfigurationOutput = {
     type: "structure",
     required: [],
@@ -9631,14 +10011,14 @@ exports.GetBucketMetricsConfigurationOutput = {
 /***/ }),
 
 /***/ 36755:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketNotificationInput_1 = __webpack_require__(3518);
-var GetBucketNotificationOutput_1 = __webpack_require__(75253);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketNotificationInput_1 = __nccwpck_require__(3518);
+var GetBucketNotificationOutput_1 = __nccwpck_require__(75253);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketNotification = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketNotification",
@@ -9659,14 +10039,14 @@ exports.GetBucketNotification = {
 /***/ }),
 
 /***/ 88391:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketNotificationConfigurationInput_1 = __webpack_require__(20428);
-var GetBucketNotificationConfigurationOutput_1 = __webpack_require__(38767);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketNotificationConfigurationInput_1 = __nccwpck_require__(20428);
+var GetBucketNotificationConfigurationOutput_1 = __nccwpck_require__(38767);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketNotificationConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketNotificationConfiguration",
@@ -9710,14 +10090,14 @@ exports.GetBucketNotificationConfigurationInput = {
 /***/ }),
 
 /***/ 38767:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TopicConfigurationList_1 = __webpack_require__(89504);
-var _QueueConfigurationList_1 = __webpack_require__(22643);
-var _LambdaFunctionConfigurationList_1 = __webpack_require__(56091);
+var _TopicConfigurationList_1 = __nccwpck_require__(89504);
+var _QueueConfigurationList_1 = __nccwpck_require__(22643);
+var _LambdaFunctionConfigurationList_1 = __nccwpck_require__(56091);
 exports.GetBucketNotificationConfigurationOutput = {
     type: "structure",
     required: [],
@@ -9764,14 +10144,14 @@ exports.GetBucketNotificationInput = {
 /***/ }),
 
 /***/ 75253:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TopicConfigurationDeprecated_1 = __webpack_require__(91759);
-var _QueueConfigurationDeprecated_1 = __webpack_require__(34259);
-var _CloudFunctionConfiguration_1 = __webpack_require__(57182);
+var _TopicConfigurationDeprecated_1 = __nccwpck_require__(91759);
+var _QueueConfigurationDeprecated_1 = __nccwpck_require__(34259);
+var _CloudFunctionConfiguration_1 = __nccwpck_require__(57182);
 exports.GetBucketNotificationOutput = {
     type: "structure",
     required: [],
@@ -9792,14 +10172,14 @@ exports.GetBucketNotificationOutput = {
 /***/ }),
 
 /***/ 7208:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketPolicyInput_1 = __webpack_require__(43484);
-var GetBucketPolicyOutput_1 = __webpack_require__(52269);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketPolicyInput_1 = __nccwpck_require__(43484);
+var GetBucketPolicyOutput_1 = __nccwpck_require__(52269);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketPolicy = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketPolicy",
@@ -9865,14 +10245,14 @@ exports.GetBucketPolicyOutput = {
 /***/ }),
 
 /***/ 92178:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketReplicationInput_1 = __webpack_require__(96251);
-var GetBucketReplicationOutput_1 = __webpack_require__(62271);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketReplicationInput_1 = __nccwpck_require__(96251);
+var GetBucketReplicationOutput_1 = __nccwpck_require__(62271);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketReplication = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketReplication",
@@ -9916,12 +10296,12 @@ exports.GetBucketReplicationInput = {
 /***/ }),
 
 /***/ 62271:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ReplicationConfiguration_1 = __webpack_require__(73783);
+var _ReplicationConfiguration_1 = __nccwpck_require__(73783);
 exports.GetBucketReplicationOutput = {
     type: "structure",
     required: [],
@@ -9937,14 +10317,14 @@ exports.GetBucketReplicationOutput = {
 /***/ }),
 
 /***/ 65633:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketRequestPaymentInput_1 = __webpack_require__(63682);
-var GetBucketRequestPaymentOutput_1 = __webpack_require__(71670);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketRequestPaymentInput_1 = __nccwpck_require__(63682);
+var GetBucketRequestPaymentOutput_1 = __nccwpck_require__(71670);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketRequestPayment = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketRequestPayment",
@@ -10009,14 +10389,14 @@ exports.GetBucketRequestPaymentOutput = {
 /***/ }),
 
 /***/ 9760:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketTaggingInput_1 = __webpack_require__(68399);
-var GetBucketTaggingOutput_1 = __webpack_require__(95527);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketTaggingInput_1 = __nccwpck_require__(68399);
+var GetBucketTaggingOutput_1 = __nccwpck_require__(95527);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketTagging",
@@ -10060,12 +10440,12 @@ exports.GetBucketTaggingInput = {
 /***/ }),
 
 /***/ 95527:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports.GetBucketTaggingOutput = {
     type: "structure",
     required: ["TagSet"],
@@ -10080,14 +10460,14 @@ exports.GetBucketTaggingOutput = {
 /***/ }),
 
 /***/ 40050:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketVersioningInput_1 = __webpack_require__(10356);
-var GetBucketVersioningOutput_1 = __webpack_require__(35489);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketVersioningInput_1 = __nccwpck_require__(10356);
+var GetBucketVersioningOutput_1 = __nccwpck_require__(35489);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketVersioning = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketVersioning",
@@ -10158,14 +10538,14 @@ exports.GetBucketVersioningOutput = {
 /***/ }),
 
 /***/ 4040:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetBucketWebsiteInput_1 = __webpack_require__(77667);
-var GetBucketWebsiteOutput_1 = __webpack_require__(68228);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetBucketWebsiteInput_1 = __nccwpck_require__(77667);
+var GetBucketWebsiteOutput_1 = __nccwpck_require__(68228);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetBucketWebsite = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetBucketWebsite",
@@ -10209,15 +10589,15 @@ exports.GetBucketWebsiteInput = {
 /***/ }),
 
 /***/ 68228:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RedirectAllRequestsTo_1 = __webpack_require__(32299);
-var _IndexDocument_1 = __webpack_require__(3447);
-var _ErrorDocument_1 = __webpack_require__(39139);
-var _RoutingRules_1 = __webpack_require__(26797);
+var _RedirectAllRequestsTo_1 = __nccwpck_require__(32299);
+var _IndexDocument_1 = __nccwpck_require__(3447);
+var _ErrorDocument_1 = __nccwpck_require__(39139);
+var _RoutingRules_1 = __nccwpck_require__(26797);
 exports.GetBucketWebsiteOutput = {
     type: "structure",
     required: [],
@@ -10241,15 +10621,15 @@ exports.GetBucketWebsiteOutput = {
 /***/ }),
 
 /***/ 96494:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetObjectInput_1 = __webpack_require__(5425);
-var GetObjectOutput_1 = __webpack_require__(13273);
-var NoSuchKey_1 = __webpack_require__(83997);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetObjectInput_1 = __nccwpck_require__(5425);
+var GetObjectOutput_1 = __nccwpck_require__(13273);
+var NoSuchKey_1 = __nccwpck_require__(83997);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetObject",
@@ -10274,15 +10654,15 @@ exports.GetObject = {
 /***/ }),
 
 /***/ 90580:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetObjectAclInput_1 = __webpack_require__(20235);
-var GetObjectAclOutput_1 = __webpack_require__(31798);
-var NoSuchKey_1 = __webpack_require__(83997);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetObjectAclInput_1 = __nccwpck_require__(20235);
+var GetObjectAclOutput_1 = __nccwpck_require__(31798);
+var NoSuchKey_1 = __nccwpck_require__(83997);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetObjectAcl = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetObjectAcl",
@@ -10352,13 +10732,13 @@ exports.GetObjectAclInput = {
 /***/ }),
 
 /***/ 31798:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
-var _Grants_1 = __webpack_require__(50781);
+var _Owner_1 = __nccwpck_require__(17885);
+var _Grants_1 = __nccwpck_require__(50781);
 exports.GetObjectAclOutput = {
     type: "structure",
     required: [],
@@ -10535,12 +10915,12 @@ exports.GetObjectInput = {
 /***/ }),
 
 /***/ 13273:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Metadata_1 = __webpack_require__(43941);
+var _Metadata_1 = __nccwpck_require__(43941);
 exports.GetObjectOutput = {
     type: "structure",
     required: [],
@@ -10747,14 +11127,14 @@ exports.GetObjectOutput = {
 /***/ }),
 
 /***/ 93721:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetObjectTaggingInput_1 = __webpack_require__(99472);
-var GetObjectTaggingOutput_1 = __webpack_require__(88204);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetObjectTaggingInput_1 = __nccwpck_require__(99472);
+var GetObjectTaggingOutput_1 = __nccwpck_require__(88204);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetObjectTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetObjectTagging",
@@ -10813,12 +11193,12 @@ exports.GetObjectTaggingInput = {
 /***/ }),
 
 /***/ 88204:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports.GetObjectTaggingOutput = {
     type: "structure",
     required: ["TagSet"],
@@ -10840,14 +11220,14 @@ exports.GetObjectTaggingOutput = {
 /***/ }),
 
 /***/ 56377:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var GetObjectTorrentInput_1 = __webpack_require__(47018);
-var GetObjectTorrentOutput_1 = __webpack_require__(80303);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var GetObjectTorrentInput_1 = __nccwpck_require__(47018);
+var GetObjectTorrentOutput_1 = __nccwpck_require__(80303);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.GetObjectTorrent = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "GetObjectTorrent",
@@ -10936,15 +11316,15 @@ exports.GetObjectTorrentOutput = {
 /***/ }),
 
 /***/ 50595:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var HeadBucketInput_1 = __webpack_require__(94565);
-var HeadBucketOutput_1 = __webpack_require__(670);
-var NoSuchBucket_1 = __webpack_require__(44467);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var HeadBucketInput_1 = __nccwpck_require__(94565);
+var HeadBucketOutput_1 = __nccwpck_require__(670);
+var NoSuchBucket_1 = __nccwpck_require__(44467);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.HeadBucket = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "HeadBucket",
@@ -11007,15 +11387,15 @@ exports.HeadBucketOutput = {
 /***/ }),
 
 /***/ 31386:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var HeadObjectInput_1 = __webpack_require__(29094);
-var HeadObjectOutput_1 = __webpack_require__(11590);
-var NoSuchKey_1 = __webpack_require__(83997);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var HeadObjectInput_1 = __nccwpck_require__(29094);
+var HeadObjectOutput_1 = __nccwpck_require__(11590);
+var NoSuchKey_1 = __nccwpck_require__(83997);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.HeadObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "HeadObject",
@@ -11149,12 +11529,12 @@ exports.HeadObjectInput = {
 /***/ }),
 
 /***/ 11590:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Metadata_1 = __webpack_require__(43941);
+var _Metadata_1 = __nccwpck_require__(43941);
 exports.HeadObjectOutput = {
     type: "structure",
     required: [],
@@ -11340,14 +11720,14 @@ exports.HeadObjectOutput = {
 /***/ }),
 
 /***/ 24177:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListBucketAnalyticsConfigurationsInput_1 = __webpack_require__(94057);
-var ListBucketAnalyticsConfigurationsOutput_1 = __webpack_require__(5944);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListBucketAnalyticsConfigurationsInput_1 = __nccwpck_require__(94057);
+var ListBucketAnalyticsConfigurationsOutput_1 = __nccwpck_require__(5944);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListBucketAnalyticsConfigurations = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListBucketAnalyticsConfigurations",
@@ -11398,12 +11778,12 @@ exports.ListBucketAnalyticsConfigurationsInput = {
 /***/ }),
 
 /***/ 5944:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsConfigurationList_1 = __webpack_require__(75383);
+var _AnalyticsConfigurationList_1 = __nccwpck_require__(75383);
 exports.ListBucketAnalyticsConfigurationsOutput = {
     type: "structure",
     required: [],
@@ -11434,14 +11814,14 @@ exports.ListBucketAnalyticsConfigurationsOutput = {
 /***/ }),
 
 /***/ 73934:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListBucketInventoryConfigurationsInput_1 = __webpack_require__(14257);
-var ListBucketInventoryConfigurationsOutput_1 = __webpack_require__(91925);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListBucketInventoryConfigurationsInput_1 = __nccwpck_require__(14257);
+var ListBucketInventoryConfigurationsOutput_1 = __nccwpck_require__(91925);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListBucketInventoryConfigurations = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListBucketInventoryConfigurations",
@@ -11492,12 +11872,12 @@ exports.ListBucketInventoryConfigurationsInput = {
 /***/ }),
 
 /***/ 91925:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryConfigurationList_1 = __webpack_require__(69146);
+var _InventoryConfigurationList_1 = __nccwpck_require__(69146);
 exports.ListBucketInventoryConfigurationsOutput = {
     type: "structure",
     required: [],
@@ -11528,14 +11908,14 @@ exports.ListBucketInventoryConfigurationsOutput = {
 /***/ }),
 
 /***/ 4194:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListBucketMetricsConfigurationsInput_1 = __webpack_require__(18326);
-var ListBucketMetricsConfigurationsOutput_1 = __webpack_require__(29457);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListBucketMetricsConfigurationsInput_1 = __nccwpck_require__(18326);
+var ListBucketMetricsConfigurationsOutput_1 = __nccwpck_require__(29457);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListBucketMetricsConfigurations = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListBucketMetricsConfigurations",
@@ -11586,12 +11966,12 @@ exports.ListBucketMetricsConfigurationsInput = {
 /***/ }),
 
 /***/ 29457:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetricsConfigurationList_1 = __webpack_require__(5685);
+var _MetricsConfigurationList_1 = __nccwpck_require__(5685);
 exports.ListBucketMetricsConfigurationsOutput = {
     type: "structure",
     required: [],
@@ -11622,14 +12002,14 @@ exports.ListBucketMetricsConfigurationsOutput = {
 /***/ }),
 
 /***/ 27252:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListBucketsInput_1 = __webpack_require__(60287);
-var ListBucketsOutput_1 = __webpack_require__(54391);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListBucketsInput_1 = __nccwpck_require__(60287);
+var ListBucketsOutput_1 = __nccwpck_require__(54391);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListBuckets = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListBuckets",
@@ -11665,13 +12045,13 @@ exports.ListBucketsInput = {
 /***/ }),
 
 /***/ 54391:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Buckets_1 = __webpack_require__(48456);
-var _Owner_1 = __webpack_require__(17885);
+var _Buckets_1 = __nccwpck_require__(48456);
+var _Owner_1 = __nccwpck_require__(17885);
 exports.ListBucketsOutput = {
     type: "structure",
     required: [],
@@ -11689,14 +12069,14 @@ exports.ListBucketsOutput = {
 /***/ }),
 
 /***/ 39893:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListMultipartUploadsInput_1 = __webpack_require__(75186);
-var ListMultipartUploadsOutput_1 = __webpack_require__(30381);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListMultipartUploadsInput_1 = __nccwpck_require__(75186);
+var ListMultipartUploadsOutput_1 = __nccwpck_require__(30381);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListMultipartUploads = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListMultipartUploads",
@@ -11782,13 +12162,13 @@ exports.ListMultipartUploadsInput = {
 /***/ }),
 
 /***/ 30381:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MultipartUploadList_1 = __webpack_require__(27785);
-var _CommonPrefixList_1 = __webpack_require__(41186);
+var _MultipartUploadList_1 = __nccwpck_require__(27785);
+var _CommonPrefixList_1 = __nccwpck_require__(41186);
 exports.ListMultipartUploadsOutput = {
     type: "structure",
     required: [],
@@ -11857,14 +12237,14 @@ exports.ListMultipartUploadsOutput = {
 /***/ }),
 
 /***/ 79762:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListObjectVersionsInput_1 = __webpack_require__(19369);
-var ListObjectVersionsOutput_1 = __webpack_require__(99841);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListObjectVersionsInput_1 = __nccwpck_require__(19369);
+var ListObjectVersionsOutput_1 = __nccwpck_require__(99841);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListObjectVersions = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListObjectVersions",
@@ -11950,14 +12330,14 @@ exports.ListObjectVersionsInput = {
 /***/ }),
 
 /***/ 99841:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectVersionList_1 = __webpack_require__(64917);
-var _DeleteMarkers_1 = __webpack_require__(65957);
-var _CommonPrefixList_1 = __webpack_require__(41186);
+var _ObjectVersionList_1 = __nccwpck_require__(64917);
+var _DeleteMarkers_1 = __nccwpck_require__(65957);
+var _CommonPrefixList_1 = __nccwpck_require__(41186);
 exports.ListObjectVersionsOutput = {
     type: "structure",
     required: [],
@@ -12030,15 +12410,15 @@ exports.ListObjectVersionsOutput = {
 /***/ }),
 
 /***/ 59373:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListObjectsInput_1 = __webpack_require__(94469);
-var ListObjectsOutput_1 = __webpack_require__(22209);
-var NoSuchBucket_1 = __webpack_require__(44467);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListObjectsInput_1 = __nccwpck_require__(94469);
+var ListObjectsOutput_1 = __nccwpck_require__(22209);
+var NoSuchBucket_1 = __nccwpck_require__(44467);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListObjects = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListObjects",
@@ -12128,13 +12508,13 @@ exports.ListObjectsInput = {
 /***/ }),
 
 /***/ 22209:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectList_1 = __webpack_require__(35183);
-var _CommonPrefixList_1 = __webpack_require__(41186);
+var _ObjectList_1 = __nccwpck_require__(35183);
+var _CommonPrefixList_1 = __nccwpck_require__(41186);
 exports.ListObjectsOutput = {
     type: "structure",
     required: [],
@@ -12192,15 +12572,15 @@ exports.ListObjectsOutput = {
 /***/ }),
 
 /***/ 25285:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListObjectsV2Input_1 = __webpack_require__(67097);
-var ListObjectsV2Output_1 = __webpack_require__(46792);
-var NoSuchBucket_1 = __webpack_require__(44467);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListObjectsV2Input_1 = __nccwpck_require__(67097);
+var ListObjectsV2Output_1 = __nccwpck_require__(46792);
+var NoSuchBucket_1 = __nccwpck_require__(44467);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListObjectsV2 = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListObjectsV2",
@@ -12304,13 +12684,13 @@ exports.ListObjectsV2Input = {
 /***/ }),
 
 /***/ 46792:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectList_1 = __webpack_require__(35183);
-var _CommonPrefixList_1 = __webpack_require__(41186);
+var _ObjectList_1 = __nccwpck_require__(35183);
+var _CommonPrefixList_1 = __nccwpck_require__(41186);
 exports.ListObjectsV2Output = {
     type: "structure",
     required: [],
@@ -12378,14 +12758,14 @@ exports.ListObjectsV2Output = {
 /***/ }),
 
 /***/ 61574:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var ListPartsInput_1 = __webpack_require__(99601);
-var ListPartsOutput_1 = __webpack_require__(86474);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var ListPartsInput_1 = __nccwpck_require__(99601);
+var ListPartsOutput_1 = __nccwpck_require__(86474);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.ListParts = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "ListParts",
@@ -12465,14 +12845,14 @@ exports.ListPartsInput = {
 /***/ }),
 
 /***/ 86474:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Parts_1 = __webpack_require__(90635);
-var _Initiator_1 = __webpack_require__(93083);
-var _Owner_1 = __webpack_require__(17885);
+var _Parts_1 = __nccwpck_require__(90635);
+var _Initiator_1 = __nccwpck_require__(93083);
+var _Owner_1 = __nccwpck_require__(17885);
 exports.ListPartsOutput = {
     type: "structure",
     required: [],
@@ -12636,14 +13016,14 @@ exports.ObjectNotInActiveTierError = {
 /***/ }),
 
 /***/ 50644:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketAccelerateConfigurationInput_1 = __webpack_require__(58219);
-var PutBucketAccelerateConfigurationOutput_1 = __webpack_require__(67005);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketAccelerateConfigurationInput_1 = __nccwpck_require__(58219);
+var PutBucketAccelerateConfigurationOutput_1 = __nccwpck_require__(67005);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketAccelerateConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketAccelerateConfiguration",
@@ -12664,12 +13044,12 @@ exports.PutBucketAccelerateConfiguration = {
 /***/ }),
 
 /***/ 58219:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AccelerateConfiguration_1 = __webpack_require__(62990);
+var _AccelerateConfiguration_1 = __nccwpck_require__(62990);
 exports.PutBucketAccelerateConfigurationInput = {
     type: "structure",
     required: ["Bucket", "AccelerateConfiguration"],
@@ -12711,14 +13091,14 @@ exports.PutBucketAccelerateConfigurationOutput = {
 /***/ }),
 
 /***/ 79611:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketAclInput_1 = __webpack_require__(83452);
-var PutBucketAclOutput_1 = __webpack_require__(21675);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketAclInput_1 = __nccwpck_require__(83452);
+var PutBucketAclOutput_1 = __nccwpck_require__(21675);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketAcl = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketAcl",
@@ -12739,12 +13119,12 @@ exports.PutBucketAcl = {
 /***/ }),
 
 /***/ 83452:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AccessControlPolicy_1 = __webpack_require__(23864);
+var _AccessControlPolicy_1 = __nccwpck_require__(23864);
 exports.PutBucketAclInput = {
     type: "structure",
     required: ["Bucket"],
@@ -12835,14 +13215,14 @@ exports.PutBucketAclOutput = {
 /***/ }),
 
 /***/ 43421:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketAnalyticsConfigurationInput_1 = __webpack_require__(47065);
-var PutBucketAnalyticsConfigurationOutput_1 = __webpack_require__(86592);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketAnalyticsConfigurationInput_1 = __nccwpck_require__(47065);
+var PutBucketAnalyticsConfigurationOutput_1 = __nccwpck_require__(86592);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketAnalyticsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketAnalyticsConfiguration",
@@ -12863,12 +13243,12 @@ exports.PutBucketAnalyticsConfiguration = {
 /***/ }),
 
 /***/ 47065:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsConfiguration_1 = __webpack_require__(18491);
+var _AnalyticsConfiguration_1 = __nccwpck_require__(18491);
 exports.PutBucketAnalyticsConfigurationInput = {
     type: "structure",
     required: ["Bucket", "Id", "AnalyticsConfiguration"],
@@ -12917,14 +13297,14 @@ exports.PutBucketAnalyticsConfigurationOutput = {
 /***/ }),
 
 /***/ 83341:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketCorsInput_1 = __webpack_require__(43929);
-var PutBucketCorsOutput_1 = __webpack_require__(30035);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketCorsInput_1 = __nccwpck_require__(43929);
+var PutBucketCorsOutput_1 = __nccwpck_require__(30035);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketCors = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketCors",
@@ -12945,12 +13325,12 @@ exports.PutBucketCors = {
 /***/ }),
 
 /***/ 43929:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CORSConfiguration_1 = __webpack_require__(90688);
+var _CORSConfiguration_1 = __nccwpck_require__(90688);
 exports.PutBucketCorsInput = {
     type: "structure",
     required: ["Bucket", "CORSConfiguration"],
@@ -12999,14 +13379,14 @@ exports.PutBucketCorsOutput = {
 /***/ }),
 
 /***/ 96599:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketEncryptionInput_1 = __webpack_require__(46054);
-var PutBucketEncryptionOutput_1 = __webpack_require__(3870);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketEncryptionInput_1 = __nccwpck_require__(46054);
+var PutBucketEncryptionOutput_1 = __nccwpck_require__(3870);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketEncryption = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketEncryption",
@@ -13027,12 +13407,12 @@ exports.PutBucketEncryption = {
 /***/ }),
 
 /***/ 46054:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ServerSideEncryptionConfiguration_1 = __webpack_require__(25535);
+var _ServerSideEncryptionConfiguration_1 = __nccwpck_require__(25535);
 exports.PutBucketEncryptionInput = {
     type: "structure",
     required: ["Bucket", "ServerSideEncryptionConfiguration"],
@@ -13081,14 +13461,14 @@ exports.PutBucketEncryptionOutput = {
 /***/ }),
 
 /***/ 13225:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketInventoryConfigurationInput_1 = __webpack_require__(91057);
-var PutBucketInventoryConfigurationOutput_1 = __webpack_require__(20512);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketInventoryConfigurationInput_1 = __nccwpck_require__(91057);
+var PutBucketInventoryConfigurationOutput_1 = __nccwpck_require__(20512);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketInventoryConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketInventoryConfiguration",
@@ -13109,12 +13489,12 @@ exports.PutBucketInventoryConfiguration = {
 /***/ }),
 
 /***/ 91057:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryConfiguration_1 = __webpack_require__(27890);
+var _InventoryConfiguration_1 = __nccwpck_require__(27890);
 exports.PutBucketInventoryConfigurationInput = {
     type: "structure",
     required: ["Bucket", "Id", "InventoryConfiguration"],
@@ -13163,14 +13543,14 @@ exports.PutBucketInventoryConfigurationOutput = {
 /***/ }),
 
 /***/ 99870:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketLifecycleInput_1 = __webpack_require__(91190);
-var PutBucketLifecycleOutput_1 = __webpack_require__(84844);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketLifecycleInput_1 = __nccwpck_require__(91190);
+var PutBucketLifecycleOutput_1 = __nccwpck_require__(84844);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketLifecycle = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketLifecycle",
@@ -13191,14 +13571,14 @@ exports.PutBucketLifecycle = {
 /***/ }),
 
 /***/ 29695:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketLifecycleConfigurationInput_1 = __webpack_require__(46731);
-var PutBucketLifecycleConfigurationOutput_1 = __webpack_require__(42807);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketLifecycleConfigurationInput_1 = __nccwpck_require__(46731);
+var PutBucketLifecycleConfigurationOutput_1 = __nccwpck_require__(42807);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketLifecycleConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketLifecycleConfiguration",
@@ -13219,12 +13599,12 @@ exports.PutBucketLifecycleConfiguration = {
 /***/ }),
 
 /***/ 46731:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _BucketLifecycleConfiguration_1 = __webpack_require__(88672);
+var _BucketLifecycleConfiguration_1 = __nccwpck_require__(88672);
 exports.PutBucketLifecycleConfigurationInput = {
     type: "structure",
     required: ["Bucket"],
@@ -13266,12 +13646,12 @@ exports.PutBucketLifecycleConfigurationOutput = {
 /***/ }),
 
 /***/ 91190:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleConfiguration_1 = __webpack_require__(34018);
+var _LifecycleConfiguration_1 = __nccwpck_require__(34018);
 exports.PutBucketLifecycleInput = {
     type: "structure",
     required: ["Bucket"],
@@ -13320,14 +13700,14 @@ exports.PutBucketLifecycleOutput = {
 /***/ }),
 
 /***/ 82458:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketLoggingInput_1 = __webpack_require__(37333);
-var PutBucketLoggingOutput_1 = __webpack_require__(6925);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketLoggingInput_1 = __nccwpck_require__(37333);
+var PutBucketLoggingOutput_1 = __nccwpck_require__(6925);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketLogging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketLogging",
@@ -13348,12 +13728,12 @@ exports.PutBucketLogging = {
 /***/ }),
 
 /***/ 37333:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _BucketLoggingStatus_1 = __webpack_require__(39903);
+var _BucketLoggingStatus_1 = __nccwpck_require__(39903);
 exports.PutBucketLoggingInput = {
     type: "structure",
     required: ["Bucket", "BucketLoggingStatus"],
@@ -13402,14 +13782,14 @@ exports.PutBucketLoggingOutput = {
 /***/ }),
 
 /***/ 61098:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketMetricsConfigurationInput_1 = __webpack_require__(58382);
-var PutBucketMetricsConfigurationOutput_1 = __webpack_require__(43235);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketMetricsConfigurationInput_1 = __nccwpck_require__(58382);
+var PutBucketMetricsConfigurationOutput_1 = __nccwpck_require__(43235);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketMetricsConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketMetricsConfiguration",
@@ -13430,12 +13810,12 @@ exports.PutBucketMetricsConfiguration = {
 /***/ }),
 
 /***/ 58382:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetricsConfiguration_1 = __webpack_require__(84956);
+var _MetricsConfiguration_1 = __nccwpck_require__(84956);
 exports.PutBucketMetricsConfigurationInput = {
     type: "structure",
     required: ["Bucket", "Id", "MetricsConfiguration"],
@@ -13484,14 +13864,14 @@ exports.PutBucketMetricsConfigurationOutput = {
 /***/ }),
 
 /***/ 2757:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketNotificationInput_1 = __webpack_require__(89745);
-var PutBucketNotificationOutput_1 = __webpack_require__(25636);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketNotificationInput_1 = __nccwpck_require__(89745);
+var PutBucketNotificationOutput_1 = __nccwpck_require__(25636);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketNotification = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketNotification",
@@ -13512,14 +13892,14 @@ exports.PutBucketNotification = {
 /***/ }),
 
 /***/ 33673:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketNotificationConfigurationInput_1 = __webpack_require__(21623);
-var PutBucketNotificationConfigurationOutput_1 = __webpack_require__(3747);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketNotificationConfigurationInput_1 = __nccwpck_require__(21623);
+var PutBucketNotificationConfigurationOutput_1 = __nccwpck_require__(3747);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketNotificationConfiguration = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketNotificationConfiguration",
@@ -13540,12 +13920,12 @@ exports.PutBucketNotificationConfiguration = {
 /***/ }),
 
 /***/ 21623:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _NotificationConfiguration_1 = __webpack_require__(54825);
+var _NotificationConfiguration_1 = __nccwpck_require__(54825);
 exports.PutBucketNotificationConfigurationInput = {
     type: "structure",
     required: ["Bucket", "NotificationConfiguration"],
@@ -13587,12 +13967,12 @@ exports.PutBucketNotificationConfigurationOutput = {
 /***/ }),
 
 /***/ 89745:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _NotificationConfigurationDeprecated_1 = __webpack_require__(8569);
+var _NotificationConfigurationDeprecated_1 = __nccwpck_require__(8569);
 exports.PutBucketNotificationInput = {
     type: "structure",
     required: ["Bucket", "NotificationConfiguration"],
@@ -13641,14 +14021,14 @@ exports.PutBucketNotificationOutput = {
 /***/ }),
 
 /***/ 86115:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketPolicyInput_1 = __webpack_require__(32236);
-var PutBucketPolicyOutput_1 = __webpack_require__(69659);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketPolicyInput_1 = __nccwpck_require__(32236);
+var PutBucketPolicyOutput_1 = __nccwpck_require__(69659);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketPolicy = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketPolicy",
@@ -13727,14 +14107,14 @@ exports.PutBucketPolicyOutput = {
 /***/ }),
 
 /***/ 48734:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketReplicationInput_1 = __webpack_require__(33958);
-var PutBucketReplicationOutput_1 = __webpack_require__(48039);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketReplicationInput_1 = __nccwpck_require__(33958);
+var PutBucketReplicationOutput_1 = __nccwpck_require__(48039);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketReplication = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketReplication",
@@ -13755,12 +14135,12 @@ exports.PutBucketReplication = {
 /***/ }),
 
 /***/ 33958:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ReplicationConfiguration_1 = __webpack_require__(73783);
+var _ReplicationConfiguration_1 = __nccwpck_require__(73783);
 exports.PutBucketReplicationInput = {
     type: "structure",
     required: ["Bucket", "ReplicationConfiguration"],
@@ -13809,14 +14189,14 @@ exports.PutBucketReplicationOutput = {
 /***/ }),
 
 /***/ 12870:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketRequestPaymentInput_1 = __webpack_require__(27981);
-var PutBucketRequestPaymentOutput_1 = __webpack_require__(39223);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketRequestPaymentInput_1 = __nccwpck_require__(27981);
+var PutBucketRequestPaymentOutput_1 = __nccwpck_require__(39223);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketRequestPayment = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketRequestPayment",
@@ -13837,12 +14217,12 @@ exports.PutBucketRequestPayment = {
 /***/ }),
 
 /***/ 27981:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RequestPaymentConfiguration_1 = __webpack_require__(64015);
+var _RequestPaymentConfiguration_1 = __nccwpck_require__(64015);
 exports.PutBucketRequestPaymentInput = {
     type: "structure",
     required: ["Bucket", "RequestPaymentConfiguration"],
@@ -13891,14 +14271,14 @@ exports.PutBucketRequestPaymentOutput = {
 /***/ }),
 
 /***/ 7863:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketTaggingInput_1 = __webpack_require__(48460);
-var PutBucketTaggingOutput_1 = __webpack_require__(15878);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketTaggingInput_1 = __nccwpck_require__(48460);
+var PutBucketTaggingOutput_1 = __nccwpck_require__(15878);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketTagging",
@@ -13919,12 +14299,12 @@ exports.PutBucketTagging = {
 /***/ }),
 
 /***/ 48460:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tagging_1 = __webpack_require__(71613);
+var _Tagging_1 = __nccwpck_require__(71613);
 exports.PutBucketTaggingInput = {
     type: "structure",
     required: ["Bucket", "Tagging"],
@@ -13973,14 +14353,14 @@ exports.PutBucketTaggingOutput = {
 /***/ }),
 
 /***/ 87436:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketVersioningInput_1 = __webpack_require__(99141);
-var PutBucketVersioningOutput_1 = __webpack_require__(22677);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketVersioningInput_1 = __nccwpck_require__(99141);
+var PutBucketVersioningOutput_1 = __nccwpck_require__(22677);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketVersioning = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketVersioning",
@@ -14001,12 +14381,12 @@ exports.PutBucketVersioning = {
 /***/ }),
 
 /***/ 99141:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _VersioningConfiguration_1 = __webpack_require__(53770);
+var _VersioningConfiguration_1 = __nccwpck_require__(53770);
 exports.PutBucketVersioningInput = {
     type: "structure",
     required: ["Bucket", "VersioningConfiguration"],
@@ -14062,14 +14442,14 @@ exports.PutBucketVersioningOutput = {
 /***/ }),
 
 /***/ 14757:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutBucketWebsiteInput_1 = __webpack_require__(28072);
-var PutBucketWebsiteOutput_1 = __webpack_require__(21817);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutBucketWebsiteInput_1 = __nccwpck_require__(28072);
+var PutBucketWebsiteOutput_1 = __nccwpck_require__(21817);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutBucketWebsite = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutBucketWebsite",
@@ -14090,12 +14470,12 @@ exports.PutBucketWebsite = {
 /***/ }),
 
 /***/ 28072:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _WebsiteConfiguration_1 = __webpack_require__(86448);
+var _WebsiteConfiguration_1 = __nccwpck_require__(86448);
 exports.PutBucketWebsiteInput = {
     type: "structure",
     required: ["Bucket", "WebsiteConfiguration"],
@@ -14144,14 +14524,14 @@ exports.PutBucketWebsiteOutput = {
 /***/ }),
 
 /***/ 96770:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutObjectInput_1 = __webpack_require__(39111);
-var PutObjectOutput_1 = __webpack_require__(31463);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutObjectInput_1 = __nccwpck_require__(39111);
+var PutObjectOutput_1 = __nccwpck_require__(31463);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutObject",
@@ -14172,15 +14552,15 @@ exports.PutObject = {
 /***/ }),
 
 /***/ 30691:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutObjectAclInput_1 = __webpack_require__(94909);
-var PutObjectAclOutput_1 = __webpack_require__(30662);
-var NoSuchKey_1 = __webpack_require__(83997);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutObjectAclInput_1 = __nccwpck_require__(94909);
+var PutObjectAclOutput_1 = __nccwpck_require__(30662);
+var NoSuchKey_1 = __nccwpck_require__(83997);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutObjectAcl = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutObjectAcl",
@@ -14205,12 +14585,12 @@ exports.PutObjectAcl = {
 /***/ }),
 
 /***/ 94909:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AccessControlPolicy_1 = __webpack_require__(23864);
+var _AccessControlPolicy_1 = __nccwpck_require__(23864);
 exports.PutObjectAclInput = {
     type: "structure",
     required: ["Bucket", "Key"],
@@ -14331,12 +14711,12 @@ exports.PutObjectAclOutput = {
 /***/ }),
 
 /***/ 39111:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Metadata_1 = __webpack_require__(43941);
+var _Metadata_1 = __nccwpck_require__(43941);
 exports.PutObjectInput = {
     type: "structure",
     required: ["Bucket", "Key"],
@@ -14604,14 +14984,14 @@ exports.PutObjectOutput = {
 /***/ }),
 
 /***/ 33987:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var PutObjectTaggingInput_1 = __webpack_require__(63508);
-var PutObjectTaggingOutput_1 = __webpack_require__(2296);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var PutObjectTaggingInput_1 = __nccwpck_require__(63508);
+var PutObjectTaggingOutput_1 = __nccwpck_require__(2296);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.PutObjectTagging = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "PutObjectTagging",
@@ -14632,12 +15012,12 @@ exports.PutObjectTagging = {
 /***/ }),
 
 /***/ 63508:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tagging_1 = __webpack_require__(71613);
+var _Tagging_1 = __nccwpck_require__(71613);
 exports.PutObjectTaggingInput = {
     type: "structure",
     required: ["Bucket", "Key", "Tagging"],
@@ -14709,15 +15089,15 @@ exports.PutObjectTaggingOutput = {
 /***/ }),
 
 /***/ 31488:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var RestoreObjectInput_1 = __webpack_require__(23872);
-var RestoreObjectOutput_1 = __webpack_require__(27748);
-var ObjectAlreadyInActiveTierError_1 = __webpack_require__(31555);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var RestoreObjectInput_1 = __nccwpck_require__(23872);
+var RestoreObjectOutput_1 = __nccwpck_require__(27748);
+var ObjectAlreadyInActiveTierError_1 = __nccwpck_require__(31555);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.RestoreObject = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "RestoreObject",
@@ -14742,12 +15122,12 @@ exports.RestoreObject = {
 /***/ }),
 
 /***/ 23872:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RestoreRequest_1 = __webpack_require__(57094);
+var _RestoreRequest_1 = __nccwpck_require__(57094);
 exports.RestoreObjectInput = {
     type: "structure",
     required: ["Bucket", "Key"],
@@ -14826,14 +15206,14 @@ exports.RestoreObjectOutput = {
 /***/ }),
 
 /***/ 91223:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var SelectObjectContentInput_1 = __webpack_require__(46713);
-var SelectObjectContentOutput_1 = __webpack_require__(55868);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var SelectObjectContentInput_1 = __nccwpck_require__(46713);
+var SelectObjectContentOutput_1 = __nccwpck_require__(55868);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.SelectObjectContent = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "SelectObjectContent",
@@ -14858,14 +15238,14 @@ exports.SelectObjectContent = {
 /***/ }),
 
 /***/ 46713:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RequestProgress_1 = __webpack_require__(61828);
-var _InputSerialization_1 = __webpack_require__(71651);
-var _OutputSerialization_1 = __webpack_require__(63173);
+var _RequestProgress_1 = __nccwpck_require__(61828);
+var _InputSerialization_1 = __nccwpck_require__(71651);
+var _OutputSerialization_1 = __nccwpck_require__(63173);
 exports.SelectObjectContentInput = {
     type: "structure",
     required: [
@@ -14940,12 +15320,12 @@ exports.SelectObjectContentInput = {
 /***/ }),
 
 /***/ 55868:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _SelectObjectContentEventStream_1 = __webpack_require__(22817);
+var _SelectObjectContentEventStream_1 = __nccwpck_require__(22817);
 exports.SelectObjectContentOutput = {
     type: "structure",
     required: [],
@@ -14982,14 +15362,14 @@ exports.clientVersion = "0.1.0-preview.1";
 /***/ }),
 
 /***/ 27777:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var UploadPartInput_1 = __webpack_require__(33489);
-var UploadPartOutput_1 = __webpack_require__(58441);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var UploadPartInput_1 = __nccwpck_require__(33489);
+var UploadPartOutput_1 = __nccwpck_require__(58441);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.UploadPart = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "UploadPart",
@@ -15010,14 +15390,14 @@ exports.UploadPart = {
 /***/ }),
 
 /***/ 71869:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var UploadPartCopyInput_1 = __webpack_require__(15938);
-var UploadPartCopyOutput_1 = __webpack_require__(23953);
-var ServiceMetadata_1 = __webpack_require__(86326);
+var UploadPartCopyInput_1 = __nccwpck_require__(15938);
+var UploadPartCopyOutput_1 = __nccwpck_require__(23953);
+var ServiceMetadata_1 = __nccwpck_require__(86326);
 exports.UploadPartCopy = {
     metadata: ServiceMetadata_1.ServiceMetadata,
     name: "UploadPartCopy",
@@ -15176,12 +15556,12 @@ exports.UploadPartCopyInput = {
 /***/ }),
 
 /***/ 23953:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CopyPartResult_1 = __webpack_require__(32732);
+var _CopyPartResult_1 = __nccwpck_require__(32732);
 exports.UploadPartCopyOutput = {
     type: "structure",
     required: [],
@@ -15436,13 +15816,13 @@ exports._AccelerateConfiguration = {
 /***/ }),
 
 /***/ 23864:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Grants_1 = __webpack_require__(50781);
-var _Owner_1 = __webpack_require__(17885);
+var _Grants_1 = __nccwpck_require__(50781);
+var _Owner_1 = __nccwpck_require__(17885);
 exports._AccessControlPolicy = {
     type: "structure",
     required: [],
@@ -15539,12 +15919,12 @@ exports._AllowedOrigins = {
 /***/ }),
 
 /***/ 53258:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports._AnalyticsAndOperator = {
     type: "structure",
     required: [],
@@ -15566,13 +15946,13 @@ exports._AnalyticsAndOperator = {
 /***/ }),
 
 /***/ 18491:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsFilter_1 = __webpack_require__(97631);
-var _StorageClassAnalysis_1 = __webpack_require__(46600);
+var _AnalyticsFilter_1 = __nccwpck_require__(97631);
+var _StorageClassAnalysis_1 = __nccwpck_require__(46600);
 exports._AnalyticsConfiguration = {
     type: "structure",
     required: ["Id", "StorageClassAnalysis"],
@@ -15595,12 +15975,12 @@ exports._AnalyticsConfiguration = {
 /***/ }),
 
 /***/ 75383:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsConfiguration_1 = __webpack_require__(18491);
+var _AnalyticsConfiguration_1 = __nccwpck_require__(18491);
 exports._AnalyticsConfigurationList = {
     type: "list",
     flattened: true,
@@ -15613,12 +15993,12 @@ exports._AnalyticsConfigurationList = {
 /***/ }),
 
 /***/ 84659:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsS3BucketDestination_1 = __webpack_require__(58679);
+var _AnalyticsS3BucketDestination_1 = __nccwpck_require__(58679);
 exports._AnalyticsExportDestination = {
     type: "structure",
     required: ["S3BucketDestination"],
@@ -15633,13 +16013,13 @@ exports._AnalyticsExportDestination = {
 /***/ }),
 
 /***/ 97631:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tag_1 = __webpack_require__(16322);
-var _AnalyticsAndOperator_1 = __webpack_require__(53258);
+var _Tag_1 = __nccwpck_require__(16322);
+var _AnalyticsAndOperator_1 = __nccwpck_require__(53258);
 exports._AnalyticsFilter = {
     type: "structure",
     required: [],
@@ -15724,12 +16104,12 @@ exports._Bucket = {
 /***/ }),
 
 /***/ 88672:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleRules_1 = __webpack_require__(70954);
+var _LifecycleRules_1 = __nccwpck_require__(70954);
 exports._BucketLifecycleConfiguration = {
     type: "structure",
     required: ["Rules"],
@@ -15745,12 +16125,12 @@ exports._BucketLifecycleConfiguration = {
 /***/ }),
 
 /***/ 39903:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LoggingEnabled_1 = __webpack_require__(69205);
+var _LoggingEnabled_1 = __nccwpck_require__(69205);
 exports._BucketLoggingStatus = {
     type: "structure",
     required: [],
@@ -15765,12 +16145,12 @@ exports._BucketLoggingStatus = {
 /***/ }),
 
 /***/ 48456:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Bucket_1 = __webpack_require__(10161);
+var _Bucket_1 = __nccwpck_require__(10161);
 exports._Buckets = {
     type: "list",
     member: {
@@ -15783,12 +16163,12 @@ exports._Buckets = {
 /***/ }),
 
 /***/ 90688:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CORSRules_1 = __webpack_require__(44387);
+var _CORSRules_1 = __nccwpck_require__(44387);
 exports._CORSConfiguration = {
     type: "structure",
     required: ["CORSRules"],
@@ -15804,15 +16184,15 @@ exports._CORSConfiguration = {
 /***/ }),
 
 /***/ 44087:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AllowedHeaders_1 = __webpack_require__(70414);
-var _AllowedMethods_1 = __webpack_require__(79622);
-var _AllowedOrigins_1 = __webpack_require__(8445);
-var _ExposeHeaders_1 = __webpack_require__(64995);
+var _AllowedHeaders_1 = __nccwpck_require__(70414);
+var _AllowedMethods_1 = __nccwpck_require__(79622);
+var _AllowedOrigins_1 = __nccwpck_require__(8445);
+var _ExposeHeaders_1 = __nccwpck_require__(64995);
 exports._CORSRule = {
     type: "structure",
     required: ["AllowedMethods", "AllowedOrigins"],
@@ -15845,12 +16225,12 @@ exports._CORSRule = {
 /***/ }),
 
 /***/ 44387:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CORSRule_1 = __webpack_require__(44087);
+var _CORSRule_1 = __nccwpck_require__(44087);
 exports._CORSRules = {
     type: "list",
     flattened: true,
@@ -15955,12 +16335,12 @@ exports._CSVOutput = {
 /***/ }),
 
 /***/ 57182:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
+var _EventList_1 = __nccwpck_require__(36031);
 exports._CloudFunctionConfiguration = {
     type: "structure",
     required: [],
@@ -16017,12 +16397,12 @@ exports._CommonPrefix = {
 /***/ }),
 
 /***/ 41186:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CommonPrefix_1 = __webpack_require__(47187);
+var _CommonPrefix_1 = __nccwpck_require__(47187);
 exports._CommonPrefixList = {
     type: "list",
     flattened: true,
@@ -16035,12 +16415,12 @@ exports._CommonPrefixList = {
 /***/ }),
 
 /***/ 71853:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CompletedPartList_1 = __webpack_require__(57763);
+var _CompletedPartList_1 = __nccwpck_require__(57763);
 exports._CompletedMultipartUpload = {
     type: "structure",
     required: [],
@@ -16082,12 +16462,12 @@ exports._CompletedPart = {
 /***/ }),
 
 /***/ 57763:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CompletedPart_1 = __webpack_require__(36515);
+var _CompletedPart_1 = __nccwpck_require__(36515);
 exports._CompletedPartList = {
     type: "list",
     flattened: true,
@@ -16214,12 +16594,12 @@ exports._CreateBucketConfiguration = {
 /***/ }),
 
 /***/ 80578:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectIdentifierList_1 = __webpack_require__(69972);
+var _ObjectIdentifierList_1 = __nccwpck_require__(69972);
 exports._Delete = {
     type: "structure",
     required: ["Objects"],
@@ -16240,12 +16620,12 @@ exports._Delete = {
 /***/ }),
 
 /***/ 67353:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
+var _Owner_1 = __nccwpck_require__(17885);
 exports._DeleteMarkerEntry = {
     type: "structure",
     required: [],
@@ -16302,12 +16682,12 @@ exports._DeleteMarkerReplication = {
 /***/ }),
 
 /***/ 65957:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _DeleteMarkerEntry_1 = __webpack_require__(67353);
+var _DeleteMarkerEntry_1 = __nccwpck_require__(67353);
 exports._DeleteMarkers = {
     type: "list",
     flattened: true,
@@ -16357,12 +16737,12 @@ exports._DeletedObject = {
 /***/ }),
 
 /***/ 14945:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _DeletedObject_1 = __webpack_require__(34824);
+var _DeletedObject_1 = __nccwpck_require__(34824);
 exports._DeletedObjects = {
     type: "list",
     flattened: true,
@@ -16375,13 +16755,13 @@ exports._DeletedObjects = {
 /***/ }),
 
 /***/ 65749:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AccessControlTranslation_1 = __webpack_require__(64547);
-var _EncryptionConfiguration_1 = __webpack_require__(29014);
+var _AccessControlTranslation_1 = __nccwpck_require__(64547);
+var _EncryptionConfiguration_1 = __nccwpck_require__(29014);
 exports._Destination = {
     type: "structure",
     required: ["Bucket"],
@@ -16541,12 +16921,12 @@ exports._ErrorDocument = {
 /***/ }),
 
 /***/ 37226:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Error_1 = __webpack_require__(91254);
+var _Error_1 = __nccwpck_require__(91254);
 exports._Errors = {
     type: "list",
     flattened: true,
@@ -16623,12 +17003,12 @@ exports._FilterRule = {
 /***/ }),
 
 /***/ 94102:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _FilterRule_1 = __webpack_require__(65567);
+var _FilterRule_1 = __nccwpck_require__(65567);
 exports._FilterRuleList = {
     type: "list",
     flattened: true,
@@ -16662,12 +17042,12 @@ exports._GlacierJobParameters = {
 /***/ }),
 
 /***/ 69483:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Grantee_1 = __webpack_require__(64895);
+var _Grantee_1 = __nccwpck_require__(64895);
 exports._Grant = {
     type: "structure",
     required: [],
@@ -16730,12 +17110,12 @@ exports._Grantee = {
 /***/ }),
 
 /***/ 50781:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Grant_1 = __webpack_require__(69483);
+var _Grant_1 = __nccwpck_require__(69483);
 exports._Grants = {
     type: "list",
     member: {
@@ -16795,14 +17175,14 @@ exports._Initiator = {
 /***/ }),
 
 /***/ 71651:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CSVInput_1 = __webpack_require__(71158);
-var _JSONInput_1 = __webpack_require__(7694);
-var _ParquetInput_1 = __webpack_require__(6683);
+var _CSVInput_1 = __nccwpck_require__(71158);
+var _JSONInput_1 = __nccwpck_require__(7694);
+var _ParquetInput_1 = __nccwpck_require__(6683);
 exports._InputSerialization = {
     type: "structure",
     required: [],
@@ -16828,15 +17208,15 @@ exports._InputSerialization = {
 /***/ }),
 
 /***/ 27890:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryDestination_1 = __webpack_require__(90844);
-var _InventoryFilter_1 = __webpack_require__(90568);
-var _InventoryOptionalFields_1 = __webpack_require__(49058);
-var _InventorySchedule_1 = __webpack_require__(53702);
+var _InventoryDestination_1 = __nccwpck_require__(90844);
+var _InventoryFilter_1 = __nccwpck_require__(90568);
+var _InventoryOptionalFields_1 = __nccwpck_require__(49058);
+var _InventorySchedule_1 = __nccwpck_require__(53702);
 exports._InventoryConfiguration = {
     type: "structure",
     required: [
@@ -16881,12 +17261,12 @@ exports._InventoryConfiguration = {
 /***/ }),
 
 /***/ 69146:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryConfiguration_1 = __webpack_require__(27890);
+var _InventoryConfiguration_1 = __nccwpck_require__(27890);
 exports._InventoryConfigurationList = {
     type: "list",
     flattened: true,
@@ -16899,12 +17279,12 @@ exports._InventoryConfigurationList = {
 /***/ }),
 
 /***/ 90844:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryS3BucketDestination_1 = __webpack_require__(40655);
+var _InventoryS3BucketDestination_1 = __nccwpck_require__(40655);
 exports._InventoryDestination = {
     type: "structure",
     required: ["S3BucketDestination"],
@@ -16919,13 +17299,13 @@ exports._InventoryDestination = {
 /***/ }),
 
 /***/ 34564:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _SSES3_1 = __webpack_require__(8801);
-var _SSEKMS_1 = __webpack_require__(75969);
+var _SSES3_1 = __nccwpck_require__(8801);
+var _SSEKMS_1 = __nccwpck_require__(75969);
 exports._InventoryEncryption = {
     type: "structure",
     required: [],
@@ -16985,12 +17365,12 @@ exports._InventoryOptionalFields = {
 /***/ }),
 
 /***/ 40655:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InventoryEncryption_1 = __webpack_require__(34564);
+var _InventoryEncryption_1 = __nccwpck_require__(34564);
 exports._InventoryS3BucketDestination = {
     type: "structure",
     required: ["Bucket", "Format"],
@@ -17088,13 +17468,13 @@ exports._JSONOutput = {
 /***/ }),
 
 /***/ 32670:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
-var _NotificationConfigurationFilter_1 = __webpack_require__(43446);
+var _EventList_1 = __nccwpck_require__(36031);
+var _NotificationConfigurationFilter_1 = __nccwpck_require__(43446);
 exports._LambdaFunctionConfiguration = {
     type: "structure",
     required: ["LambdaFunctionArn", "Events"],
@@ -17124,12 +17504,12 @@ exports._LambdaFunctionConfiguration = {
 /***/ }),
 
 /***/ 56091:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LambdaFunctionConfiguration_1 = __webpack_require__(32670);
+var _LambdaFunctionConfiguration_1 = __nccwpck_require__(32670);
 exports._LambdaFunctionConfigurationList = {
     type: "list",
     flattened: true,
@@ -17142,12 +17522,12 @@ exports._LambdaFunctionConfigurationList = {
 /***/ }),
 
 /***/ 34018:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Rules_1 = __webpack_require__(30169);
+var _Rules_1 = __nccwpck_require__(30169);
 exports._LifecycleConfiguration = {
     type: "structure",
     required: ["Rules"],
@@ -17195,17 +17575,17 @@ exports._LifecycleExpiration = {
 /***/ }),
 
 /***/ 41085:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleExpiration_1 = __webpack_require__(50123);
-var _LifecycleRuleFilter_1 = __webpack_require__(48863);
-var _TransitionList_1 = __webpack_require__(69220);
-var _NoncurrentVersionTransitionList_1 = __webpack_require__(38461);
-var _NoncurrentVersionExpiration_1 = __webpack_require__(64086);
-var _AbortIncompleteMultipartUpload_1 = __webpack_require__(93639);
+var _LifecycleExpiration_1 = __nccwpck_require__(50123);
+var _LifecycleRuleFilter_1 = __nccwpck_require__(48863);
+var _TransitionList_1 = __nccwpck_require__(69220);
+var _NoncurrentVersionTransitionList_1 = __nccwpck_require__(38461);
+var _NoncurrentVersionExpiration_1 = __nccwpck_require__(64086);
+var _AbortIncompleteMultipartUpload_1 = __nccwpck_require__(93639);
 exports._LifecycleRule = {
     type: "structure",
     required: ["Status"],
@@ -17252,12 +17632,12 @@ exports._LifecycleRule = {
 /***/ }),
 
 /***/ 37760:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports._LifecycleRuleAndOperator = {
     type: "structure",
     required: [],
@@ -17279,13 +17659,13 @@ exports._LifecycleRuleAndOperator = {
 /***/ }),
 
 /***/ 48863:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tag_1 = __webpack_require__(16322);
-var _LifecycleRuleAndOperator_1 = __webpack_require__(37760);
+var _Tag_1 = __nccwpck_require__(16322);
+var _LifecycleRuleAndOperator_1 = __nccwpck_require__(37760);
 exports._LifecycleRuleFilter = {
     type: "structure",
     required: [],
@@ -17308,12 +17688,12 @@ exports._LifecycleRuleFilter = {
 /***/ }),
 
 /***/ 70954:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleRule_1 = __webpack_require__(41085);
+var _LifecycleRule_1 = __nccwpck_require__(41085);
 exports._LifecycleRules = {
     type: "list",
     flattened: true,
@@ -17326,12 +17706,12 @@ exports._LifecycleRules = {
 /***/ }),
 
 /***/ 69205:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TargetGrants_1 = __webpack_require__(34402);
+var _TargetGrants_1 = __nccwpck_require__(34402);
 exports._LoggingEnabled = {
     type: "structure",
     required: ["TargetBucket", "TargetPrefix"],
@@ -17405,12 +17785,12 @@ exports._MetadataEntry = {
 /***/ }),
 
 /***/ 41812:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports._MetricsAndOperator = {
     type: "structure",
     required: [],
@@ -17432,12 +17812,12 @@ exports._MetricsAndOperator = {
 /***/ }),
 
 /***/ 84956:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetricsFilter_1 = __webpack_require__(15324);
+var _MetricsFilter_1 = __nccwpck_require__(15324);
 exports._MetricsConfiguration = {
     type: "structure",
     required: ["Id"],
@@ -17457,12 +17837,12 @@ exports._MetricsConfiguration = {
 /***/ }),
 
 /***/ 5685:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetricsConfiguration_1 = __webpack_require__(84956);
+var _MetricsConfiguration_1 = __nccwpck_require__(84956);
 exports._MetricsConfigurationList = {
     type: "list",
     flattened: true,
@@ -17475,13 +17855,13 @@ exports._MetricsConfigurationList = {
 /***/ }),
 
 /***/ 15324:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tag_1 = __webpack_require__(16322);
-var _MetricsAndOperator_1 = __webpack_require__(41812);
+var _Tag_1 = __nccwpck_require__(16322);
+var _MetricsAndOperator_1 = __nccwpck_require__(41812);
 exports._MetricsFilter = {
     type: "structure",
     required: [],
@@ -17504,13 +17884,13 @@ exports._MetricsFilter = {
 /***/ }),
 
 /***/ 43332:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
-var _Initiator_1 = __webpack_require__(93083);
+var _Owner_1 = __nccwpck_require__(17885);
+var _Initiator_1 = __nccwpck_require__(93083);
 exports._MultipartUpload = {
     type: "structure",
     required: [],
@@ -17549,12 +17929,12 @@ exports._MultipartUpload = {
 /***/ }),
 
 /***/ 27785:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MultipartUpload_1 = __webpack_require__(43332);
+var _MultipartUpload_1 = __nccwpck_require__(43332);
 exports._MultipartUploadList = {
     type: "list",
     flattened: true,
@@ -17614,12 +17994,12 @@ exports._NoncurrentVersionTransition = {
 /***/ }),
 
 /***/ 38461:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _NoncurrentVersionTransition_1 = __webpack_require__(48629);
+var _NoncurrentVersionTransition_1 = __nccwpck_require__(48629);
 exports._NoncurrentVersionTransitionList = {
     type: "list",
     flattened: true,
@@ -17632,14 +18012,14 @@ exports._NoncurrentVersionTransitionList = {
 /***/ }),
 
 /***/ 54825:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TopicConfigurationList_1 = __webpack_require__(89504);
-var _QueueConfigurationList_1 = __webpack_require__(22643);
-var _LambdaFunctionConfigurationList_1 = __webpack_require__(56091);
+var _TopicConfigurationList_1 = __nccwpck_require__(89504);
+var _QueueConfigurationList_1 = __nccwpck_require__(22643);
+var _LambdaFunctionConfigurationList_1 = __nccwpck_require__(56091);
 exports._NotificationConfiguration = {
     type: "structure",
     required: [],
@@ -17663,14 +18043,14 @@ exports._NotificationConfiguration = {
 /***/ }),
 
 /***/ 8569:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TopicConfigurationDeprecated_1 = __webpack_require__(91759);
-var _QueueConfigurationDeprecated_1 = __webpack_require__(34259);
-var _CloudFunctionConfiguration_1 = __webpack_require__(57182);
+var _TopicConfigurationDeprecated_1 = __nccwpck_require__(91759);
+var _QueueConfigurationDeprecated_1 = __nccwpck_require__(34259);
+var _CloudFunctionConfiguration_1 = __nccwpck_require__(57182);
 exports._NotificationConfigurationDeprecated = {
     type: "structure",
     required: [],
@@ -17691,12 +18071,12 @@ exports._NotificationConfigurationDeprecated = {
 /***/ }),
 
 /***/ 43446:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _S3KeyFilter_1 = __webpack_require__(64653);
+var _S3KeyFilter_1 = __nccwpck_require__(64653);
 exports._NotificationConfigurationFilter = {
     type: "structure",
     required: [],
@@ -17712,12 +18092,12 @@ exports._NotificationConfigurationFilter = {
 /***/ }),
 
 /***/ 96676:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
+var _Owner_1 = __nccwpck_require__(17885);
 exports._Object = {
     type: "structure",
     required: [],
@@ -17785,12 +18165,12 @@ exports._ObjectIdentifier = {
 /***/ }),
 
 /***/ 69972:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectIdentifier_1 = __webpack_require__(9181);
+var _ObjectIdentifier_1 = __nccwpck_require__(9181);
 exports._ObjectIdentifierList = {
     type: "list",
     flattened: true,
@@ -17803,12 +18183,12 @@ exports._ObjectIdentifierList = {
 /***/ }),
 
 /***/ 35183:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Object_1 = __webpack_require__(96676);
+var _Object_1 = __nccwpck_require__(96676);
 exports._ObjectList = {
     type: "list",
     flattened: true,
@@ -17821,12 +18201,12 @@ exports._ObjectList = {
 /***/ }),
 
 /***/ 54220:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Owner_1 = __webpack_require__(17885);
+var _Owner_1 = __nccwpck_require__(17885);
 exports._ObjectVersion = {
     type: "structure",
     required: [],
@@ -17877,12 +18257,12 @@ exports._ObjectVersion = {
 /***/ }),
 
 /***/ 64917:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ObjectVersion_1 = __webpack_require__(54220);
+var _ObjectVersion_1 = __nccwpck_require__(54220);
 exports._ObjectVersionList = {
     type: "list",
     flattened: true,
@@ -17895,12 +18275,12 @@ exports._ObjectVersionList = {
 /***/ }),
 
 /***/ 94146:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _S3Location_1 = __webpack_require__(28634);
+var _S3Location_1 = __nccwpck_require__(28634);
 exports._OutputLocation = {
     type: "structure",
     required: [],
@@ -17915,13 +18295,13 @@ exports._OutputLocation = {
 /***/ }),
 
 /***/ 63173:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _CSVOutput_1 = __webpack_require__(96767);
-var _JSONOutput_1 = __webpack_require__(71901);
+var _CSVOutput_1 = __nccwpck_require__(96767);
+var _JSONOutput_1 = __nccwpck_require__(71901);
 exports._OutputSerialization = {
     type: "structure",
     required: [],
@@ -18016,12 +18396,12 @@ exports._Part = {
 /***/ }),
 
 /***/ 90635:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Part_1 = __webpack_require__(75500);
+var _Part_1 = __nccwpck_require__(75500);
 exports._Parts = {
     type: "list",
     flattened: true,
@@ -18065,12 +18445,12 @@ exports._Progress = {
 /***/ }),
 
 /***/ 68828:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Progress_1 = __webpack_require__(62998);
+var _Progress_1 = __nccwpck_require__(62998);
 exports._ProgressEvent = {
     type: "structure",
     required: [],
@@ -18085,13 +18465,13 @@ exports._ProgressEvent = {
 /***/ }),
 
 /***/ 5613:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
-var _NotificationConfigurationFilter_1 = __webpack_require__(43446);
+var _EventList_1 = __nccwpck_require__(36031);
+var _NotificationConfigurationFilter_1 = __nccwpck_require__(43446);
 exports._QueueConfiguration = {
     type: "structure",
     required: ["QueueArn", "Events"],
@@ -18121,12 +18501,12 @@ exports._QueueConfiguration = {
 /***/ }),
 
 /***/ 34259:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
+var _EventList_1 = __nccwpck_require__(36031);
 exports._QueueConfigurationDeprecated = {
     type: "structure",
     required: [],
@@ -18157,12 +18537,12 @@ exports._QueueConfigurationDeprecated = {
 /***/ }),
 
 /***/ 22643:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _QueueConfiguration_1 = __webpack_require__(5613);
+var _QueueConfiguration_1 = __nccwpck_require__(5613);
 exports._QueueConfigurationList = {
     type: "list",
     flattened: true,
@@ -18263,12 +18643,12 @@ exports._RedirectAllRequestsTo = {
 /***/ }),
 
 /***/ 73783:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ReplicationRules_1 = __webpack_require__(95586);
+var _ReplicationRules_1 = __nccwpck_require__(95586);
 exports._ReplicationConfiguration = {
     type: "structure",
     required: ["Role", "Rules"],
@@ -18289,15 +18669,15 @@ exports._ReplicationConfiguration = {
 /***/ }),
 
 /***/ 94294:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ReplicationRuleFilter_1 = __webpack_require__(54308);
-var _SourceSelectionCriteria_1 = __webpack_require__(10247);
-var _Destination_1 = __webpack_require__(65749);
-var _DeleteMarkerReplication_1 = __webpack_require__(80386);
+var _ReplicationRuleFilter_1 = __nccwpck_require__(54308);
+var _SourceSelectionCriteria_1 = __nccwpck_require__(10247);
+var _Destination_1 = __nccwpck_require__(65749);
+var _DeleteMarkerReplication_1 = __nccwpck_require__(80386);
 exports._ReplicationRule = {
     type: "structure",
     required: ["Status", "Destination"],
@@ -18341,12 +18721,12 @@ exports._ReplicationRule = {
 /***/ }),
 
 /***/ 62995:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports._ReplicationRuleAndOperator = {
     type: "structure",
     required: [],
@@ -18368,13 +18748,13 @@ exports._ReplicationRuleAndOperator = {
 /***/ }),
 
 /***/ 54308:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tag_1 = __webpack_require__(16322);
-var _ReplicationRuleAndOperator_1 = __webpack_require__(62995);
+var _Tag_1 = __nccwpck_require__(16322);
+var _ReplicationRuleAndOperator_1 = __nccwpck_require__(62995);
 exports._ReplicationRuleFilter = {
     type: "structure",
     required: [],
@@ -18397,12 +18777,12 @@ exports._ReplicationRuleFilter = {
 /***/ }),
 
 /***/ 95586:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ReplicationRule_1 = __webpack_require__(94294);
+var _ReplicationRule_1 = __nccwpck_require__(94294);
 exports._ReplicationRules = {
     type: "list",
     flattened: true,
@@ -18457,14 +18837,14 @@ exports._RequestProgress = {
 /***/ }),
 
 /***/ 57094:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _GlacierJobParameters_1 = __webpack_require__(54177);
-var _SelectParameters_1 = __webpack_require__(62870);
-var _OutputLocation_1 = __webpack_require__(94146);
+var _GlacierJobParameters_1 = __nccwpck_require__(54177);
+var _SelectParameters_1 = __nccwpck_require__(62870);
+var _OutputLocation_1 = __nccwpck_require__(94146);
 exports._RestoreRequest = {
     type: "structure",
     required: [],
@@ -18505,13 +18885,13 @@ exports._RestoreRequest = {
 /***/ }),
 
 /***/ 59119:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Condition_1 = __webpack_require__(80938);
-var _Redirect_1 = __webpack_require__(98533);
+var _Condition_1 = __nccwpck_require__(80938);
+var _Redirect_1 = __nccwpck_require__(98533);
 exports._RoutingRule = {
     type: "structure",
     required: ["Redirect"],
@@ -18529,12 +18909,12 @@ exports._RoutingRule = {
 /***/ }),
 
 /***/ 26797:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RoutingRule_1 = __webpack_require__(59119);
+var _RoutingRule_1 = __nccwpck_require__(59119);
 exports._RoutingRules = {
     type: "list",
     member: {
@@ -18547,16 +18927,16 @@ exports._RoutingRules = {
 /***/ }),
 
 /***/ 47448:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _LifecycleExpiration_1 = __webpack_require__(50123);
-var _Transition_1 = __webpack_require__(45505);
-var _NoncurrentVersionTransition_1 = __webpack_require__(48629);
-var _NoncurrentVersionExpiration_1 = __webpack_require__(64086);
-var _AbortIncompleteMultipartUpload_1 = __webpack_require__(93639);
+var _LifecycleExpiration_1 = __nccwpck_require__(50123);
+var _Transition_1 = __nccwpck_require__(45505);
+var _NoncurrentVersionTransition_1 = __nccwpck_require__(48629);
+var _NoncurrentVersionExpiration_1 = __nccwpck_require__(64086);
+var _AbortIncompleteMultipartUpload_1 = __nccwpck_require__(93639);
 exports._Rule = {
     type: "structure",
     required: ["Prefix", "Status"],
@@ -18598,12 +18978,12 @@ exports._Rule = {
 /***/ }),
 
 /***/ 30169:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Rule_1 = __webpack_require__(47448);
+var _Rule_1 = __nccwpck_require__(47448);
 exports._Rules = {
     type: "list",
     flattened: true,
@@ -18616,12 +18996,12 @@ exports._Rules = {
 /***/ }),
 
 /***/ 64653:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _FilterRuleList_1 = __webpack_require__(94102);
+var _FilterRuleList_1 = __nccwpck_require__(94102);
 exports._S3KeyFilter = {
     type: "structure",
     required: [],
@@ -18637,15 +19017,15 @@ exports._S3KeyFilter = {
 /***/ }),
 
 /***/ 28634:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Encryption_1 = __webpack_require__(38672);
-var _Grants_1 = __webpack_require__(50781);
-var _Tagging_1 = __webpack_require__(71613);
-var _UserMetadata_1 = __webpack_require__(65017);
+var _Encryption_1 = __nccwpck_require__(38672);
+var _Grants_1 = __nccwpck_require__(50781);
+var _Tagging_1 = __nccwpck_require__(71613);
+var _UserMetadata_1 = __nccwpck_require__(65017);
 exports._S3Location = {
     type: "structure",
     required: ["BucketName", "Prefix"],
@@ -18726,16 +19106,16 @@ exports._SSES3 = {
 /***/ }),
 
 /***/ 22817:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _RecordsEvent_1 = __webpack_require__(98119);
-var _StatsEvent_1 = __webpack_require__(21661);
-var _ProgressEvent_1 = __webpack_require__(68828);
-var _ContinuationEvent_1 = __webpack_require__(22350);
-var _EndEvent_1 = __webpack_require__(26147);
+var _RecordsEvent_1 = __nccwpck_require__(98119);
+var _StatsEvent_1 = __nccwpck_require__(21661);
+var _ProgressEvent_1 = __nccwpck_require__(68828);
+var _ContinuationEvent_1 = __nccwpck_require__(22350);
+var _EndEvent_1 = __nccwpck_require__(26147);
 exports._SelectObjectContentEventStream = {
     type: "structure",
     required: [],
@@ -18762,13 +19142,13 @@ exports._SelectObjectContentEventStream = {
 /***/ }),
 
 /***/ 62870:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _InputSerialization_1 = __webpack_require__(71651);
-var _OutputSerialization_1 = __webpack_require__(63173);
+var _InputSerialization_1 = __nccwpck_require__(71651);
+var _OutputSerialization_1 = __nccwpck_require__(63173);
 exports._SelectParameters = {
     type: "structure",
     required: [
@@ -18828,12 +19208,12 @@ exports._ServerSideEncryptionByDefault = {
 /***/ }),
 
 /***/ 25535:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ServerSideEncryptionRules_1 = __webpack_require__(58422);
+var _ServerSideEncryptionRules_1 = __nccwpck_require__(58422);
 exports._ServerSideEncryptionConfiguration = {
     type: "structure",
     required: ["Rules"],
@@ -18849,12 +19229,12 @@ exports._ServerSideEncryptionConfiguration = {
 /***/ }),
 
 /***/ 61104:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ServerSideEncryptionByDefault_1 = __webpack_require__(58955);
+var _ServerSideEncryptionByDefault_1 = __nccwpck_require__(58955);
 exports._ServerSideEncryptionRule = {
     type: "structure",
     required: [],
@@ -18869,12 +19249,12 @@ exports._ServerSideEncryptionRule = {
 /***/ }),
 
 /***/ 58422:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ServerSideEncryptionRule_1 = __webpack_require__(61104);
+var _ServerSideEncryptionRule_1 = __nccwpck_require__(61104);
 exports._ServerSideEncryptionRules = {
     type: "list",
     flattened: true,
@@ -18887,12 +19267,12 @@ exports._ServerSideEncryptionRules = {
 /***/ }),
 
 /***/ 10247:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _SseKmsEncryptedObjects_1 = __webpack_require__(44425);
+var _SseKmsEncryptedObjects_1 = __nccwpck_require__(44425);
 exports._SourceSelectionCriteria = {
     type: "structure",
     required: [],
@@ -18959,12 +19339,12 @@ exports._Stats = {
 /***/ }),
 
 /***/ 21661:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Stats_1 = __webpack_require__(21167);
+var _Stats_1 = __nccwpck_require__(21167);
 exports._StatsEvent = {
     type: "structure",
     required: [],
@@ -18979,12 +19359,12 @@ exports._StatsEvent = {
 /***/ }),
 
 /***/ 46600:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _StorageClassAnalysisDataExport_1 = __webpack_require__(26554);
+var _StorageClassAnalysisDataExport_1 = __nccwpck_require__(26554);
 exports._StorageClassAnalysis = {
     type: "structure",
     required: [],
@@ -18999,12 +19379,12 @@ exports._StorageClassAnalysis = {
 /***/ }),
 
 /***/ 26554:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _AnalyticsExportDestination_1 = __webpack_require__(84659);
+var _AnalyticsExportDestination_1 = __nccwpck_require__(84659);
 exports._StorageClassAnalysisDataExport = {
     type: "structure",
     required: ["OutputSchemaVersion", "Destination"],
@@ -19051,12 +19431,12 @@ exports._Tag = {
 /***/ }),
 
 /***/ 66620:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Tag_1 = __webpack_require__(16322);
+var _Tag_1 = __nccwpck_require__(16322);
 exports._TagSet = {
     type: "list",
     member: {
@@ -19069,12 +19449,12 @@ exports._TagSet = {
 /***/ }),
 
 /***/ 71613:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TagSet_1 = __webpack_require__(66620);
+var _TagSet_1 = __nccwpck_require__(66620);
 exports._Tagging = {
     type: "structure",
     required: ["TagSet"],
@@ -19089,12 +19469,12 @@ exports._Tagging = {
 /***/ }),
 
 /***/ 28849:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Grantee_1 = __webpack_require__(64895);
+var _Grantee_1 = __nccwpck_require__(64895);
 exports._TargetGrant = {
     type: "structure",
     required: [],
@@ -19114,12 +19494,12 @@ exports._TargetGrant = {
 /***/ }),
 
 /***/ 34402:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TargetGrant_1 = __webpack_require__(28849);
+var _TargetGrant_1 = __nccwpck_require__(28849);
 exports._TargetGrants = {
     type: "list",
     member: {
@@ -19132,13 +19512,13 @@ exports._TargetGrants = {
 /***/ }),
 
 /***/ 13859:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
-var _NotificationConfigurationFilter_1 = __webpack_require__(43446);
+var _EventList_1 = __nccwpck_require__(36031);
+var _NotificationConfigurationFilter_1 = __nccwpck_require__(43446);
 exports._TopicConfiguration = {
     type: "structure",
     required: ["TopicArn", "Events"],
@@ -19168,12 +19548,12 @@ exports._TopicConfiguration = {
 /***/ }),
 
 /***/ 91759:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _EventList_1 = __webpack_require__(36031);
+var _EventList_1 = __nccwpck_require__(36031);
 exports._TopicConfigurationDeprecated = {
     type: "structure",
     required: [],
@@ -19204,12 +19584,12 @@ exports._TopicConfigurationDeprecated = {
 /***/ }),
 
 /***/ 89504:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _TopicConfiguration_1 = __webpack_require__(13859);
+var _TopicConfiguration_1 = __nccwpck_require__(13859);
 exports._TopicConfigurationList = {
     type: "list",
     flattened: true,
@@ -19254,12 +19634,12 @@ exports._Transition = {
 /***/ }),
 
 /***/ 69220:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _Transition_1 = __webpack_require__(45505);
+var _Transition_1 = __nccwpck_require__(45505);
 exports._TransitionList = {
     type: "list",
     flattened: true,
@@ -19272,12 +19652,12 @@ exports._TransitionList = {
 /***/ }),
 
 /***/ 65017:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _MetadataEntry_1 = __webpack_require__(34727);
+var _MetadataEntry_1 = __nccwpck_require__(34727);
 exports._UserMetadata = {
     type: "list",
     member: {
@@ -19317,15 +19697,15 @@ exports._VersioningConfiguration = {
 /***/ }),
 
 /***/ 86448:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var _ErrorDocument_1 = __webpack_require__(39139);
-var _IndexDocument_1 = __webpack_require__(3447);
-var _RedirectAllRequestsTo_1 = __webpack_require__(32299);
-var _RoutingRules_1 = __webpack_require__(26797);
+var _ErrorDocument_1 = __nccwpck_require__(39139);
+var _IndexDocument_1 = __nccwpck_require__(3447);
+var _RedirectAllRequestsTo_1 = __nccwpck_require__(32299);
+var _RoutingRules_1 = __nccwpck_require__(26797);
 exports._WebsiteConfiguration = {
     type: "structure",
     required: [],
@@ -19349,12 +19729,12 @@ exports._WebsiteConfiguration = {
 /***/ }),
 
 /***/ 17808:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function resolveConfiguration(providedConfiguration, configurationDefinition, middlewareStack) {
     var e_1, _a;
     var out = {};
@@ -19425,13 +19805,13 @@ exports.coreHandler = coreHandler;
 /***/ }),
 
 /***/ 47579:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var property_provider_1 = __webpack_require__(36772);
-var protocol_timestamp_1 = __webpack_require__(27949);
+var property_provider_1 = __nccwpck_require__(36772);
+var protocol_timestamp_1 = __nccwpck_require__(27949);
 exports.ENV_KEY = "AWS_ACCESS_KEY_ID";
 exports.ENV_SECRET = "AWS_SECRET_ACCESS_KEY";
 exports.ENV_SESSION = "AWS_SESSION_TOKEN";
@@ -19463,18 +19843,18 @@ exports.fromEnv = fromEnv;
 /***/ }),
 
 /***/ 36864:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var RemoteProviderInit_1 = __webpack_require__(21568);
-var httpGet_1 = __webpack_require__(54537);
-var ImdsCredentials_1 = __webpack_require__(14339);
-var retry_1 = __webpack_require__(38267);
-var property_provider_1 = __webpack_require__(36772);
-var url_1 = __webpack_require__(78835);
+var tslib_1 = __nccwpck_require__(4351);
+var RemoteProviderInit_1 = __nccwpck_require__(21568);
+var httpGet_1 = __nccwpck_require__(54537);
+var ImdsCredentials_1 = __nccwpck_require__(14339);
+var retry_1 = __nccwpck_require__(38267);
+var property_provider_1 = __nccwpck_require__(36772);
+var url_1 = __nccwpck_require__(78835);
 exports.ENV_CMDS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI";
 exports.ENV_CMDS_RELATIVE_URI = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI";
 exports.ENV_CMDS_AUTH_TOKEN = "AWS_CONTAINER_AUTHORIZATION_TOKEN";
@@ -19551,17 +19931,17 @@ function getCmdsUri() {
 /***/ }),
 
 /***/ 75222:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var RemoteProviderInit_1 = __webpack_require__(21568);
-var httpGet_1 = __webpack_require__(54537);
-var ImdsCredentials_1 = __webpack_require__(14339);
-var retry_1 = __webpack_require__(38267);
-var property_provider_1 = __webpack_require__(36772);
+var tslib_1 = __nccwpck_require__(4351);
+var RemoteProviderInit_1 = __nccwpck_require__(21568);
+var httpGet_1 = __nccwpck_require__(54537);
+var ImdsCredentials_1 = __nccwpck_require__(14339);
+var retry_1 = __nccwpck_require__(38267);
+var property_provider_1 = __nccwpck_require__(36772);
 /**
  * Creates a credential provider that will source credentials from the EC2
  * Instance Metadata Service
@@ -19618,15 +19998,15 @@ function requestFromEc2Imds(timeout, path) {
 /***/ }),
 
 /***/ 3496:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(36864), exports);
-tslib_1.__exportStar(__webpack_require__(75222), exports);
-tslib_1.__exportStar(__webpack_require__(21568), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(36864), exports);
+tslib_1.__exportStar(__nccwpck_require__(75222), exports);
+tslib_1.__exportStar(__nccwpck_require__(21568), exports);
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiLi9zcmMvIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFBQSxrRUFBd0M7QUFDeEMsaUVBQXVDO0FBQ3ZDLDhFQUFvRCIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gXCIuL2Zyb21Db250YWluZXJNZXRhZGF0YVwiO1xuZXhwb3J0ICogZnJvbSBcIi4vZnJvbUluc3RhbmNlTWV0YWRhdGFcIjtcbmV4cG9ydCAqIGZyb20gXCIuL3JlbW90ZVByb3ZpZGVyL1JlbW90ZVByb3ZpZGVySW5pdFwiO1xuIl19
 
 /***/ }),
@@ -19677,14 +20057,14 @@ exports.providerConfigFromInit = providerConfigFromInit;
 /***/ }),
 
 /***/ 54537:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var buffer_1 = __webpack_require__(64293);
-var http_1 = __webpack_require__(98605);
-var property_provider_1 = __webpack_require__(36772);
+var buffer_1 = __nccwpck_require__(64293);
+var http_1 = __nccwpck_require__(98605);
+var property_provider_1 = __nccwpck_require__(36772);
 /**
  * @internal
  */
@@ -19736,14 +20116,14 @@ exports.retry = retry;
 /***/ }),
 
 /***/ 56902:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var property_provider_1 = __webpack_require__(36772);
-var shared_ini_file_loader_1 = __webpack_require__(14894);
+var tslib_1 = __nccwpck_require__(4351);
+var property_provider_1 = __nccwpck_require__(36772);
+var shared_ini_file_loader_1 = __nccwpck_require__(14894);
 var DEFAULT_PROFILE = "default";
 exports.ENV_PROFILE = "AWS_PROFILE";
 function isStaticCredsProfile(arg) {
@@ -19858,16 +20238,16 @@ function resolveStaticCredentials(profile) {
 /***/ }),
 
 /***/ 44091:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const property_provider_1 = __webpack_require__(36772);
-const credential_provider_env_1 = __webpack_require__(47579);
-const credential_provider_imds_1 = __webpack_require__(3496);
-const credential_provider_ini_1 = __webpack_require__(56902);
-const credential_provider_process_1 = __webpack_require__(3711);
+const property_provider_1 = __nccwpck_require__(36772);
+const credential_provider_env_1 = __nccwpck_require__(47579);
+const credential_provider_imds_1 = __nccwpck_require__(3496);
+const credential_provider_ini_1 = __nccwpck_require__(56902);
+const credential_provider_process_1 = __nccwpck_require__(3711);
 exports.ENV_IMDS_DISABLED = "AWS_EC2_METADATA_DISABLED";
 /**
  * Creates a credential provider that will attempt to find credentials from the
@@ -19923,15 +20303,15 @@ function remoteProvider(init) {
 /***/ }),
 
 /***/ 3711:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var property_provider_1 = __webpack_require__(36772);
-var child_process_1 = __webpack_require__(63129);
-var credential_provider_ini_1 = __webpack_require__(56902);
+var tslib_1 = __nccwpck_require__(4351);
+var property_provider_1 = __nccwpck_require__(36772);
+var child_process_1 = __nccwpck_require__(63129);
+var credential_provider_ini_1 = __nccwpck_require__(56902);
 var DEFAULT_PROFILE = "default";
 exports.ENV_PROFILE = "AWS_PROFILE";
 /**
@@ -20022,14 +20402,14 @@ function execPromise(command) {
 /***/ }),
 
 /***/ 53612:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const buffer_1 = __webpack_require__(64293);
-const util_buffer_from_1 = __webpack_require__(65574);
-const crypto_1 = __webpack_require__(76417);
+const buffer_1 = __nccwpck_require__(64293);
+const util_buffer_from_1 = __nccwpck_require__(65574);
+const crypto_1 = __nccwpck_require__(76417);
 class Hash {
     constructor(algorithmIdentifier, secret) {
         this.hash = secret
@@ -20061,12 +20441,12 @@ function castSourceData(toCast, encoding) {
 /***/ }),
 
 /***/ 74200:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const stream_1 = __webpack_require__(92413);
+const stream_1 = __nccwpck_require__(92413);
 class HashCalculator extends stream_1.Writable {
     constructor(hash, options) {
         super(options);
@@ -20088,13 +20468,13 @@ exports.HashCalculator = HashCalculator;
 /***/ }),
 
 /***/ 95594:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const hash_calculator_1 = __webpack_require__(74200);
-const fs_1 = __webpack_require__(35747);
+const hash_calculator_1 = __nccwpck_require__(74200);
+const fs_1 = __nccwpck_require__(35747);
 exports.calculateSha256 = function calculateSha256(hashCtor, fileStream) {
     return new Promise((resolve, reject) => {
         if (!isReadStream(fileStream)) {
@@ -20161,12 +20541,12 @@ exports.isIterable = isIterable;
 /***/ }),
 
 /***/ 95686:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function locationConstraintMiddleware(regionProvider) {
     var _this = this;
     return function (next) { return function (args) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -20195,12 +20575,12 @@ exports.locationConstraintMiddleware = locationConstraintMiddleware;
 /***/ }),
 
 /***/ 40802:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function contentLengthMiddleware(bodyLengthCalculator) {
     var _this = this;
     return function (next) { return function (args) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -20227,12 +20607,12 @@ exports.contentLengthMiddleware = contentLengthMiddleware;
 /***/ }),
 
 /***/ 62645:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var middleware_header_default_1 = __webpack_require__(26385);
+var middleware_header_default_1 = __nccwpck_require__(26385);
 function addExpectContinue(next, context) {
     return function (args) {
         if (args.request.body) {
@@ -20251,12 +20631,12 @@ exports.addExpectContinue = addExpectContinue;
 /***/ }),
 
 /***/ 26385:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function headerDefault(headerBag) {
     return function (next) {
         return function (args) {
@@ -20287,12 +20667,12 @@ exports.headerDefault = headerDefault;
 /***/ }),
 
 /***/ 15910:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function serializerMiddleware(requestSerializerProvider) {
     var _this = this;
     return function (next, _a) {
@@ -20321,12 +20701,12 @@ exports.serializerMiddleware = serializerMiddleware;
 /***/ }),
 
 /***/ 7936:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 var MiddlewareStack = /** @class */ (function () {
     function MiddlewareStack() {
         this.entries = [];
@@ -20429,30 +20809,30 @@ var stepWeights = {
 /***/ }),
 
 /***/ 17937:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(35034), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(35034), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
 /***/ 35034:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var https = __webpack_require__(57211);
-var http = __webpack_require__(98605);
-var querystring_builder_1 = __webpack_require__(72845);
-var set_connection_timeout_1 = __webpack_require__(19281);
-var set_socket_timeout_1 = __webpack_require__(38142);
-var write_request_body_1 = __webpack_require__(96053);
+var tslib_1 = __nccwpck_require__(4351);
+var https = __nccwpck_require__(57211);
+var http = __nccwpck_require__(98605);
+var querystring_builder_1 = __nccwpck_require__(72845);
+var set_connection_timeout_1 = __nccwpck_require__(19281);
+var set_socket_timeout_1 = __nccwpck_require__(38142);
+var write_request_body_1 = __nccwpck_require__(96053);
 var NodeHttpHandler = /** @class */ (function () {
     function NodeHttpHandler(httpOptions) {
         if (httpOptions === void 0) { httpOptions = {}; }
@@ -20603,12 +20983,12 @@ exports.setSocketTimeout = setSocketTimeout;
 /***/ }),
 
 /***/ 96053:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var stream_1 = __webpack_require__(92413);
+var stream_1 = __nccwpck_require__(92413);
 function writeRequestBody(httpRequest, request) {
     var expect = request.headers["Expect"] || request.headers["expect"];
     if (expect === "100-continue") {
@@ -20638,12 +21018,12 @@ function writeBody(httpRequest, body) {
 /***/ }),
 
 /***/ 55809:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 /**
  * An error representing a failure of an individual credential provider.
  *
@@ -20669,13 +21049,13 @@ exports.ProviderError = ProviderError;
 /***/ }),
 
 /***/ 36364:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var ProviderError_1 = __webpack_require__(55809);
+var tslib_1 = __nccwpck_require__(4351);
+var ProviderError_1 = __nccwpck_require__(55809);
 /**
  * Compose a single credential provider function from multiple credential
  * providers. The first provider in the argument list will always be invoked;
@@ -20738,16 +21118,16 @@ exports.fromStatic = fromStatic;
 /***/ }),
 
 /***/ 36772:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(36364), exports);
-tslib_1.__exportStar(__webpack_require__(90215), exports);
-tslib_1.__exportStar(__webpack_require__(64894), exports);
-tslib_1.__exportStar(__webpack_require__(55809), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(36364), exports);
+tslib_1.__exportStar(__nccwpck_require__(90215), exports);
+tslib_1.__exportStar(__nccwpck_require__(64894), exports);
+tslib_1.__exportStar(__nccwpck_require__(55809), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -20788,15 +21168,15 @@ exports.memoize = memoize;
 /***/ }),
 
 /***/ 78691:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var is_array_buffer_1 = __webpack_require__(47749);
-var protocol_timestamp_1 = __webpack_require__(27949);
-var response_metadata_extractor_1 = __webpack_require__(48881);
+var tslib_1 = __nccwpck_require__(4351);
+var is_array_buffer_1 = __nccwpck_require__(47749);
+var protocol_timestamp_1 = __nccwpck_require__(27949);
+var response_metadata_extractor_1 = __nccwpck_require__(48881);
 var RestParser = /** @class */ (function () {
     function RestParser(bodyParser, bodyCollector, parseServiceException, utf8Encoder, base64Decoder) {
         this.bodyParser = bodyParser;
@@ -21044,15 +21424,15 @@ exports.RestParser = RestParser;
 /***/ }),
 
 /***/ 9410:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var protocol_timestamp_1 = __webpack_require__(27949);
-var util_uri_escape_1 = __webpack_require__(58681);
-var is_iterable_1 = __webpack_require__(6617);
+var tslib_1 = __nccwpck_require__(4351);
+var protocol_timestamp_1 = __nccwpck_require__(27949);
+var util_uri_escape_1 = __nccwpck_require__(58681);
+var is_iterable_1 = __nccwpck_require__(6617);
 var RestSerializer = /** @class */ (function () {
     function RestSerializer(endpoint, bodySerializer, base64Encoder, utf8Decoder) {
         this.endpoint = endpoint;
@@ -21365,14 +21745,14 @@ exports.RestSerializer = RestSerializer;
 /***/ }),
 
 /***/ 88504:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(9410), exports);
-tslib_1.__exportStar(__webpack_require__(78691), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(9410), exports);
+tslib_1.__exportStar(__nccwpck_require__(78691), exports);
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsMkRBQWlDO0FBQ2pDLHVEQUE2QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gXCIuL1Jlc3RTZXJpYWxpemVyXCI7XG5leHBvcnQgKiBmcm9tIFwiLi9SZXN0UGFyc2VyXCI7XG4iXX0=
 
 /***/ }),
@@ -21428,13 +21808,13 @@ exports.formatTimestamp = formatTimestamp;
 /***/ }),
 
 /***/ 72845:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var util_uri_escape_1 = __webpack_require__(58681);
+var tslib_1 = __nccwpck_require__(4351);
+var util_uri_escape_1 = __nccwpck_require__(58681);
 function buildQueryString(query) {
     var e_1, _a;
     var parts = [];
@@ -21472,12 +21852,12 @@ exports.buildQueryString = buildQueryString;
 /***/ }),
 
 /***/ 93292:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function parseQueryString(querystring) {
     var e_1, _a;
     var query = {};
@@ -21518,14 +21898,14 @@ exports.parseQueryString = parseQueryString;
 /***/ }),
 
 /***/ 5215:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var fromEnv_1 = __webpack_require__(86848);
-var fromSharedConfigFiles_1 = __webpack_require__(79020);
-var property_provider_1 = __webpack_require__(36772);
+var fromEnv_1 = __nccwpck_require__(86848);
+var fromSharedConfigFiles_1 = __nccwpck_require__(79020);
+var property_provider_1 = __nccwpck_require__(36772);
 function defaultProvider(configuration) {
     if (configuration === void 0) { configuration = {}; }
     return property_provider_1.memoize(property_provider_1.chain(fromEnv_1.fromEnv(configuration), fromSharedConfigFiles_1.fromSharedConfigFiles(configuration)));
@@ -21536,13 +21916,13 @@ exports.defaultProvider = defaultProvider;
 /***/ }),
 
 /***/ 86848:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var property_provider_1 = __webpack_require__(36772);
+var tslib_1 = __nccwpck_require__(4351);
+var property_provider_1 = __nccwpck_require__(36772);
 exports.ENV_REGION = "AWS_REGION";
 function fromEnv(_a) {
     var _this = this;
@@ -21564,14 +21944,14 @@ exports.fromEnv = fromEnv;
 /***/ }),
 
 /***/ 79020:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var property_provider_1 = __webpack_require__(36772);
-var shared_ini_file_loader_1 = __webpack_require__(14894);
+var tslib_1 = __nccwpck_require__(4351);
+var property_provider_1 = __nccwpck_require__(36772);
+var shared_ini_file_loader_1 = __nccwpck_require__(14894);
 var DEFAULT_PROFILE = "default";
 exports.ENV_PROFILE = "AWS_PROFILE";
 function fromSharedConfigFiles(init) {
@@ -21607,15 +21987,15 @@ exports.fromSharedConfigFiles = fromSharedConfigFiles;
 /***/ }),
 
 /***/ 19948:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(5215), exports);
-tslib_1.__exportStar(__webpack_require__(86848), exports);
-tslib_1.__exportStar(__webpack_require__(79020), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(5215), exports);
+tslib_1.__exportStar(__nccwpck_require__(86848), exports);
+tslib_1.__exportStar(__nccwpck_require__(79020), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -21681,12 +22061,12 @@ exports.THROTTLING_RETRY_DELAY_BASE = 500;
 /***/ }),
 
 /***/ 53399:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var constants_1 = __webpack_require__(10056);
+var constants_1 = __nccwpck_require__(10056);
 /**
  * Calculate a capped, fully-jittered exponential backoff time.
  */
@@ -21699,27 +22079,27 @@ exports.defaultDelayDecider = defaultDelayDecider;
 /***/ }),
 
 /***/ 57901:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(53399), exports);
-tslib_1.__exportStar(__webpack_require__(2409), exports);
-tslib_1.__exportStar(__webpack_require__(93851), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(53399), exports);
+tslib_1.__exportStar(__nccwpck_require__(2409), exports);
+tslib_1.__exportStar(__nccwpck_require__(93851), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
 /***/ 2409:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var constants_1 = __webpack_require__(10056);
-var service_error_classification_1 = __webpack_require__(8826);
+var constants_1 = __nccwpck_require__(10056);
+var service_error_classification_1 = __nccwpck_require__(8826);
 function defaultRetryDecider(retryClockSkewErrors) {
     if (retryClockSkewErrors === void 0) { retryClockSkewErrors = false; }
     return function (error) {
@@ -21748,16 +22128,16 @@ function hasMetadata(error) {
 /***/ }),
 
 /***/ 93851:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var constants_1 = __webpack_require__(10056);
-var delayDecider_1 = __webpack_require__(53399);
-var retryDecider_1 = __webpack_require__(2409);
-var service_error_classification_1 = __webpack_require__(8826);
+var tslib_1 = __nccwpck_require__(4351);
+var constants_1 = __nccwpck_require__(10056);
+var delayDecider_1 = __nccwpck_require__(53399);
+var retryDecider_1 = __nccwpck_require__(2409);
+var service_error_classification_1 = __nccwpck_require__(8826);
 function retryMiddleware(maxRetries, retryDecider, delayDecider) {
     if (retryDecider === void 0) { retryDecider = retryDecider_1.defaultRetryDecider(); }
     if (delayDecider === void 0) { delayDecider = delayDecider_1.defaultDelayDecider; }
@@ -21846,15 +22226,15 @@ exports.ERR_RESP_SHAPE = {
 /***/ }),
 
 /***/ 11839:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var constants_1 = __webpack_require__(71087);
-var response_metadata_extractor_1 = __webpack_require__(48881);
-var util_error_constructor_1 = __webpack_require__(8622);
+var tslib_1 = __nccwpck_require__(4351);
+var constants_1 = __nccwpck_require__(71087);
+var response_metadata_extractor_1 = __nccwpck_require__(48881);
+var util_error_constructor_1 = __nccwpck_require__(8622);
 exports.s3ErrorUnmarshaller = function (operation, input, errorBodyParser) {
     var e_1, _a;
     var body = input.body;
@@ -21973,12 +22353,12 @@ exports.THROTTLING_ERROR_CODES = {
 /***/ }),
 
 /***/ 8826:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var constants_1 = __webpack_require__(66025);
+var constants_1 = __nccwpck_require__(66025);
 function isClockSkewError(error) {
     return error.name in constants_1.CLOCK_SKEW_ERROR_CODES;
 }
@@ -21996,14 +22376,14 @@ exports.isThrottlingError = isThrottlingError;
 /***/ }),
 
 /***/ 14894:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var os_1 = __webpack_require__(12087);
-var path_1 = __webpack_require__(85622);
-var fs_1 = __webpack_require__(35747);
+var os_1 = __nccwpck_require__(12087);
+var path_1 = __nccwpck_require__(85622);
+var fs_1 = __nccwpck_require__(35747);
 exports.ENV_CREDENTIALS_PATH = "AWS_SHARED_CREDENTIALS_FILE";
 exports.ENV_CONFIG_PATH = "AWS_CONFIG_FILE";
 var swallowError = function () { return ({}); };
@@ -22094,22 +22474,22 @@ function getHomeDir() {
 /***/ }),
 
 /***/ 21439:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(75636);
-const credentialDerivation_1 = __webpack_require__(27639);
-const getCanonicalHeaders_1 = __webpack_require__(24628);
-const getCanonicalQuery_1 = __webpack_require__(36013);
-const getPayloadHash_1 = __webpack_require__(466);
-const prepareRequest_1 = __webpack_require__(5475);
-const moveHeadersToQuery_1 = __webpack_require__(16764);
-const constants_1 = __webpack_require__(13248);
-const protocol_timestamp_1 = __webpack_require__(27949);
-const util_hex_encoding_1 = __webpack_require__(72155);
-const hasHeader_1 = __webpack_require__(36725);
+const tslib_1 = __nccwpck_require__(4351);
+const credentialDerivation_1 = __nccwpck_require__(27639);
+const getCanonicalHeaders_1 = __nccwpck_require__(24628);
+const getCanonicalQuery_1 = __nccwpck_require__(36013);
+const getPayloadHash_1 = __nccwpck_require__(466);
+const prepareRequest_1 = __nccwpck_require__(5475);
+const moveHeadersToQuery_1 = __nccwpck_require__(16764);
+const constants_1 = __nccwpck_require__(13248);
+const protocol_timestamp_1 = __nccwpck_require__(27949);
+const util_hex_encoding_1 = __nccwpck_require__(72155);
+const hasHeader_1 = __nccwpck_require__(36725);
 class SignatureV4 {
     constructor({ applyChecksum, credentials, region, service, sha256, uriEscapePath = true }) {
         this.service = service;
@@ -22258,12 +22638,12 @@ function getTtl(start, expiration) {
 /***/ }),
 
 /***/ 45155:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(75636);
+const tslib_1 = __nccwpck_require__(4351);
 /**
  * @internal
  */
@@ -22333,12 +22713,12 @@ exports.MAX_PRESIGNED_TTL = 60 * 60 * 24 * 7;
 /***/ }),
 
 /***/ 27639:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const constants_1 = __webpack_require__(13248);
+const constants_1 = __nccwpck_require__(13248);
 const signingKeyCache = {};
 const cacheQueue = [];
 /**
@@ -22407,12 +22787,12 @@ function hmac(ctor, secret, data) {
 /***/ }),
 
 /***/ 24628:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const constants_1 = __webpack_require__(13248);
+const constants_1 = __nccwpck_require__(13248);
 /**
  * @internal
  */
@@ -22441,12 +22821,12 @@ exports.getCanonicalHeaders = getCanonicalHeaders;
 /***/ }),
 
 /***/ 36013:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const constants_1 = __webpack_require__(13248);
+const constants_1 = __nccwpck_require__(13248);
 /**
  * @internal
  */
@@ -22483,14 +22863,14 @@ exports.getCanonicalQuery = getCanonicalQuery;
 /***/ }),
 
 /***/ 466:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const constants_1 = __webpack_require__(13248);
-const is_array_buffer_1 = __webpack_require__(47749);
-const util_hex_encoding_1 = __webpack_require__(72155);
+const constants_1 = __nccwpck_require__(13248);
+const is_array_buffer_1 = __nccwpck_require__(47749);
+const util_hex_encoding_1 = __nccwpck_require__(72155);
 /**
  * @internal
  */
@@ -22541,25 +22921,25 @@ exports.hasHeader = hasHeader;
 /***/ }),
 
 /***/ 18550:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(27639), exports);
-tslib_1.__exportStar(__webpack_require__(21439), exports);
+const tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(27639), exports);
+tslib_1.__exportStar(__nccwpck_require__(21439), exports);
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsaUVBQXVDO0FBQ3ZDLHdEQUE4QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCAqIGZyb20gXCIuL2NyZWRlbnRpYWxEZXJpdmF0aW9uXCI7XG5leHBvcnQgKiBmcm9tIFwiLi9TaWduYXR1cmVWNFwiO1xuIl19
 
 /***/ }),
 
 /***/ 16764:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const cloneRequest_1 = __webpack_require__(45155);
+const cloneRequest_1 = __nccwpck_require__(45155);
 /**
  * @internal
  */
@@ -22581,13 +22961,13 @@ exports.moveHeadersToQuery = moveHeadersToQuery;
 /***/ }),
 
 /***/ 5475:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const cloneRequest_1 = __webpack_require__(45155);
-const constants_1 = __webpack_require__(13248);
+const cloneRequest_1 = __nccwpck_require__(45155);
+const constants_1 = __nccwpck_require__(13248);
 /**
  * @internal
  */
@@ -22610,12 +22990,12 @@ exports.prepareRequest = prepareRequest;
 /***/ }),
 
 /***/ 55824:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function signingMiddleware(signer) {
     var _this = this;
     return function (next) { return function (args) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -22638,12 +23018,12 @@ exports.signingMiddleware = signingMiddleware;
 /***/ }),
 
 /***/ 17845:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
+var tslib_1 = __nccwpck_require__(4351);
 function ssecMiddleware(_a) {
     var _this = this;
     var utf8Decoder = _a.utf8Decoder, base64Encoder = _a.base64Encoder, hashConstructor = _a.hashConstructor, ssecProperties = _a.ssecProperties;
@@ -22707,12 +23087,12 @@ exports.ssecMiddleware = ssecMiddleware;
 /***/ }),
 
 /***/ 39058:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const stream_1 = __webpack_require__(92413);
+const stream_1 = __nccwpck_require__(92413);
 class Collector extends stream_1.Writable {
     constructor() {
         super(...arguments);
@@ -22729,12 +23109,12 @@ exports.Collector = Collector;
 /***/ }),
 
 /***/ 18188:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const collector_1 = __webpack_require__(39058);
+const collector_1 = __nccwpck_require__(39058);
 exports.streamCollector = function streamCollector(stream) {
     return new Promise((resolve, reject) => {
         const collector = new collector_1.Collector();
@@ -22756,13 +23136,13 @@ exports.streamCollector = function streamCollector(stream) {
 /***/ }),
 
 /***/ 4560:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const querystring_parser_1 = __webpack_require__(93292);
-const url_1 = __webpack_require__(78835);
+const querystring_parser_1 = __nccwpck_require__(93292);
+const url_1 = __nccwpck_require__(78835);
 exports.parseUrl = (url) => {
     const { hostname = "localhost", pathname = "/", port, protocol = "https:", search } = url_1.parse(url);
     let query;
@@ -22782,12 +23162,12 @@ exports.parseUrl = (url) => {
 /***/ }),
 
 /***/ 31906:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const util_buffer_from_1 = __webpack_require__(65574);
+const util_buffer_from_1 = __nccwpck_require__(65574);
 /**
  * Converts a base-64 encoded string to a Uint8Array of bytes using Node.JS's
  * `buffer` module.
@@ -22814,12 +23194,12 @@ exports.toBase64 = toBase64;
 /***/ }),
 
 /***/ 55479:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fs_1 = __webpack_require__(35747);
+const fs_1 = __nccwpck_require__(35747);
 function calculateBodyLength(body) {
     if (!body) {
         return 0;
@@ -22845,13 +23225,13 @@ exports.calculateBodyLength = calculateBodyLength;
 /***/ }),
 
 /***/ 65574:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var buffer_1 = __webpack_require__(64293);
-var is_array_buffer_1 = __webpack_require__(47749);
+var buffer_1 = __nccwpck_require__(64293);
+var is_array_buffer_1 = __nccwpck_require__(47749);
 function fromArrayBuffer(input, offset, length) {
     if (offset === void 0) { offset = 0; }
     if (length === void 0) { length = input.byteLength - offset; }
@@ -22965,13 +23345,13 @@ exports.toHex = toHex;
 /***/ }),
 
 /***/ 74067:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var escape_uri_1 = __webpack_require__(38958);
+var tslib_1 = __nccwpck_require__(4351);
+var escape_uri_1 = __nccwpck_require__(38958);
 function escapeUriPath(uri) {
     var e_1, _a;
     var parts = [];
@@ -23019,25 +23399,25 @@ function hexEncode(c) {
 /***/ }),
 
 /***/ 58681:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(38958), exports);
-tslib_1.__exportStar(__webpack_require__(74067), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(38958), exports);
+tslib_1.__exportStar(__nccwpck_require__(74067), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 
 /***/ 40185:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const process = __webpack_require__(61765);
+const process = __nccwpck_require__(61765);
 function defaultUserAgent(packageName, packageVersion) {
     let engine = `${process.platform}/${process.version}`;
     if (process.env.AWS_EXECUTION_ENV) {
@@ -23055,12 +23435,12 @@ exports.appendToUserAgent = appendToUserAgent;
 /***/ }),
 
 /***/ 19930:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const util_buffer_from_1 = __webpack_require__(65574);
+const util_buffer_from_1 = __nccwpck_require__(65574);
 function fromUtf8(input) {
     const buf = util_buffer_from_1.fromString(input, "utf8");
     return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
@@ -23075,15 +23455,15 @@ exports.toUtf8 = toUtf8;
 /***/ }),
 
 /***/ 53419:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var is_iterable_1 = __webpack_require__(6617);
-var protocol_timestamp_1 = __webpack_require__(27949);
-var xml_builder_1 = __webpack_require__(9776);
+var tslib_1 = __nccwpck_require__(4351);
+var is_iterable_1 = __nccwpck_require__(6617);
+var protocol_timestamp_1 = __nccwpck_require__(27949);
+var xml_builder_1 = __nccwpck_require__(9776);
 var XML_NAMESPACE_PREFIX = "xmlns";
 var XmlBodyBuilder = /** @class */ (function () {
     function XmlBodyBuilder(base64Encoder, utf8Decoder) {
@@ -23323,14 +23703,14 @@ exports.XmlBodyBuilder = XmlBodyBuilder;
 /***/ }),
 
 /***/ 52624:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-var protocol_timestamp_1 = __webpack_require__(27949);
-var pixl_xml_1 = __webpack_require__(79193);
+var tslib_1 = __nccwpck_require__(4351);
+var protocol_timestamp_1 = __nccwpck_require__(27949);
+var pixl_xml_1 = __nccwpck_require__(79193);
 var XmlBodyParser = /** @class */ (function () {
     function XmlBodyParser(base64Decoder) {
         this.base64Decoder = base64Decoder;
@@ -24195,12 +24575,12 @@ var num_keys = (exports.numKeys = function num_keys(hash) {
 /***/ }),
 
 /***/ 60622:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var escape_attribute_1 = __webpack_require__(91468);
+var escape_attribute_1 = __nccwpck_require__(91468);
 /**
  * Represents an XML node.
  */
@@ -24247,12 +24627,12 @@ exports.XmlNode = XmlNode;
 /***/ }),
 
 /***/ 85265:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var escape_element_1 = __webpack_require__(26044);
+var escape_element_1 = __nccwpck_require__(26044);
 /**
  * Represents an XML text value.
  */
@@ -24312,14 +24692,14 @@ exports.escapeElement = escapeElement;
 /***/ }),
 
 /***/ 9776:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-var tslib_1 = __webpack_require__(75636);
-tslib_1.__exportStar(__webpack_require__(60622), exports);
-tslib_1.__exportStar(__webpack_require__(85265), exports);
+var tslib_1 = __nccwpck_require__(4351);
+tslib_1.__exportStar(__nccwpck_require__(60622), exports);
+tslib_1.__exportStar(__nccwpck_require__(85265), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -24392,10 +24772,10 @@ function range(a, b, str) {
 /***/ }),
 
 /***/ 33717:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var concatMap = __webpack_require__(86891);
-var balanced = __webpack_require__(9417);
+var concatMap = __nccwpck_require__(86891);
+var balanced = __nccwpck_require__(9417);
 
 module.exports = expandTop;
 
@@ -24620,18 +25000,18 @@ var isArray = Array.isArray || function (xs) {
 /***/ }),
 
 /***/ 83973:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = minimatch
 minimatch.Minimatch = Minimatch
 
 var path = { sep: '/' }
 try {
-  path = __webpack_require__(85622)
+  path = __nccwpck_require__(85622)
 } catch (er) {}
 
 var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-var expand = __webpack_require__(33717)
+var expand = __nccwpck_require__(33717)
 
 var plTypes = {
   '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
@@ -25550,14 +25930,14 @@ function regExpEscape (s) {
 /***/ }),
 
 /***/ 66186:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const optsArg = __webpack_require__(42853)
-const pathArg = __webpack_require__(12930)
+const optsArg = __nccwpck_require__(42853)
+const pathArg = __nccwpck_require__(12930)
 
-const {mkdirpNative, mkdirpNativeSync} = __webpack_require__(4983)
-const {mkdirpManual, mkdirpManualSync} = __webpack_require__(40356)
-const {useNative, useNativeSync} = __webpack_require__(54518)
+const {mkdirpNative, mkdirpNativeSync} = __nccwpck_require__(4983)
+const {mkdirpManual, mkdirpManualSync} = __nccwpck_require__(40356)
+const {useNative, useNativeSync} = __nccwpck_require__(54518)
 
 
 const mkdirp = (path, opts) => {
@@ -25588,9 +25968,9 @@ module.exports = mkdirp
 /***/ }),
 
 /***/ 44992:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {dirname} = __webpack_require__(85622)
+const {dirname} = __nccwpck_require__(85622)
 
 const findMade = (opts, parent, path = undefined) => {
   // we never want the 'made' return value to be a root directory
@@ -25624,9 +26004,9 @@ module.exports = {findMade, findMadeSync}
 /***/ }),
 
 /***/ 40356:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {dirname} = __webpack_require__(85622)
+const {dirname} = __nccwpck_require__(85622)
 
 const mkdirpManual = (path, opts, made) => {
   opts.recursive = false
@@ -25695,11 +26075,11 @@ module.exports = {mkdirpManual, mkdirpManualSync}
 /***/ }),
 
 /***/ 4983:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {dirname} = __webpack_require__(85622)
-const {findMade, findMadeSync} = __webpack_require__(44992)
-const {mkdirpManual, mkdirpManualSync} = __webpack_require__(40356)
+const {dirname} = __nccwpck_require__(85622)
+const {findMade, findMadeSync} = __nccwpck_require__(44992)
+const {mkdirpManual, mkdirpManualSync} = __nccwpck_require__(40356)
 
 const mkdirpNative = (path, opts) => {
   opts.recursive = true
@@ -25741,10 +26121,10 @@ module.exports = {mkdirpNative, mkdirpNativeSync}
 /***/ }),
 
 /***/ 42853:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { promisify } = __webpack_require__(31669)
-const fs = __webpack_require__(35747)
+const { promisify } = __nccwpck_require__(31669)
+const fs = __nccwpck_require__(35747)
 const optsArg = opts => {
   if (!opts)
     opts = { mode: 0o777, fs }
@@ -25771,10 +26151,10 @@ module.exports = optsArg
 /***/ }),
 
 /***/ 12930:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const platform = process.env.__TESTING_MKDIRP_PLATFORM__ || process.platform
-const { resolve, parse } = __webpack_require__(85622)
+const { resolve, parse } = __nccwpck_require__(85622)
 const pathArg = path => {
   if (/\0/.test(path)) {
     // simulate same failure that node raises
@@ -25807,9 +26187,9 @@ module.exports = pathArg
 /***/ }),
 
 /***/ 54518:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const fs = __webpack_require__(35747)
+const fs = __nccwpck_require__(35747)
 
 const version = process.env.__TESTING_MKDIRP_NODE_VERSION__ || process.version
 const versArr = version.replace(/^v/, '').split('.')
@@ -25823,36 +26203,9 @@ module.exports = {useNative, useNativeSync}
 
 /***/ }),
 
-/***/ 75636:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ 4351:
+/***/ ((module) => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "__extends": () => /* binding */ __extends,
-/* harmony export */   "__assign": () => /* binding */ __assign,
-/* harmony export */   "__rest": () => /* binding */ __rest,
-/* harmony export */   "__decorate": () => /* binding */ __decorate,
-/* harmony export */   "__param": () => /* binding */ __param,
-/* harmony export */   "__metadata": () => /* binding */ __metadata,
-/* harmony export */   "__awaiter": () => /* binding */ __awaiter,
-/* harmony export */   "__generator": () => /* binding */ __generator,
-/* harmony export */   "__createBinding": () => /* binding */ __createBinding,
-/* harmony export */   "__exportStar": () => /* binding */ __exportStar,
-/* harmony export */   "__values": () => /* binding */ __values,
-/* harmony export */   "__read": () => /* binding */ __read,
-/* harmony export */   "__spread": () => /* binding */ __spread,
-/* harmony export */   "__spreadArrays": () => /* binding */ __spreadArrays,
-/* harmony export */   "__await": () => /* binding */ __await,
-/* harmony export */   "__asyncGenerator": () => /* binding */ __asyncGenerator,
-/* harmony export */   "__asyncDelegator": () => /* binding */ __asyncDelegator,
-/* harmony export */   "__asyncValues": () => /* binding */ __asyncValues,
-/* harmony export */   "__makeTemplateObject": () => /* binding */ __makeTemplateObject,
-/* harmony export */   "__importStar": () => /* binding */ __importStar,
-/* harmony export */   "__importDefault": () => /* binding */ __importDefault,
-/* harmony export */   "__classPrivateFieldGet": () => /* binding */ __classPrivateFieldGet,
-/* harmony export */   "__classPrivateFieldSet": () => /* binding */ __classPrivateFieldSet
-/* harmony export */ });
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -25867,210 +26220,276 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise */
 
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
+/* global global, define, System, Reflect, Promise */
+var __extends;
+var __assign;
+var __rest;
+var __decorate;
+var __param;
+var __metadata;
+var __awaiter;
+var __generator;
+var __exportStar;
+var __values;
+var __read;
+var __spread;
+var __spreadArrays;
+var __await;
+var __asyncGenerator;
+var __asyncDelegator;
+var __asyncValues;
+var __makeTemplateObject;
+var __importStar;
+var __importDefault;
+var __classPrivateFieldGet;
+var __classPrivateFieldSet;
+var __createBinding;
+(function (factory) {
+    var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : {};
+    if (typeof define === "function" && define.amd) {
+        define("tslib", ["exports"], function (exports) { factory(createExporter(root, createExporter(exports))); });
+    }
+    else if ( true && typeof module.exports === "object") {
+        factory(createExporter(root, createExporter(module.exports)));
+    }
+    else {
+        factory(createExporter(root));
+    }
+    function createExporter(exports, previous) {
+        if (exports !== root) {
+            if (typeof Object.create === "function") {
+                Object.defineProperty(exports, "__esModule", { value: true });
+            }
+            else {
+                exports.__esModule = true;
+            }
+        }
+        return function (id, v) { return exports[id] = previous ? previous(id, v) : v; };
+    }
+})
+(function (exporter) {
+    var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
 
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
+    __extends = function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
 
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
+    __assign = Object.assign || function (t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
             for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
         }
         return t;
-    }
-    return __assign.apply(this, arguments);
-}
+    };
 
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
-
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-
-function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-}
-
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
-function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
+    __rest = function (s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
             }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-}
+        return t;
+    };
 
-function __createBinding(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}
+    __decorate = function (decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    };
 
-function __exportStar(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
-}
+    __param = function (paramIndex, decorator) {
+        return function (target, key) { decorator(target, key, paramIndex); }
+    };
 
-function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
+    __metadata = function (metadataKey, metadataValue) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+    };
+
+    __awaiter = function (thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+
+    __generator = function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
     };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-}
 
-function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
+    __createBinding = function(o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+    };
+
+    __exportStar = function (m, exports) {
+        for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
+    };
+
+    __values = function (o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    };
+
+    __read = function (o, n) {
+        var m = typeof Symbol === "function" && o[Symbol.iterator];
+        if (!m) return o;
+        var i = m.call(o), r, ar = [], e;
         try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
         }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-}
+        catch (error) { e = { error: error }; }
+        finally {
+            try {
+                if (r && !r.done && (m = i["return"])) m.call(i);
+            }
+            finally { if (e) throw e.error; }
+        }
+        return ar;
+    };
 
-function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
-}
+    __spread = function () {
+        for (var ar = [], i = 0; i < arguments.length; i++)
+            ar = ar.concat(__read(arguments[i]));
+        return ar;
+    };
 
-function __spreadArrays() {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
+    __spreadArrays = function () {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    };
 
-function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
-}
+    __await = function (v) {
+        return this instanceof __await ? (this.v = v, this) : new __await(v);
+    };
 
-function __asyncGenerator(thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-}
+    __asyncGenerator = function (thisArg, _arguments, generator) {
+        if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+        var g = generator.apply(thisArg, _arguments || []), i, q = [];
+        return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+        function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+        function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+        function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);  }
+        function fulfill(value) { resume("next", value); }
+        function reject(value) { resume("throw", value); }
+        function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+    };
 
-function __asyncDelegator(o) {
-    var i, p;
-    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
-}
+    __asyncDelegator = function (o) {
+        var i, p;
+        return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+        function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+    };
 
-function __asyncValues(o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-}
+    __asyncValues = function (o) {
+        if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+        var m = o[Symbol.asyncIterator], i;
+        return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+        function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+        function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+    };
 
-function __makeTemplateObject(cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
+    __makeTemplateObject = function (cooked, raw) {
+        if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+        return cooked;
+    };
 
-function __importStar(mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result.default = mod;
-    return result;
-}
+    __importStar = function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+        result["default"] = mod;
+        return result;
+    };
 
-function __importDefault(mod) {
-    return (mod && mod.__esModule) ? mod : { default: mod };
-}
+    __importDefault = function (mod) {
+        return (mod && mod.__esModule) ? mod : { "default": mod };
+    };
 
-function __classPrivateFieldGet(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-}
+    __classPrivateFieldGet = function (receiver, privateMap) {
+        if (!privateMap.has(receiver)) {
+            throw new TypeError("attempted to get private field on non-instance");
+        }
+        return privateMap.get(receiver);
+    };
 
-function __classPrivateFieldSet(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-}
+    __classPrivateFieldSet = function (receiver, privateMap, value) {
+        if (!privateMap.has(receiver)) {
+            throw new TypeError("attempted to set private field on non-instance");
+        }
+        privateMap.set(receiver, value);
+        return value;
+    };
+
+    exporter("__extends", __extends);
+    exporter("__assign", __assign);
+    exporter("__rest", __rest);
+    exporter("__decorate", __decorate);
+    exporter("__param", __param);
+    exporter("__metadata", __metadata);
+    exporter("__awaiter", __awaiter);
+    exporter("__generator", __generator);
+    exporter("__exportStar", __exportStar);
+    exporter("__createBinding", __createBinding);
+    exporter("__values", __values);
+    exporter("__read", __read);
+    exporter("__spread", __spread);
+    exporter("__spreadArrays", __spreadArrays);
+    exporter("__await", __await);
+    exporter("__asyncGenerator", __asyncGenerator);
+    exporter("__asyncDelegator", __asyncDelegator);
+    exporter("__asyncValues", __asyncValues);
+    exporter("__makeTemplateObject", __makeTemplateObject);
+    exporter("__importStar", __importStar);
+    exporter("__importDefault", __importDefault);
+    exporter("__classPrivateFieldGet", __classPrivateFieldGet);
+    exporter("__classPrivateFieldSet", __classPrivateFieldSet);
+});
 
 
 /***/ }),
@@ -26185,10 +26604,11 @@ module.exports = require("util");
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -26200,7 +26620,7 @@ module.exports = require("util");
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
 /******/ 			threw = false;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
@@ -26211,41 +26631,18 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	__webpack_require__.ab = __dirname + "/";/************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
+/******/ 	
+/************************************************************************/
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(94822);
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(94822);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map

@@ -32,7 +32,7 @@
     }
   },
   "devDependencies": {
-    "@changesets/cli": "^2.18.1",
+    "@changesets/cli": "^2.19.0",
     "@types/jest": "^27.0.3",
     "@types/mkdirp": "^1.0.2",
     "@types/node": "^15.3.1",

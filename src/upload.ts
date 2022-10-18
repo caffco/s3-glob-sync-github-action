@@ -1,6 +1,6 @@
 import fs from 'fs'
 import * as glob from '@actions/glob'
-import {S3} from '@aws-sdk/client-s3-node'
+import {S3} from '@aws-sdk/client-s3'
 import {getChunked} from './chunk'
 import {ACL} from './github'
 

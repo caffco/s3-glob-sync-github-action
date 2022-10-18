@@ -1,5 +1,5 @@
 import fs from 'fs'
-import {S3} from '@aws-sdk/client-s3-node'
+import {S3} from '@aws-sdk/client-s3'
 import * as glob from '@actions/glob'
 import {uploadGlobToPrefix} from './upload'
 
@@ -19,9 +19,9 @@ jest.mock('@actions/glob', () => ({
 const getS3Spy = (overrides?: {
   putObject?: jest.SpyInstance
 }): {[key in keyof S3]: jest.SpyInstance} =>
-  (({
+  ({
     putObject: overrides?.putObject ?? jest.fn()
-  } as unknown) as {[key in keyof S3]: jest.SpyInstance})
+  } as unknown as {[key in keyof S3]: jest.SpyInstance})
 
 describe('upload', () => {
   afterEach(() => {
@@ -37,7 +37,7 @@ describe('upload', () => {
         patterns: ['pattern-a', 'pattern-b'],
         bucketName: 'the-bucket',
         prefix: 'the-prefix',
-        s3: (s3Spy as unknown) as S3,
+        s3: s3Spy as unknown as S3,
         maxParallelUploads: 10
       })
 
@@ -52,7 +52,7 @@ describe('upload', () => {
         patterns: ['pattern-a', 'pattern-b'],
         bucketName: 'the-bucket',
         prefix: 'the-prefix',
-        s3: (s3Spy as unknown) as S3,
+        s3: s3Spy as unknown as S3,
         maxParallelUploads: 10
       })
 
@@ -73,7 +73,7 @@ describe('upload', () => {
           patterns: ['pattern-a', 'pattern-b'],
           bucketName: 'the-bucket',
           prefix: 'the-prefix',
-          s3: (s3Spy as unknown) as S3,
+          s3: s3Spy as unknown as S3,
           maxParallelUploads: 10
         })
       ).resolves.toEqual(['/fake-root/my-file'])
@@ -92,7 +92,7 @@ describe('upload', () => {
           patterns: ['pattern-a', 'pattern-b'],
           bucketName: 'the-bucket',
           prefix: 'the-prefix',
-          s3: (s3Spy as unknown) as S3,
+          s3: s3Spy as unknown as S3,
           maxParallelUploads: 10
         })
       ).rejects.toThrowError('Forced error')

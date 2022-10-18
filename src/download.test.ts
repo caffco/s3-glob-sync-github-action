@@ -1,4 +1,4 @@
-import {S3} from '@aws-sdk/client-s3-node'
+import {S3} from '@aws-sdk/client-s3'
 import fs from 'fs'
 import mkdirp from 'mkdirp'
 import {downloadPrefix} from './download'
@@ -19,7 +19,7 @@ const getS3Spy = (overrides?: {
   getObject?: jest.SpyInstance
   bodyStreamOn?: jest.SpyInstance
 }): {[key in keyof S3]: jest.SpyInstance} =>
-  (({
+  ({
     listObjectsV2:
       overrides?.listObjectsV2 ??
       jest.fn().mockResolvedValue({
@@ -35,7 +35,7 @@ const getS3Spy = (overrides?: {
           pipe: jest.fn()
         }
       })
-  } as unknown) as {[key in keyof S3]: jest.SpyInstance})
+  } as unknown as {[key in keyof S3]: jest.SpyInstance})
 
 describe('download', () => {
   afterEach(() => {
@@ -61,7 +61,7 @@ describe('download', () => {
         bucketName: 'the-bucket',
         maxParallelDownloads: 10,
         prefix: 'the-prefix-',
-        s3: (s3Spy as unknown) as S3
+        s3: s3Spy as unknown as S3
       })
 
       expect(s3Spy.getObject).toHaveBeenCalledWith({
@@ -107,7 +107,7 @@ describe('download', () => {
         bucketName: 'the-bucket',
         maxParallelDownloads: 10,
         prefix: 'the-prefix-',
-        s3: (s3Spy as unknown) as S3
+        s3: s3Spy as unknown as S3
       })
 
       expect(s3Spy.listObjectsV2).toHaveBeenCalledWith({
@@ -148,7 +148,7 @@ describe('download', () => {
         bucketName: 'the-bucket',
         maxParallelDownloads: 42,
         prefix: 'the-prefix-',
-        s3: (s3Spy as unknown) as S3
+        s3: s3Spy as unknown as S3
       })
 
       expect(s3Spy.listObjectsV2).toHaveBeenCalledWith({
@@ -178,7 +178,7 @@ describe('download', () => {
           bucketName: 'the-bucket',
           maxParallelDownloads: 10,
           prefix: 'the-prefix-',
-          s3: (s3Spy as unknown) as S3
+          s3: s3Spy as unknown as S3
         })
       ).resolves.toEqual(['/fake-destination/the-key'])
     })
@@ -205,7 +205,7 @@ describe('download', () => {
           bucketName: 'the-bucket',
           maxParallelDownloads: 10,
           prefix: 'the-prefix-',
-          s3: (s3Spy as unknown) as S3
+          s3: s3Spy as unknown as S3
         })
       ).rejects.toThrowError(
         'Attempt to fetch object with key «the-prefix-the-key» on bucket «the-bucket» returned invalid empty body: «undefined»'
@@ -227,7 +227,7 @@ describe('download', () => {
           bucketName: 'the-bucket',
           maxParallelDownloads: 10,
           prefix: 'the-prefix-',
-          s3: (s3Spy as unknown) as S3
+          s3: s3Spy as unknown as S3
         })
       ).rejects.toThrowError(
         'No objects with prefix «the-prefix-» found in bucket «the-bucket»'
@@ -249,7 +249,7 @@ describe('download', () => {
           bucketName: 'the-bucket',
           maxParallelDownloads: 10,
           prefix: 'the-prefix-',
-          s3: (s3Spy as unknown) as S3
+          s3: s3Spy as unknown as S3
         })
       ).rejects.toThrowError('No key for remote object: {}')
     })
@@ -269,7 +269,7 @@ describe('download', () => {
           bucketName: 'the-bucket',
           maxParallelDownloads: 10,
           prefix: 'the-prefix-',
-          s3: (s3Spy as unknown) as S3
+          s3: s3Spy as unknown as S3
         })
       ).rejects.toThrowError(
         'Response has next page but no continuation token was provided'
@@ -298,21 +298,21 @@ describe('download', () => {
 
       const emitSpy = jest.fn()
 
-      jest.spyOn(fs, 'createWriteStream').mockReturnValue(({
+      jest.spyOn(fs, 'createWriteStream').mockReturnValue({
         on: jest.fn().mockImplementation((eventName, callback) => {
           if (eventName === 'finish') {
             callback()
           }
         }),
         emit: emitSpy
-      } as unknown) as ReturnType<typeof fs.createWriteStream>)
+      } as unknown as ReturnType<typeof fs.createWriteStream>)
 
       await downloadPrefix({
         destinationFolder: '/fake-destination',
         bucketName: 'the-bucket',
         maxParallelDownloads: 10,
         prefix: 'the-prefix-',
-        s3: (s3Spy as unknown) as S3
+        s3: s3Spy as unknown as S3
       })
 
       expect(emitSpy).toHaveBeenCalledWith('error', forcedError)
@@ -338,14 +338,14 @@ describe('download', () => {
         })
       })
 
-      const fakeWriteStream = ({
+      const fakeWriteStream = {
         on: jest.fn().mockImplementation((eventName, callback) => {
           if (eventName === 'finish') {
             callback()
           }
         }),
         emit: jest.fn()
-      } as unknown) as ReturnType<typeof fs.createWriteStream>
+      } as unknown as ReturnType<typeof fs.createWriteStream>
 
       jest.spyOn(fs, 'createWriteStream').mockReturnValue(fakeWriteStream)
 
@@ -354,7 +354,7 @@ describe('download', () => {
         bucketName: 'the-bucket',
         maxParallelDownloads: 10,
         prefix: 'the-prefix-',
-        s3: (s3Spy as unknown) as S3
+        s3: s3Spy as unknown as S3
       })
 
       expect(pipeSpy).toHaveBeenCalledWith(fakeWriteStream)

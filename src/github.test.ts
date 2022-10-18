@@ -17,15 +17,17 @@ describe('Github', () => {
     ): ReturnType<typeof jest.spyOn> =>
       jest.spyOn(core, 'getInput').mockImplementation(
         key =>
-          (({
-            prefix: 'the-prefix',
-            bucket_name: 'my-bucket',
-            endpoint: 'custom-endpoint',
-            region: 'the-region',
-            access_key_id: 'my access key id',
-            secret_access_key: 'my secret access key',
-            ...overridenKeys
-          } as Record<string, string>)[key])
+          ((
+            {
+              prefix: 'the-prefix',
+              bucket_name: 'my-bucket',
+              endpoint: 'custom-endpoint',
+              region: 'the-region',
+              access_key_id: 'my access key id',
+              secret_access_key: 'my secret access key',
+              ...overridenKeys
+            } as Record<string, string>
+          )[key])
       )
 
     beforeEach(() => {

@@ -1,7 +1,9 @@
 import {resolve as resolvePath, dirname} from 'path'
 import fs from 'fs'
 import mkdirp from 'mkdirp'
-import {S3, _UnmarshalledObject} from '@aws-sdk/client-s3-node'
+import {S3} from '@aws-sdk/client-s3'
+import type {_Object} from '@aws-sdk/client-s3'
+import {Readable} from 'stream'
 
 const downloadSingleFile = async ({
   destinationFolder,
@@ -28,7 +30,7 @@ const downloadSingleFile = async ({
     Key: key
   })
 
-  const readStream = remoteObject.Body
+  const readStream = remoteObject.Body as Readable
 
   if (!readStream) {
     throw new Error(
@@ -53,7 +55,7 @@ const downloadObjects = async ({
   prefix,
   s3
 }: {
-  objectsInBucket: _UnmarshalledObject[]
+  objectsInBucket: _Object[]
   destinationFolder: string
   bucketName: string
   prefix: string

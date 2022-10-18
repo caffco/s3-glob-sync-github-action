@@ -48,5 +48,5 @@ outputs:
   downloaded_files:
     description: 'List of absolute paths to downloaded files.'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'

@@ -8,6 +8,8 @@
     "project": "./tsconfig.test.json"
   },
   "rules": {
+    "i18n-text/no-en": "off",
+    "filenames/match-regex": [2, "^[a-z_]+(.test)?$", true],
     "eslint-comments/no-use": "off",
     "import/no-namespace": "off",
     "no-unused-vars": "off",

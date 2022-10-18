@@ -1,4 +1,4 @@
-import {S3} from '@aws-sdk/client-s3-node'
+import {S3} from '@aws-sdk/client-s3'
 import {
   Mode,
   getOptionsFromGithubActionInput,

@@ -1,4 +1,4 @@
-import * as clientS3Node from '@aws-sdk/client-s3-node'
+import * as clientS3 from '@aws-sdk/client-s3'
 import * as github from './github'
 import * as upload from './upload'
 import * as download from './download'
@@ -8,15 +8,15 @@ import main from './main'
 jest.mock('./github')
 jest.mock('./upload')
 jest.mock('./download')
-jest.mock('@aws-sdk/client-s3-node')
+jest.mock('@aws-sdk/client-s3')
 
 describe('Main', () => {
   const fakeS3Instance = {}
 
   beforeEach(() => {
     jest
-      .spyOn(clientS3Node, 'S3')
-      .mockReturnValue((fakeS3Instance as unknown) as clientS3Node.S3)
+      .spyOn(clientS3, 'S3')
+      .mockReturnValue(fakeS3Instance as unknown as clientS3.S3)
   })
 
   afterEach(() => {
@@ -43,7 +43,7 @@ describe('Main', () => {
 
       await main()
 
-      expect(clientS3Node.S3).toHaveBeenCalledWith({
+      expect(clientS3.S3).toHaveBeenCalledWith({
         endpoint: 'the-endpoint',
         region: 'the-region',
         credentials: {

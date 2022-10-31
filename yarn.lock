@@ -1428,17 +1428,10 @@
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.18.9":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5":
   version "7.19.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.19.4.tgz#a42f814502ee467d55b38dd1c256f53a7b885c78"
   integrity sha512-EXpLCrk55f+cYqmHsSR+yD/0gAIMxxA9QK9lnQWzhMCvt+YmoBN7Zx94s++Kv0+unHk39vxNO8t+CMA2WSS3wA==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.5.5":
-  version "7.11.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
-  integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1601,10 +1594,10 @@
   dependencies:
     "@changesets/types" "^5.2.0"
 
-"@changesets/cli@^2.25.0":
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.25.0.tgz#c338fefe69daa8348a504e7f54382eb1a4bb7a10"
-  integrity sha512-Svu5KD2enurVHGEEzCRlaojrHjVYgF9srmMP9VQSy9c1TspX6C9lDPpulsSNIjYY9BuU/oiWpjBgR7RI9eQiAA==
+"@changesets/cli@^2.25.1":
+  version "2.25.1"
+  resolved "https://registry.yarnpkg.com/@changesets/cli/-/cli-2.25.1.tgz#78ae1a185e8dcbe5420fac44ed22fb03836de55e"
+  integrity sha512-e65ZJ7QKq7aERV/vAeuG0DTkkuEnTZK8eVNYqnd6wBsc9YTK+5iuuzp8aG0E80AngxeOaI4u77OIfzE9fv2T5Q==
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@changesets/apply-release-plan" "^6.1.1"
@@ -5401,14 +5394,7 @@ p-limit@^2.2.0:
   dependencies:
     p-try "^2.0.0"
 
-p-limit@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-3.0.2.tgz#1664e010af3cadc681baafd3e2a437be7b0fb5fe"
-  integrity sha512-iwqZSOoWIW+Ew4kAGUlN16J4M7OB3ysMLSZtnhmqx7njIHFPlxWBX8xo3lVTyFVq6mI/lL9qt2IsN1sHwaxJkg==
-  dependencies:
-    p-try "^2.0.0"
-
-p-limit@^3.1.0:
+p-limit@^3.0.2, p-limit@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-3.1.0.tgz#e1daccbe78d0d1388ca18c64fea38e3e57e3706b"
   integrity sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==

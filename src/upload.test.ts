@@ -4,16 +4,11 @@ import * as glob from '@actions/glob'
 import {uploadGlobToPrefix} from './upload'
 
 jest.mock('fs', () => ({
-  readFile: (
-    file: string,
-    callback: (error: Error | null, buffer: Buffer) => void
-  ) => callback(null, Buffer.from('data'))
+  readFile: jest.fn()
 }))
 
 jest.mock('@actions/glob', () => ({
-  create: jest.fn().mockResolvedValue({
-    glob: jest.fn().mockResolvedValue(['/fake-root/my-file'])
-  })
+  create: jest.fn()
 }))
 
 const getS3Spy = (overrides?: {
@@ -24,6 +19,16 @@ const getS3Spy = (overrides?: {
   } as unknown as {[key in keyof S3]: jest.SpyInstance})
 
 describe('upload', () => {
+  beforeEach(() => {
+    ;(fs.readFile as unknown as jest.Mock).mockImplementation(
+      (file: string, callback: (error: Error | null, buffer: Buffer) => void) =>
+        callback(null, Buffer.from('data'))
+    )
+    ;(glob.create as unknown as jest.Mock).mockResolvedValue({
+      glob: jest.fn().mockResolvedValue(['/fake-root/my-file'])
+    })
+  })
+
   afterEach(() => {
     jest.restoreAllMocks()
   })

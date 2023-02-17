@@ -5,13 +5,7 @@ import {downloadPrefix} from './download'
 
 jest.mock('mkdirp')
 jest.mock('fs', () => ({
-  createWriteStream: jest.fn().mockReturnValue({
-    on: jest.fn().mockImplementation((eventName, callback) => {
-      if (eventName === 'finish') {
-        callback()
-      }
-    })
-  })
+  createWriteStream: jest.fn()
 }))
 
 const getS3Spy = (overrides?: {
@@ -38,6 +32,16 @@ const getS3Spy = (overrides?: {
   } as unknown as {[key in keyof S3]: jest.SpyInstance})
 
 describe('download', () => {
+  beforeEach(() => {
+    ;(fs.createWriteStream as unknown as jest.Mock).mockReturnValue({
+      on: jest.fn().mockImplementation((eventName, callback) => {
+        if (eventName === 'finish') {
+          callback()
+        }
+      })
+    })
+  })
+
   afterEach(() => {
     jest.restoreAllMocks()
   })

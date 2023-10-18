@@ -1,4 +1,5 @@
 import {getInput, setOutput} from '@actions/core'
+import {ObjectCannedACL} from '@aws-sdk/client-s3'
 
 export type Mode = 'upload' | 'download'
 
@@ -12,16 +13,6 @@ interface S3BucketConfig {
     secretAccessKey: string
   }
 }
-
-export type ACL =
-  | 'private'
-  | 'public-read'
-  | 'public-read-write'
-  | 'aws-exec-read'
-  | 'authenticated-read'
-  | 'bucket-owner-read'
-  | 'bucket-owner-full-control'
-  | 'log-delivery-write'
 
 const getS3BucketConfig = (): S3BucketConfig => ({
   prefix: getInput('prefix'),
@@ -40,7 +31,7 @@ export function getOptionsFromGithubActionInput(): S3BucketConfig &
         mode: 'upload'
         patterns: string[]
         maxParallelUploads: number
-        acl: ACL
+        acl: ObjectCannedACL
       }
     | {
         mode: 'download'
@@ -57,7 +48,7 @@ export function getOptionsFromGithubActionInput(): S3BucketConfig &
       return {
         ...s3BucketConfig,
         mode,
-        acl: (getInput('acl') as ACL | '') || 'private',
+        acl: (getInput('acl') as ObjectCannedACL | '') || 'private',
         patterns: getInput('patterns').split('\n'),
         maxParallelUploads: parseInt(getInput('max_parallel_uploads')) || 10
       }

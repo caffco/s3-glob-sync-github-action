@@ -1,8 +1,7 @@
 import fs from 'fs'
 import * as glob from '@actions/glob'
-import {S3} from '@aws-sdk/client-s3'
+import {S3, ObjectCannedACL} from '@aws-sdk/client-s3'
 import {getChunked} from './chunk'
-import {ACL} from './github'
 
 const uploadSingleFile = async ({
   acl,
@@ -11,7 +10,7 @@ const uploadSingleFile = async ({
   prefix,
   s3
 }: {
-  acl: ACL
+  acl: ObjectCannedACL
   absolutePathToFile: string
   bucketName: string
   prefix: string
@@ -39,7 +38,7 @@ export const uploadGlobToPrefix = async ({
   s3,
   maxParallelUploads
 }: {
-  acl: ACL
+  acl: ObjectCannedACL
   patterns: string[]
   bucketName: string
   prefix: string

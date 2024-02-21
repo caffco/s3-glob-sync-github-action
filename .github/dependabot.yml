@@ -4,5 +4,11 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
     reviewers:
       - 'Sumolari'
+    assignees:
+      - 'Sumolari'
+    versioning-strategy: increase

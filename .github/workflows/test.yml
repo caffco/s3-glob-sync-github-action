@@ -9,7 +9,7 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: |
           yarn --frozen-lockfile
       - run: |
@@ -17,13 +17,13 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Run tests
         run: yarn test
       - name: Upload coverage
-        uses: caffco/code-climate-github-action@v0.0.1-alpha.5
+        uses: caffco/code-climate-github-action@v0.0.4
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:

@@ -33,7 +33,7 @@
     "@types/mkdirp": "^1.0.2",
     "@types/node": "^18.11.9",
     "@typescript-eslint/parser": "^7.18.0",
-    "@vercel/ncc": "^0.38.1",
+    "@vercel/ncc": "^0.38.2",
     "eslint": "^8.57.1",
     "eslint-plugin-github": "^4.4.0",
     "eslint-plugin-jest": "^28.8.3",

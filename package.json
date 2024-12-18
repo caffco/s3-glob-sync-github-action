@@ -28,7 +28,7 @@
     "all": "run-s format lint test build"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.10",
+    "@changesets/cli": "^2.27.11",
     "@types/jest": "^29.5.14",
     "@types/mkdirp": "^1.0.2",
     "@types/node": "^18.11.9",

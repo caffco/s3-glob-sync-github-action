@@ -1,21 +1,22 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import * as core from '@actions/core'
 import {
   getOptionsFromGithubActionInput,
   setGithubActionOutputFromResults
 } from './github'
 
-jest.mock('@actions/core')
+vi.mock('@actions/core')
 
 describe('Github', () => {
   afterEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('#getOptionsFromGithubActionInput', () => {
     const mockGetInput = (
       overridenKeys: Record<string, string> = {}
-    ): ReturnType<typeof jest.spyOn> =>
-      jest.spyOn(core, 'getInput').mockImplementation(
+    ) =>
+      vi.spyOn(core, 'getInput').mockImplementation(
         key =>
           ((
             {

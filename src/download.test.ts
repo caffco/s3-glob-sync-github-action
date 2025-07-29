@@ -1,55 +1,59 @@
-import {S3} from '@aws-sdk/client-s3'
-import fs from 'fs'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import type {S3} from '@aws-sdk/client-s3'
+import fs from 'node:fs'
 import mkdirp from 'mkdirp'
 import {downloadPrefix} from './download'
 
-jest.mock('mkdirp')
-jest.mock('fs', () => ({
-  createWriteStream: jest.fn()
+vi.mock('mkdirp')
+vi.mock('fs', () => ({
+  default: {
+    createWriteStream: vi.fn()
+  },
+  createWriteStream: vi.fn()
 }))
 
 const getS3Spy = (overrides?: {
-  listObjectsV2?: jest.SpyInstance
-  getObject?: jest.SpyInstance
-  bodyStreamOn?: jest.SpyInstance
-}): {[key in keyof S3]: jest.SpyInstance} =>
+  listObjectsV2?: ReturnType<typeof vi.fn>
+  getObject?: ReturnType<typeof vi.fn>
+  bodyStreamOn?: ReturnType<typeof vi.fn>
+}): Record<string, ReturnType<typeof vi.fn>> =>
   ({
     listObjectsV2:
       overrides?.listObjectsV2 ??
-      jest.fn().mockResolvedValue({
+      vi.fn().mockResolvedValue({
         Contents: [],
         NextContinuationToken: undefined,
         IsTruncated: false
       }),
     getObject:
       overrides?.getObject ??
-      jest.fn().mockResolvedValue({
+      vi.fn().mockResolvedValue({
         Body: {
-          on: overrides?.bodyStreamOn ?? jest.fn(),
-          pipe: jest.fn()
+          on: overrides?.bodyStreamOn ?? vi.fn(),
+          pipe: vi.fn()
         }
       })
-  } as unknown as {[key in keyof S3]: jest.SpyInstance})
+  } as unknown as Record<string, ReturnType<typeof vi.fn>>)
 
 describe('download', () => {
   beforeEach(() => {
-    ;(fs.createWriteStream as unknown as jest.Mock).mockReturnValue({
-      on: jest.fn().mockImplementation((eventName, callback) => {
+    vi.mocked(fs.createWriteStream).mockReturnValue({
+      on: vi.fn().mockImplementation((eventName, callback) => {
         if (eventName === 'finish') {
           callback()
         }
       })
-    })
+    } as unknown as ReturnType<typeof fs.createWriteStream>)
   })
 
   afterEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('#downloadPrefix', () => {
     it('should download the file to the proper destination', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: [
             {
               Key: 'the-prefix-parent-folder/the-key'
@@ -84,7 +88,7 @@ describe('download', () => {
 
     it('should download files from all pages', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest
+        listObjectsV2: vi
           .fn()
           .mockResolvedValueOnce({
             Contents: [
@@ -165,7 +169,7 @@ describe('download', () => {
 
     it('should return paths to downloaded files', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: [
             {
               Key: 'the-prefix-the-key'
@@ -189,7 +193,7 @@ describe('download', () => {
 
     it('should throw an error if no body is returned from the bucket', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: [
             {
               Key: 'the-prefix-the-key'
@@ -198,7 +202,7 @@ describe('download', () => {
           NextContinuationToken: undefined,
           IsTruncated: false
         }),
-        getObject: jest.fn().mockResolvedValueOnce({
+        getObject: vi.fn().mockResolvedValueOnce({
           Body: undefined
         })
       })
@@ -218,7 +222,7 @@ describe('download', () => {
 
     it('should throw an error if no keys have given prefix', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: undefined,
           NextContinuationToken: undefined,
           IsTruncated: false
@@ -240,7 +244,7 @@ describe('download', () => {
 
     it('should throw an error if bucket entry has no key', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: [{}],
           NextContinuationToken: undefined,
           IsTruncated: false
@@ -260,7 +264,7 @@ describe('download', () => {
 
     it('should throw an error if page is truncated but has no next continuation token', async () => {
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValueOnce({
+        listObjectsV2: vi.fn().mockResolvedValueOnce({
           Contents: [],
           NextContinuationToken: undefined,
           IsTruncated: true
@@ -283,27 +287,27 @@ describe('download', () => {
     it('should forward read errors to write stream', async () => {
       const forcedError = new Error('Forced error')
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValue({
+        listObjectsV2: vi.fn().mockResolvedValue({
           Contents: [{Key: 'the-key'}],
           NextContinuationToken: undefined,
           IsTruncated: false
         }),
-        getObject: jest.fn().mockResolvedValue({
+        getObject: vi.fn().mockResolvedValue({
           Body: {
-            on: jest.fn().mockImplementation((eventName, callback) => {
+            on: vi.fn().mockImplementation((eventName, callback) => {
               if (eventName === 'error') {
                 callback(forcedError)
               }
             }),
-            pipe: jest.fn()
+            pipe: vi.fn()
           }
         })
       })
 
-      const emitSpy = jest.fn()
+      const emitSpy = vi.fn()
 
-      jest.spyOn(fs, 'createWriteStream').mockReturnValue({
-        on: jest.fn().mockImplementation((eventName, callback) => {
+      vi.mocked(fs.createWriteStream).mockReturnValueOnce({
+        on: vi.fn().mockImplementation((eventName, callback) => {
           if (eventName === 'finish') {
             callback()
           }
@@ -323,16 +327,16 @@ describe('download', () => {
     })
 
     it('should forward read data to write stream', async () => {
-      const pipeSpy = jest.fn()
+      const pipeSpy = vi.fn()
       const s3Spy = getS3Spy({
-        listObjectsV2: jest.fn().mockResolvedValue({
+        listObjectsV2: vi.fn().mockResolvedValue({
           Contents: [{Key: 'the-key'}],
           NextContinuationToken: undefined,
           IsTruncated: false
         }),
-        getObject: jest.fn().mockResolvedValue({
+        getObject: vi.fn().mockResolvedValue({
           Body: {
-            on: jest.fn().mockImplementation((eventName, callback) => {
+            on: vi.fn().mockImplementation((eventName, callback) => {
               if (eventName === 'finish') {
                 callback()
               }
@@ -343,15 +347,15 @@ describe('download', () => {
       })
 
       const fakeWriteStream = {
-        on: jest.fn().mockImplementation((eventName, callback) => {
+        on: vi.fn().mockImplementation((eventName, callback) => {
           if (eventName === 'finish') {
             callback()
           }
         }),
-        emit: jest.fn()
+        emit: vi.fn()
       } as unknown as ReturnType<typeof fs.createWriteStream>
 
-      jest.spyOn(fs, 'createWriteStream').mockReturnValue(fakeWriteStream)
+      vi.mocked(fs.createWriteStream).mockReturnValueOnce(fakeWriteStream)
 
       await downloadPrefix({
         destinationFolder: '/fake-destination',

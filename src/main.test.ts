@@ -1,31 +1,31 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {S3} from '@aws-sdk/client-s3'
 import * as github from './github'
 import * as upload from './upload'
 import * as download from './download'
-
 import main from './main'
 
-jest.mock('./github')
-jest.mock('./upload')
-jest.mock('./download')
-jest.mock('@aws-sdk/client-s3', () => ({
-  S3: jest.fn()
+vi.mock('./github')
+vi.mock('./upload')
+vi.mock('./download')
+vi.mock('@aws-sdk/client-s3', () => ({
+  S3: vi.fn()
 }))
 
 describe('Main', () => {
   const fakeS3Instance = {}
 
   beforeEach(() => {
-    ;(S3 as unknown as jest.SpyInstance).mockReturnValue(fakeS3Instance)
+    vi.mocked(S3).mockReturnValue(fakeS3Instance as S3)
   })
 
   afterEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('#default', () => {
     it('should create S3 instance with proper parameters', async () => {
-      jest
+      vi
         .spyOn(github, 'getOptionsFromGithubActionInput')
         .mockReturnValueOnce({
           prefix: 'the-prefix',
@@ -55,7 +55,7 @@ describe('Main', () => {
 
     describe('upload mode', () => {
       beforeEach(() => {
-        jest
+        vi
           .spyOn(github, 'getOptionsFromGithubActionInput')
           .mockReturnValueOnce({
             prefix: 'the-prefix',
@@ -94,7 +94,7 @@ describe('Main', () => {
       })
 
       it('should set uploaded files as output', async () => {
-        jest
+        vi
           .spyOn(upload, 'uploadGlobToPrefix')
           .mockResolvedValueOnce(['/fake-path/file-a'])
 
@@ -109,7 +109,7 @@ describe('Main', () => {
 
     describe('download mode', () => {
       beforeEach(() => {
-        jest
+        vi
           .spyOn(github, 'getOptionsFromGithubActionInput')
           .mockReturnValueOnce({
             prefix: 'the-prefix',
@@ -146,7 +146,7 @@ describe('Main', () => {
       })
 
       it('should set downloaded files as output', async () => {
-        jest
+        vi
           .spyOn(download, 'downloadPrefix')
           .mockResolvedValueOnce(['/fake-path/file-a'])
 

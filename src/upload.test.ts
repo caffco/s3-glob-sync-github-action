@@ -1,36 +1,47 @@
-import fs from 'fs'
-import {S3} from '@aws-sdk/client-s3'
+import fs from 'node:fs'
 import * as glob from '@actions/glob'
+import type {S3} from '@aws-sdk/client-s3'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {uploadGlobToPrefix} from './upload'
 
-jest.mock('fs', () => ({
-  readFile: jest.fn()
+vi.mock('fs', () => ({
+  default: {
+    readFile: vi.fn(),
+    createWriteStream: vi.fn()
+  },
+  readFile: vi.fn(),
+  createWriteStream: vi.fn()
 }))
 
-jest.mock('@actions/glob', () => ({
-  create: jest.fn()
+vi.mock('@actions/glob', () => ({
+  default: {
+    create: vi.fn()
+  },
+  create: vi.fn()
 }))
 
 const getS3Spy = (overrides?: {
-  putObject?: jest.SpyInstance
-}): {[key in keyof S3]: jest.SpyInstance} =>
+  putObject?: ReturnType<typeof vi.fn>
+}): Record<string, ReturnType<typeof vi.fn>> =>
   ({
-    putObject: overrides?.putObject ?? jest.fn()
-  } as unknown as {[key in keyof S3]: jest.SpyInstance})
+    putObject: overrides?.putObject ?? vi.fn()
+  }) as unknown as Record<string, ReturnType<typeof vi.fn>>
 
 describe('upload', () => {
   beforeEach(() => {
-    ;(fs.readFile as unknown as jest.Mock).mockImplementation(
-      (file: string, callback: (error: Error | null, buffer: Buffer) => void) =>
+    vi.mocked(fs.readFile).mockImplementation(
+      (_file, callback: (error: Error | null, buffer: Buffer) => void) =>
         callback(null, Buffer.from('data'))
     )
-    ;(glob.create as unknown as jest.Mock).mockResolvedValue({
-      glob: jest.fn().mockResolvedValue(['/fake-root/my-file'])
+    vi.mocked(glob.create).mockResolvedValue({
+      glob: vi.fn().mockResolvedValue(['/fake-root/my-file']),
+      getSearchPaths: vi.fn(),
+      globGenerator: vi.fn()
     })
   })
 
   afterEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('#uploadGlobToPrefix', () => {
@@ -87,7 +98,7 @@ describe('upload', () => {
     it('should fail if file cannot be read', async () => {
       const s3Spy = getS3Spy()
 
-      jest.spyOn(fs, 'readFile').mockImplementationOnce((file, callback) => {
+      vi.spyOn(fs, 'readFile').mockImplementationOnce((_file, callback) => {
         callback(new Error('Forced error'), Buffer.from(''))
       })
 

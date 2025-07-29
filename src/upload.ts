@@ -1,6 +1,6 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import * as glob from '@actions/glob'
-import {S3, ObjectCannedACL} from '@aws-sdk/client-s3'
+import type {ObjectCannedACL, S3} from '@aws-sdk/client-s3'
 import {getChunked} from './chunk'
 
 const uploadSingleFile = async ({

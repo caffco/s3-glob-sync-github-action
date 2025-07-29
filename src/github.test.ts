@@ -1,24 +1,23 @@
 import * as core from '@actions/core'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {
   getOptionsFromGithubActionInput,
   setGithubActionOutputFromResults
 } from './github'
 
-jest.mock('@actions/core')
+vi.mock('@actions/core')
 
 describe('Github', () => {
   afterEach(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('#getOptionsFromGithubActionInput', () => {
-    const mockGetInput = (
-      overridenKeys: Record<string, string> = {}
-    ): ReturnType<typeof jest.spyOn> =>
-      jest.spyOn(core, 'getInput').mockImplementation(
+    const mockGetInput = (overridenKeys: Record<string, string> = {}) =>
+      vi.spyOn(core, 'getInput').mockImplementation(
         key =>
-          ((
-            {
+          (
+            ({
               prefix: 'the-prefix',
               bucket_name: 'my-bucket',
               endpoint: 'custom-endpoint',
@@ -26,8 +25,8 @@ describe('Github', () => {
               access_key_id: 'my access key id',
               secret_access_key: 'my secret access key',
               ...overridenKeys
-            } as Record<string, string>
-          )[key])
+            }) as Record<string, string>
+          )[key]
       )
 
     beforeEach(() => {

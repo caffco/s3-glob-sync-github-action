@@ -1,4 +1,3 @@
 {
-  "*.(ts|js)": ["eslint"],
-  "*.(ts|json|yml|js|md)": ["prettier --write"]
+  "*.(ts|js|json)": ["biome check --write"]
 }

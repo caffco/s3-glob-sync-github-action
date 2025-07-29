@@ -1,10 +1,14 @@
 import fs from 'node:fs'
 import type {S3} from '@aws-sdk/client-s3'
-import mkdirp from 'mkdirp'
+import {mkdirp} from 'mkdirp'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {downloadPrefix} from './download'
 
-vi.mock('mkdirp')
+vi.mock('mkdirp', () => {
+  return {
+    mkdirp: vi.fn()
+  }
+})
 vi.mock('fs', () => ({
   default: {
     createWriteStream: vi.fn()
@@ -44,6 +48,7 @@ describe('download', () => {
         }
       })
     } as unknown as ReturnType<typeof fs.createWriteStream>)
+    vi.mocked(mkdirp).mockResolvedValue(undefined)
   })
 
   afterEach(() => {
@@ -77,9 +82,7 @@ describe('download', () => {
         Key: 'the-prefix-parent-folder/the-key'
       })
 
-      expect(mkdirp.sync).toHaveBeenCalledWith(
-        '/fake-destination/parent-folder'
-      )
+      expect(mkdirp).toHaveBeenCalledWith('/fake-destination/parent-folder')
 
       expect(fs.createWriteStream).toHaveBeenCalledWith(
         '/fake-destination/parent-folder/the-key'

@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import {dirname, resolve as resolvePath} from 'node:path'
 import type {Readable} from 'node:stream'
 import type {_Object, S3} from '@aws-sdk/client-s3'
-import mkdirp from 'mkdirp'
+import {mkdirp} from 'mkdirp'
 
 const downloadSingleFile = async ({
   destinationFolder,
@@ -22,7 +22,7 @@ const downloadSingleFile = async ({
     key.substring(prefix.length)
   )
 
-  mkdirp.sync(dirname(absolutePathToFile))
+  await mkdirp(dirname(absolutePathToFile))
 
   const remoteObject = await s3.getObject({
     Bucket: bucketName,

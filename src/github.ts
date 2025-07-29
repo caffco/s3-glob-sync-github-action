@@ -1,5 +1,5 @@
 import {getInput, setOutput} from '@actions/core'
-import {ObjectCannedACL} from '@aws-sdk/client-s3'
+import type {ObjectCannedACL} from '@aws-sdk/client-s3'
 
 export type Mode = 'upload' | 'download'
 

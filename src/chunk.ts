@@ -2,7 +2,7 @@ export const getChunked = <Item>(
   originalItems: Item[],
   maximumChunkSize: number
 ): Item[][] => {
-  if (maximumChunkSize <= 0 || isNaN(maximumChunkSize)) {
+  if (maximumChunkSize <= 0 || Number.isNaN(maximumChunkSize)) {
     throw new Error('Chunk size must be a positive number')
   }
 
@@ -15,9 +15,13 @@ export const getChunked = <Item>(
       const lastChunk = chunks[chunks.length - 1]
       const isLastChunkFilled = lastChunk.length >= maximumChunkSize
 
-      return isLastChunkFilled
-        ? [...chunks, [item]]
-        : [...chunks.slice(0, -1), [...lastChunk, item]]
+      if (isLastChunkFilled) {
+        chunks.push([item])
+      } else {
+        lastChunk.push(item)
+      }
+
+      return chunks
     },
     [[]] as Item[][]
   )

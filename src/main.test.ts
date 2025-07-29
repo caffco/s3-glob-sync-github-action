@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {S3} from '@aws-sdk/client-s3'
-import * as github from './github'
-import * as upload from './upload'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import * as download from './download'
+import * as github from './github'
 import main from './main'
+import * as upload from './upload'
 
 vi.mock('./github')
 vi.mock('./upload')
@@ -25,21 +25,19 @@ describe('Main', () => {
 
   describe('#default', () => {
     it('should create S3 instance with proper parameters', async () => {
-      vi
-        .spyOn(github, 'getOptionsFromGithubActionInput')
-        .mockReturnValueOnce({
-          prefix: 'the-prefix',
-          bucketName: 'the-bucket',
-          endpoint: 'the-endpoint',
-          region: 'the-region',
-          credentials: {
-            accessKeyId: 'the-access-key',
-            secretAccessKey: 'the-secret-access-key'
-          },
-          mode: 'download',
-          destinationFolder: '/destination-folder',
-          maxParallelDownloads: 10
-        })
+      vi.spyOn(github, 'getOptionsFromGithubActionInput').mockReturnValueOnce({
+        prefix: 'the-prefix',
+        bucketName: 'the-bucket',
+        endpoint: 'the-endpoint',
+        region: 'the-region',
+        credentials: {
+          accessKeyId: 'the-access-key',
+          secretAccessKey: 'the-secret-access-key'
+        },
+        mode: 'download',
+        destinationFolder: '/destination-folder',
+        maxParallelDownloads: 10
+      })
 
       await main()
 
@@ -55,9 +53,8 @@ describe('Main', () => {
 
     describe('upload mode', () => {
       beforeEach(() => {
-        vi
-          .spyOn(github, 'getOptionsFromGithubActionInput')
-          .mockReturnValueOnce({
+        vi.spyOn(github, 'getOptionsFromGithubActionInput').mockReturnValueOnce(
+          {
             prefix: 'the-prefix',
             bucketName: 'the-bucket',
             endpoint: 'the-endpoint',
@@ -70,7 +67,8 @@ describe('Main', () => {
             acl: 'public-read',
             patterns: ['pattern-a', 'pattern-b'],
             maxParallelUploads: 10
-          })
+          }
+        )
       })
 
       it('should upload files', async () => {
@@ -94,9 +92,9 @@ describe('Main', () => {
       })
 
       it('should set uploaded files as output', async () => {
-        vi
-          .spyOn(upload, 'uploadGlobToPrefix')
-          .mockResolvedValueOnce(['/fake-path/file-a'])
+        vi.spyOn(upload, 'uploadGlobToPrefix').mockResolvedValueOnce([
+          '/fake-path/file-a'
+        ])
 
         await main()
 
@@ -109,9 +107,8 @@ describe('Main', () => {
 
     describe('download mode', () => {
       beforeEach(() => {
-        vi
-          .spyOn(github, 'getOptionsFromGithubActionInput')
-          .mockReturnValueOnce({
+        vi.spyOn(github, 'getOptionsFromGithubActionInput').mockReturnValueOnce(
+          {
             prefix: 'the-prefix',
             bucketName: 'the-bucket',
             endpoint: 'the-endpoint',
@@ -123,7 +120,8 @@ describe('Main', () => {
             mode: 'download',
             destinationFolder: '/destination-folder',
             maxParallelDownloads: 10
-          })
+          }
+        )
       })
 
       it('should download files', async () => {
@@ -146,9 +144,9 @@ describe('Main', () => {
       })
 
       it('should set downloaded files as output', async () => {
-        vi
-          .spyOn(download, 'downloadPrefix')
-          .mockResolvedValueOnce(['/fake-path/file-a'])
+        vi.spyOn(download, 'downloadPrefix').mockResolvedValueOnce([
+          '/fake-path/file-a'
+        ])
 
         await main()
 

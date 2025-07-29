@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import * as core from '@actions/core'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {
   getOptionsFromGithubActionInput,
   setGithubActionOutputFromResults
@@ -13,13 +13,11 @@ describe('Github', () => {
   })
 
   describe('#getOptionsFromGithubActionInput', () => {
-    const mockGetInput = (
-      overridenKeys: Record<string, string> = {}
-    ) =>
+    const mockGetInput = (overridenKeys: Record<string, string> = {}) =>
       vi.spyOn(core, 'getInput').mockImplementation(
         key =>
-          ((
-            {
+          (
+            ({
               prefix: 'the-prefix',
               bucket_name: 'my-bucket',
               endpoint: 'custom-endpoint',
@@ -27,8 +25,8 @@ describe('Github', () => {
               access_key_id: 'my access key id',
               secret_access_key: 'my secret access key',
               ...overridenKeys
-            } as Record<string, string>
-          )[key])
+            }) as Record<string, string>
+          )[key]
       )
 
     beforeEach(() => {

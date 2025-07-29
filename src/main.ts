@@ -1,11 +1,11 @@
 import {S3} from '@aws-sdk/client-s3'
+import {downloadPrefix} from './download'
 import {
-  Mode,
   getOptionsFromGithubActionInput,
+  type Mode,
   setGithubActionOutputFromResults
 } from './github'
 import {uploadGlobToPrefix} from './upload'
-import {downloadPrefix} from './download'
 
 const run = async <
   ActionInput,

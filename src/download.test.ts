@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import type {S3} from '@aws-sdk/client-s3'
 import fs from 'node:fs'
+import type {S3} from '@aws-sdk/client-s3'
 import mkdirp from 'mkdirp'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {downloadPrefix} from './download'
 
 vi.mock('mkdirp')
@@ -33,7 +33,7 @@ const getS3Spy = (overrides?: {
           pipe: vi.fn()
         }
       })
-  } as unknown as Record<string, ReturnType<typeof vi.fn>>)
+  }) as unknown as Record<string, ReturnType<typeof vi.fn>>
 
 describe('download', () => {
   beforeEach(() => {

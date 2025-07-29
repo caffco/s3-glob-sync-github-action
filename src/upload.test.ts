@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import fs from 'node:fs'
-import type {S3} from '@aws-sdk/client-s3'
 import * as glob from '@actions/glob'
+import type {S3} from '@aws-sdk/client-s3'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {uploadGlobToPrefix} from './upload'
 
 vi.mock('fs', () => ({
@@ -25,7 +25,7 @@ const getS3Spy = (overrides?: {
 }): Record<string, ReturnType<typeof vi.fn>> =>
   ({
     putObject: overrides?.putObject ?? vi.fn()
-  } as unknown as Record<string, ReturnType<typeof vi.fn>>)
+  }) as unknown as Record<string, ReturnType<typeof vi.fn>>
 
 describe('upload', () => {
   beforeEach(() => {

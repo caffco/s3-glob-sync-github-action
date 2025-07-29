@@ -1,9 +1,8 @@
-import {resolve as resolvePath, dirname} from 'path'
-import fs from 'fs'
+import fs from 'node:fs'
+import {dirname, resolve as resolvePath} from 'node:path'
+import type {Readable} from 'node:stream'
+import type {_Object, S3} from '@aws-sdk/client-s3'
 import mkdirp from 'mkdirp'
-import {S3} from '@aws-sdk/client-s3'
-import type {_Object} from '@aws-sdk/client-s3'
-import {Readable} from 'stream'
 
 const downloadSingleFile = async ({
   destinationFolder,
@@ -165,7 +164,7 @@ export const downloadPrefix = async ({
   maxParallelDownloads: number
 }): Promise<string[]> => {
   const absolutePathsToDownloadedFiles: string[] = []
-  let continuationToken: string | undefined = undefined
+  let continuationToken: string | undefined
 
   do {
     const currentPageResult: {
